@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{simulacao.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{simulacao.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/simulacaos/add}" th:text="#{simulacao.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:if="${simulacaos.empty}" th:text="#{simulacao.list.empty}" />
+            <div th:if="${!simulacaos.empty}" class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th th:text="#{simulacao.id.label}" scope="col" />
+                            <th th:text="#{simulacao.descricao.label}" scope="col" />
+                            <th th:text="#{simulacao.dataHora.label}" scope="col" />
+                            <th th:text="#{simulacao.veiculoSimulacaos.label}" scope="col" />
+                            <th th:text="#{simulacao.centroDistribuicao.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="simulacao : ${simulacaos}">
+                            <td th:text="${simulacao.id}" />
+                            <td th:text="${simulacao.descricao}" />
+                            <td th:text="${simulacao.dataHora}" />
+                            <td th:text="${simulacao.veiculoSimulacaos}" />
+                            <td th:text="${simulacao.centroDistribuicao}" />
+                            <td>
+                                <form th:action="@{/simulacaos/delete/{id}(id=${simulacao.id})}" th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm float-end">
+                                    <a th:href="@{/simulacaos/edit/{id}(id=${simulacao.id})}" th:text="#{simulacao.list.edit}" class="btn btn-sm btn-info" />
+                                    <button th:text="#{simulacao.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

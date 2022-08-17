@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{veiculo.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{veiculo.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/veiculos/add}" th:text="#{veiculo.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:if="${veiculos.empty}" th:text="#{veiculo.list.empty}" />
+            <div th:if="${!veiculos.empty}" class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th th:text="#{veiculo.id.label}" scope="col" />
+                            <th th:text="#{veiculo.descricao.label}" scope="col" />
+                            <th th:text="#{veiculo.placa.label}" scope="col" />
+                            <th th:text="#{veiculo.capacidade.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="veiculo : ${veiculos}">
+                            <td th:text="${veiculo.id}" />
+                            <td th:text="${veiculo.descricao}" />
+                            <td th:text="${veiculo.placa}" />
+                            <td th:text="${veiculo.capacidade}" />
+                            <td>
+                                <form th:action="@{/veiculos/delete/{id}(id=${veiculo.id})}" th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm float-end">
+                                    <a th:href="@{/veiculos/edit/{id}(id=${veiculo.id})}" th:text="#{veiculo.list.edit}" class="btn btn-sm btn-info" />
+                                    <button th:text="#{veiculo.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

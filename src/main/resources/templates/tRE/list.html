@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{tRE.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{tRE.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/tREs/add}" th:text="#{tRE.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:if="${tREs.empty}" th:text="#{tRE.list.empty}" />
+            <div th:if="${!tREs.empty}" class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th th:text="#{tRE.id.label}" scope="col" />
+                            <th th:text="#{tRE.numero.label}" scope="col" />
+                            <th th:text="#{tRE.uf.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="tRE : ${tREs}">
+                            <td th:text="${tRE.id}" />
+                            <td th:text="${tRE.numero}" />
+                            <td th:text="${tRE.uf}" />
+                            <td>
+                                <form th:action="@{/tREs/delete/{id}(id=${tRE.id})}" th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm float-end">
+                                    <a th:href="@{/tREs/edit/{id}(id=${tRE.id})}" th:text="#{tRE.list.edit}" class="btn btn-sm btn-info" />
+                                    <button th:text="#{tRE.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

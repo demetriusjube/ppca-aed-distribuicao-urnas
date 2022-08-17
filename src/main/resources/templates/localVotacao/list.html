@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{localVotacao.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{localVotacao.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/localVotacaos/add}" th:text="#{localVotacao.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:if="${localVotacaos.empty}" th:text="#{localVotacao.list.empty}" />
+            <div th:if="${!localVotacaos.empty}" class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th th:text="#{localVotacao.id.label}" scope="col" />
+                            <th th:text="#{localVotacao.numero.label}" scope="col" />
+                            <th th:text="#{localVotacao.nome.label}" scope="col" />
+                            <th th:text="#{localVotacao.endereco.label}" scope="col" />
+                            <th th:text="#{localVotacao.quantidadeSecoes.label}" scope="col" />
+                            <th th:text="#{localVotacao.zonaEleitoral.label}" scope="col" />
+                            <th th:text="#{localVotacao.localizacao.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="localVotacao : ${localVotacaos}">
+                            <td th:text="${localVotacao.id}" />
+                            <td th:text="${localVotacao.numero}" />
+                            <td th:text="${localVotacao.nome}" />
+                            <td th:text="${localVotacao.endereco}" />
+                            <td th:text="${localVotacao.quantidadeSecoes}" />
+                            <td th:text="${localVotacao.zonaEleitoral}" />
+                            <td th:text="${localVotacao.localizacao}" />
+                            <td>
+                                <form th:action="@{/localVotacaos/delete/{id}(id=${localVotacao.id})}" th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm float-end">
+                                    <a th:href="@{/localVotacaos/edit/{id}(id=${localVotacao.id})}" th:text="#{localVotacao.list.edit}" class="btn btn-sm btn-info" />
+                                    <button th:text="#{localVotacao.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

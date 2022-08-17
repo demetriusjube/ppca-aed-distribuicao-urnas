@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{restricaoSimulacao.add.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{restricaoSimulacao.add.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/restricaoSimulacaos}" th:text="#{restricaoSimulacao.add.back}" class="btn btn-secondary" />
+                </div>
+            </div>
+            <div th:replace="fragments/forms::globalErrors('restricaoSimulacao')" />
+            <form th:action="${#httpServletRequest.requestURI}" method="post">
+                <div th:replace="fragments/forms::inputRow(object='restricaoSimulacao', field='valor')" />
+                <div th:replace="fragments/forms::inputRow(object='restricaoSimulacao', field='tipoRestricao', type='select')" />
+                <div th:replace="fragments/forms::inputRow(object='restricaoSimulacao', field='restricoes', type='select')" />
+                <input type="submit" th:value="#{restricaoSimulacao.add.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

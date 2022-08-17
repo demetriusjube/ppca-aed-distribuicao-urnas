@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{centroDistribuicao.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{centroDistribuicao.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/centroDistribuicaos/add}" th:text="#{centroDistribuicao.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:if="${centroDistribuicaos.empty}" th:text="#{centroDistribuicao.list.empty}" />
+            <div th:if="${!centroDistribuicaos.empty}" class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th th:text="#{centroDistribuicao.id.label}" scope="col" />
+                            <th th:text="#{centroDistribuicao.nome.label}" scope="col" />
+                            <th th:text="#{centroDistribuicao.endereco.label}" scope="col" />
+                            <th th:text="#{centroDistribuicao.localizacao.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="centroDistribuicao : ${centroDistribuicaos}">
+                            <td th:text="${centroDistribuicao.id}" />
+                            <td th:text="${centroDistribuicao.nome}" />
+                            <td th:text="${centroDistribuicao.endereco}" />
+                            <td th:text="${centroDistribuicao.localizacao}" />
+                            <td>
+                                <form th:action="@{/centroDistribuicaos/delete/{id}(id=${centroDistribuicao.id})}" th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm float-end">
+                                    <a th:href="@{/centroDistribuicaos/edit/{id}(id=${centroDistribuicao.id})}" th:text="#{centroDistribuicao.list.edit}" class="btn btn-sm btn-info" />
+                                    <button th:text="#{centroDistribuicao.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

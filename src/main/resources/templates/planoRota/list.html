@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{planoRota.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{planoRota.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/planoRotas/add}" th:text="#{planoRota.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:if="${planoRotas.empty}" th:text="#{planoRota.list.empty}" />
+            <div th:if="${!planoRotas.empty}" class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th th:text="#{planoRota.id.label}" scope="col" />
+                            <th th:text="#{planoRota.veiculo.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="planoRota : ${planoRotas}">
+                            <td th:text="${planoRota.id}" />
+                            <td th:text="${planoRota.veiculo}" />
+                            <td>
+                                <form th:action="@{/planoRotas/delete/{id}(id=${planoRota.id})}" th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm float-end">
+                                    <a th:href="@{/planoRotas/edit/{id}(id=${planoRota.id})}" th:text="#{planoRota.list.edit}" class="btn btn-sm btn-info" />
+                                    <button th:text="#{planoRota.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
