@@ -14,7 +14,7 @@ public class LocalVotacaoCSVDto {
 	@CsvBindByName
 	private Long numeroZE;
 	@CsvBindByName
-	private Integer numeroLocalVotacao;
+	private Long numeroLocalVotacao;
 	@CsvBindByName
 	private String nome;
 	@CsvBindByName

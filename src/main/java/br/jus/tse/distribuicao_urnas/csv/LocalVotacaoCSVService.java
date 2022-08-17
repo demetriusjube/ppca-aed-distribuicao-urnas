@@ -1,10 +1,21 @@
 package br.jus.tse.distribuicao_urnas.csv;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.opencsv.bean.CsvToBeanBuilder;
 
 import br.jus.tse.distribuicao_urnas.domain.LocalVotacao;
 import br.jus.tse.distribuicao_urnas.domain.Localizacao;
@@ -14,8 +25,11 @@ import br.jus.tse.distribuicao_urnas.repos.LocalVotacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalizacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.TRERepository;
 import br.jus.tse.distribuicao_urnas.repos.ZonaEleitoralRepository;
+import lombok.extern.slf4j.Slf4j;
 
+@Profile("load-locais-votacao")
 @Service
+@Slf4j
 public class LocalVotacaoCSVService {
 
 	@Autowired
@@ -34,10 +48,13 @@ public class LocalVotacaoCSVService {
 	public LocalVotacao saveLocalVotacaoFromCSV(LocalVotacaoCSVDto localVotacaoCSVDto) {
 
 		Optional<LocalVotacao> localVotacaoSalvo = localVotacaoRepository
-				.findByNumero(localVotacaoCSVDto.getNumeroLocalVotacao());
+				.findByNumeroEqualsAndZonaEleitoralNumeroEquals(localVotacaoCSVDto.getNumeroLocalVotacao(), localVotacaoCSVDto.getNumeroZE());
 		if (localVotacaoSalvo.isPresent()) {
+			log.info("LOCAL DE VOTAÇÃO Nº {} {} JÁ CADASTRADO!", localVotacaoCSVDto.getNumeroLocalVotacao(),
+					localVotacaoCSVDto.getNome());
 			return localVotacaoSalvo.get();
 		}
+		log.info("Iniciando cadastro do local de votação Nº {} {} ");
 		LocalVotacao localVotacao = montaLocalVotacao(localVotacaoCSVDto);
 		localVotacaoRepository.save(localVotacao);
 		return localVotacao;
@@ -104,4 +121,30 @@ public class LocalVotacaoCSVService {
 		}
 		return tre;
 	}
+
+	@EventListener
+	@Transactional
+	public void onApplicationEvent(ContextRefreshedEvent event) {
+		try {
+			importarLocaisVotacao();
+		} catch (IllegalStateException | IOException e) {
+			throw new RuntimeException("Erro ao importar os locais de votacao!");
+		}
+	}
+
+	private void importarLocaisVotacao() throws IllegalStateException, FileNotFoundException, IOException {
+		List<LocalVotacaoCSVDto> locaisVotacaoCSV = new CsvToBeanBuilder(new FileReader(getArquivoCSV()))
+				.withType(LocalVotacaoCSVDto.class).withQuoteChar('\"').build().parse();
+		log.info("Foram recuperados {} registros do CSV", locaisVotacaoCSV.size());
+		for (LocalVotacaoCSVDto localVotacaoCSVDto : locaisVotacaoCSV) {
+			LocalVotacao localVotacao = saveLocalVotacaoFromCSV(localVotacaoCSVDto);
+			log.info("Salvando a entidade {}, da {} Zona Eleitoral", localVotacao.getNome(),
+					localVotacao.getZonaEleitoral().getNumero());
+		}
+	}
+
+	private File getArquivoCSV() throws IOException {
+		return new ClassPathResource("csv/locais-votacao-transporte.csv").getFile();
+	}
+
 }

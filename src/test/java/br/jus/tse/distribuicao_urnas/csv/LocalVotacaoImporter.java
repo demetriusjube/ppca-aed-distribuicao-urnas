@@ -10,16 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
 @SpringBootTest
+@Transactional
 public class LocalVotacaoImporter {
 
 	@Autowired
 	private LocalVotacaoCSVService localVotacaoCSVService;
 
 	@Test
+	@Rollback(false)
 	public void importarLocaisVotacao() throws IllegalStateException, FileNotFoundException, IOException {
 		List<LocalVotacaoCSVDto> locaisVotacaoCSV = new CsvToBeanBuilder(new FileReader(getArquivoCSV()))
 				.withType(LocalVotacaoCSVDto.class).withQuoteChar('\"').build().parse();

@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LocalVotacaoRepository extends JpaRepository<LocalVotacao, Long> {
 
-	Optional<LocalVotacao> findByNumero(Integer numeroLocalVotacao);
+	Optional<LocalVotacao> findByNumeroEqualsAndZonaEleitoralNumeroEquals(Long numeroLocalVotacao, Long numeroZonaEleitoral);
 }
