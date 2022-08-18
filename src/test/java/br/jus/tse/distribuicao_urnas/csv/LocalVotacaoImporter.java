@@ -20,7 +20,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 public class LocalVotacaoImporter {
 
 	@Autowired
-	private LocalVotacaoCSVService localVotacaoCSVService;
+	private LoadCSVService localVotacaoCSVService;
 
 	@Test
 	@Rollback(false)

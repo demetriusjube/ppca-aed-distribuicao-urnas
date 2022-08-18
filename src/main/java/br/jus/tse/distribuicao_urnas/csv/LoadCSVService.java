@@ -17,10 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
+import br.jus.tse.distribuicao_urnas.domain.CentroDistribuicao;
 import br.jus.tse.distribuicao_urnas.domain.LocalVotacao;
 import br.jus.tse.distribuicao_urnas.domain.Localizacao;
 import br.jus.tse.distribuicao_urnas.domain.TRE;
 import br.jus.tse.distribuicao_urnas.domain.ZonaEleitoral;
+import br.jus.tse.distribuicao_urnas.repos.CentroDistribuicaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalVotacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalizacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.TRERepository;
@@ -30,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("load-locais-votacao")
 @Service
 @Slf4j
-public class LocalVotacaoCSVService {
+public class LoadCSVService {
 
 	@Autowired
 	private LocalVotacaoRepository localVotacaoRepository;
@@ -44,11 +46,36 @@ public class LocalVotacaoCSVService {
 	@Autowired
 	private TRERepository treRepository;
 
+	@Autowired
+	private CentroDistribuicaoRepository centroDistribuicaoRepository;
+
+	@Transactional
+	public CentroDistribuicao saveCentroDistribuicaoFromCSV(CentroDistribuicaoCSVDto centroDistribuicaoCSVDto) {
+
+		Optional<CentroDistribuicao> centroDistribuicaoSalvo = centroDistribuicaoRepository
+				.findByEnderecoEquals(centroDistribuicaoCSVDto.getEndereco());
+		if (centroDistribuicaoSalvo.isPresent()) {
+			log.info("CENTRO DE DISTRIBUIÇÃO {} JÁ CADASTRADO!", centroDistribuicaoCSVDto.getNome());
+			return centroDistribuicaoSalvo.get();
+		}
+		log.info("Iniciando cadastro do Centro de distribuição ");
+		CentroDistribuicao centroDistribuicao = montaCentroDistribuicao(centroDistribuicaoCSVDto);
+		centroDistribuicaoRepository.save(centroDistribuicao);
+		return centroDistribuicao;
+
+	}
+
+	private CentroDistribuicao montaCentroDistribuicao(CentroDistribuicaoCSVDto centroDistribuicaoCSVDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Transactional
 	public LocalVotacao saveLocalVotacaoFromCSV(LocalVotacaoCSVDto localVotacaoCSVDto) {
 
 		Optional<LocalVotacao> localVotacaoSalvo = localVotacaoRepository
-				.findByNumeroEqualsAndZonaEleitoralNumeroEquals(localVotacaoCSVDto.getNumeroLocalVotacao(), localVotacaoCSVDto.getNumeroZE());
+				.findByNumeroEqualsAndZonaEleitoralNumeroEquals(localVotacaoCSVDto.getNumeroLocalVotacao(),
+						localVotacaoCSVDto.getNumeroZE());
 		if (localVotacaoSalvo.isPresent()) {
 			log.info("LOCAL DE VOTAÇÃO Nº {} {} JÁ CADASTRADO!", localVotacaoCSVDto.getNumeroLocalVotacao(),
 					localVotacaoCSVDto.getNome());
@@ -127,13 +154,25 @@ public class LocalVotacaoCSVService {
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		try {
 			importarLocaisVotacao();
+			importarCentrosDistribuicao();
 		} catch (IllegalStateException | IOException e) {
 			throw new RuntimeException("Erro ao importar os locais de votacao!");
 		}
 	}
 
+	private void importarCentrosDistribuicao() throws IllegalStateException, FileNotFoundException, IOException {
+		List<CentroDistribuicaoCSVDto> centrosDistribuicaoCSV = new CsvToBeanBuilder(
+				new FileReader(getArquivoCentrosDistribuicaoCSV())).withType(CentroDistribuicaoCSVDto.class)
+				.withQuoteChar('\"').build().parse();
+		log.info("Foram recuperados {} centros de distribuição do CSV", centrosDistribuicaoCSV.size());
+		for (CentroDistribuicaoCSVDto centroDistribuicaoCSVDto : centrosDistribuicaoCSV) {
+			CentroDistribuicao centroDistribuicao = saveCentroDistribuicaoFromCSV(centroDistribuicaoCSVDto);
+			log.info("Salvando o Centro de Distribuição {}", centroDistribuicao.getNome());
+		}
+	}
+
 	private void importarLocaisVotacao() throws IllegalStateException, FileNotFoundException, IOException {
-		List<LocalVotacaoCSVDto> locaisVotacaoCSV = new CsvToBeanBuilder(new FileReader(getArquivoCSV()))
+		List<LocalVotacaoCSVDto> locaisVotacaoCSV = new CsvToBeanBuilder(new FileReader(getArquivoLocaisVotacaoCSV()))
 				.withType(LocalVotacaoCSVDto.class).withQuoteChar('\"').build().parse();
 		log.info("Foram recuperados {} registros do CSV", locaisVotacaoCSV.size());
 		for (LocalVotacaoCSVDto localVotacaoCSVDto : locaisVotacaoCSV) {
@@ -143,8 +182,16 @@ public class LocalVotacaoCSVService {
 		}
 	}
 
-	private File getArquivoCSV() throws IOException {
-		return new ClassPathResource("csv/locais-votacao-transporte.csv").getFile();
+	private File getArquivoCentrosDistribuicaoCSV() throws IOException {
+		return getArquivoDoClasspath("csv/centros-distribuicao.csv");
+	}
+
+	private File getArquivoLocaisVotacaoCSV() throws IOException {
+		return getArquivoDoClasspath("csv/locais-votacao-transporte.csv");
+	}
+
+	private File getArquivoDoClasspath(String caminhoArquivo) throws IOException {
+		return new ClassPathResource(caminhoArquivo).getFile();
 	}
 
 }
