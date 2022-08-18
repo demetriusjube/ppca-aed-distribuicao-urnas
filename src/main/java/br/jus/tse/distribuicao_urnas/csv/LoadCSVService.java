@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -66,8 +68,24 @@ public class LoadCSVService {
 	}
 
 	private CentroDistribuicao montaCentroDistribuicao(CentroDistribuicaoCSVDto centroDistribuicaoCSVDto) {
-		// TODO Auto-generated method stub
-		return null;
+		CentroDistribuicao centroDistribuicao = new CentroDistribuicao();
+		centroDistribuicao.setEndereco(centroDistribuicaoCSVDto.getEndereco());
+		Localizacao localizacao = getLocalizacao(centroDistribuicaoCSVDto.getLatitude(), centroDistribuicaoCSVDto.getLongitude());
+		centroDistribuicao.setLocalizacao(localizacao);
+		centroDistribuicao.setNome(centroDistribuicaoCSVDto.getNome());
+		centroDistribuicaoRepository.save(centroDistribuicao);
+		if (CollectionUtils.isNotEmpty(centroDistribuicaoCSVDto.getZonasEleitorais())) {
+			for (Long numeroZE : centroDistribuicaoCSVDto.getZonasEleitorais()) {
+				Optional<ZonaEleitoral> zonaEleitoralSalva = zonaEleitoralRepository
+						.findByNumero(numeroZE);
+				if (zonaEleitoralSalva.isPresent()) {
+					ZonaEleitoral zonaEleitoral = zonaEleitoralSalva.get();
+					zonaEleitoral.setCentroDistribuicao(centroDistribuicao);
+					zonaEleitoralRepository.save(zonaEleitoral);
+				}
+			}
+		}
+		return centroDistribuicao;
 	}
 
 	@Transactional
@@ -90,7 +108,7 @@ public class LoadCSVService {
 
 	private LocalVotacao montaLocalVotacao(LocalVotacaoCSVDto localVotacaoCSVDto) {
 		ZonaEleitoral zonaEleitoral = getZonaEleitoral(localVotacaoCSVDto);
-		Localizacao localizacao = getLocalizacao(localVotacaoCSVDto);
+		Localizacao localizacao = getLocalizacao(localVotacaoCSVDto.getLatitude(), localVotacaoCSVDto.getLongitude());
 		LocalVotacao localVotacao = new LocalVotacao();
 		localVotacao.setEndereco(localVotacaoCSVDto.getEndereco());
 		localVotacao.setLocalizacao(localizacao);
@@ -101,15 +119,15 @@ public class LoadCSVService {
 		return localVotacao;
 	}
 
-	private Localizacao getLocalizacao(LocalVotacaoCSVDto localVotacaoCSVDto) {
+	private Localizacao getLocalizacao(BigDecimal latitude, BigDecimal longitude) {
 		Localizacao localizacao;
 
-		Optional<Localizacao> localizacaoSalva = localizacaoRepository.findByLatitudeEqualsAndLongitudeEquals(
-				localVotacaoCSVDto.getLatitude(), localVotacaoCSVDto.getLongitude());
+		Optional<Localizacao> localizacaoSalva = localizacaoRepository.findByLatitudeEqualsAndLongitudeEquals(latitude,
+				longitude);
 		if (localizacaoSalva.isEmpty()) {
 			localizacao = new Localizacao();
-			localizacao.setLatitude(localVotacaoCSVDto.getLatitude());
-			localizacao.setLongitude(localVotacaoCSVDto.getLongitude());
+			localizacao.setLatitude(latitude);
+			localizacao.setLongitude(longitude);
 			localizacaoRepository.save(localizacao);
 		} else {
 			localizacao = localizacaoSalva.get();
