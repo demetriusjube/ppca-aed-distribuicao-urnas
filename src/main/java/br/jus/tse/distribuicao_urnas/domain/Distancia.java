@@ -40,4 +40,7 @@ public class Distancia {
     @JoinColumn(name = "destino_id")
     private Localizacao destino;
 
+    @Column
+    private Long tempoViagem;
+
 }

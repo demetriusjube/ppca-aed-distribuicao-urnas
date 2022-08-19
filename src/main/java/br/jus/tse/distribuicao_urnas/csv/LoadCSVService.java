@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,12 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
+import br.jus.tse.distribuicao_urnas.distance.DistanceCalculator;
 import br.jus.tse.distribuicao_urnas.domain.CentroDistribuicao;
+import br.jus.tse.distribuicao_urnas.domain.Distancia;
 import br.jus.tse.distribuicao_urnas.domain.LocalVotacao;
 import br.jus.tse.distribuicao_urnas.domain.Localizacao;
 import br.jus.tse.distribuicao_urnas.domain.TRE;
 import br.jus.tse.distribuicao_urnas.domain.ZonaEleitoral;
 import br.jus.tse.distribuicao_urnas.repos.CentroDistribuicaoRepository;
+import br.jus.tse.distribuicao_urnas.repos.DistanciaRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalVotacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalizacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.TRERepository;
@@ -51,6 +55,12 @@ public class LoadCSVService {
 	@Autowired
 	private CentroDistribuicaoRepository centroDistribuicaoRepository;
 
+	@Autowired
+	private DistanciaCSVService distanciaCsvService;
+
+	@Autowired
+	private DistanciaRepository distanciaRepository;
+
 	@Transactional
 	public CentroDistribuicao saveCentroDistribuicaoFromCSV(CentroDistribuicaoCSVDto centroDistribuicaoCSVDto) {
 
@@ -70,14 +80,14 @@ public class LoadCSVService {
 	private CentroDistribuicao montaCentroDistribuicao(CentroDistribuicaoCSVDto centroDistribuicaoCSVDto) {
 		CentroDistribuicao centroDistribuicao = new CentroDistribuicao();
 		centroDistribuicao.setEndereco(centroDistribuicaoCSVDto.getEndereco());
-		Localizacao localizacao = getLocalizacao(centroDistribuicaoCSVDto.getLatitude(), centroDistribuicaoCSVDto.getLongitude());
+		Localizacao localizacao = getLocalizacao(centroDistribuicaoCSVDto.getLatitude(),
+				centroDistribuicaoCSVDto.getLongitude());
 		centroDistribuicao.setLocalizacao(localizacao);
 		centroDistribuicao.setNome(centroDistribuicaoCSVDto.getNome());
 		centroDistribuicaoRepository.save(centroDistribuicao);
 		if (CollectionUtils.isNotEmpty(centroDistribuicaoCSVDto.getZonasEleitorais())) {
 			for (Long numeroZE : centroDistribuicaoCSVDto.getZonasEleitorais()) {
-				Optional<ZonaEleitoral> zonaEleitoralSalva = zonaEleitoralRepository
-						.findByNumero(numeroZE);
+				Optional<ZonaEleitoral> zonaEleitoralSalva = zonaEleitoralRepository.findByNumero(numeroZE);
 				if (zonaEleitoralSalva.isPresent()) {
 					ZonaEleitoral zonaEleitoral = zonaEleitoralSalva.get();
 					zonaEleitoral.setCentroDistribuicao(centroDistribuicao);
@@ -173,8 +183,22 @@ public class LoadCSVService {
 		try {
 			importarLocaisVotacao();
 			importarCentrosDistribuicao();
+			calcularDistanciasEntreLocais();
 		} catch (IllegalStateException | IOException e) {
 			throw new RuntimeException("Erro ao importar os locais de votacao!");
+		}
+	}
+
+	private void calcularDistanciasEntreLocais() {
+		List<Localizacao> origens = localizacaoRepository.findAll();
+		List<Localizacao> destinos = new ArrayList<Localizacao>(origens);
+		for (Localizacao origem : origens) {
+			for (Localizacao destino : destinos) {
+				boolean distanciaSalva = distanciaRepository.existsByOrigemEqualsAndDestinoEquals(origem, destino);
+				if (!distanciaSalva) {
+					distanciaCsvService.salvaDistancia(origem, destino);
+				}
+			}
 		}
 	}
 
