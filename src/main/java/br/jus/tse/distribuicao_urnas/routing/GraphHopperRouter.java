@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.graphhopper.GHRequest;
 import com.graphhopper.GHResponse;
+import com.graphhopper.PathWrapper;
 import com.graphhopper.reader.osm.GraphHopperOSM;
 import com.graphhopper.util.PointList;
 import com.graphhopper.util.shapes.BBox;
@@ -17,6 +18,7 @@ import com.graphhopper.util.shapes.BBox;
 import br.jus.tse.distribuicao_urnas.distance.DistanceCalculationException;
 import br.jus.tse.distribuicao_urnas.distance.DistanceCalculator;
 import br.jus.tse.distribuicao_urnas.domain.Localizacao;
+import br.jus.tse.distribuicao_urnas.model.TipoOtimizacaoEnum;
 import br.jus.tse.distribuicao_urnas.region.BoundingBox;
 import br.jus.tse.distribuicao_urnas.region.Region;
 import br.jus.tse.distribuicao_urnas.route.Router;
@@ -35,14 +37,18 @@ class GraphHopperRouter implements Router, DistanceCalculator, Region {
 	}
 
 	@Override
-	public List<Coordinates> getPath(Coordinates from, Coordinates to) {
+	public List<Coordinates> getPath(Coordinates from, Coordinates to, TipoOtimizacaoEnum tipoOtimizacao) {
 		GHRequest ghRequest = new GHRequest(from.latitude().doubleValue(), from.longitude().doubleValue(),
 				to.latitude().doubleValue(), to.longitude().doubleValue());
-		PointList points = graphHopper.route(ghRequest).getBest().getPoints();
+		GHResponse route = graphHopper.route(ghRequest);
+		PathWrapper path = route.getBest();
+		if (tipoOtimizacao.equals(TipoOtimizacaoEnum.MENOR_DISTANCIA)) {
+			path = GHRouteUtil.getRotaMaisCurta(route).orElse(route.getBest());
+		}
+		PointList points = path.getPoints();
 		return StreamSupport.stream(points.spliterator(), false)
 				.map(ghPoint3D -> Coordinates.of(ghPoint3D.lat, ghPoint3D.lon)).collect(toList());
 	}
-
 
 	@Override
 	public GHResponse getRoutes(Coordinates from, Coordinates to) {
