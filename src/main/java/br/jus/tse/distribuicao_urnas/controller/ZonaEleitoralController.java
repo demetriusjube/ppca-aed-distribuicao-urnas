@@ -1,12 +1,11 @@
 package br.jus.tse.distribuicao_urnas.controller;
 
 import br.jus.tse.distribuicao_urnas.domain.CentroDistribuicao;
-import br.jus.tse.distribuicao_urnas.domain.Veiculo;
-import br.jus.tse.distribuicao_urnas.model.SimulacaoDTO;
-import br.jus.tse.distribuicao_urnas.model.TipoOtimizacaoEnum;
+import br.jus.tse.distribuicao_urnas.domain.TRE;
+import br.jus.tse.distribuicao_urnas.model.ZonaEleitoralDTO;
 import br.jus.tse.distribuicao_urnas.repos.CentroDistribuicaoRepository;
-import br.jus.tse.distribuicao_urnas.repos.VeiculoRepository;
-import br.jus.tse.distribuicao_urnas.service.SimulacaoService;
+import br.jus.tse.distribuicao_urnas.repos.TRERepository;
+import br.jus.tse.distribuicao_urnas.service.ZonaEleitoralService;
 import br.jus.tse.distribuicao_urnas.util.WebUtils;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -22,80 +21,80 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-@RequestMapping("/simulacaos")
-public class SimulacaoController {
+@RequestMapping("/zonaEleitorals")
+public class ZonaEleitoralController {
 
-    private final SimulacaoService simulacaoService;
-    private final VeiculoRepository veiculoRepository;
+    private final ZonaEleitoralService zonaEleitoralService;
+    private final TRERepository tRERepository;
     private final CentroDistribuicaoRepository centroDistribuicaoRepository;
 
-    public SimulacaoController(final SimulacaoService simulacaoService,
-            final VeiculoRepository veiculoRepository,
+    public ZonaEleitoralController(final ZonaEleitoralService zonaEleitoralService,
+            final TRERepository tRERepository,
             final CentroDistribuicaoRepository centroDistribuicaoRepository) {
-        this.simulacaoService = simulacaoService;
-        this.veiculoRepository = veiculoRepository;
+        this.zonaEleitoralService = zonaEleitoralService;
+        this.tRERepository = tRERepository;
         this.centroDistribuicaoRepository = centroDistribuicaoRepository;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("tipoOtimizacaoValues", TipoOtimizacaoEnum.values());
-        model.addAttribute("veiculoSimulacaosValues", veiculoRepository.findAll().stream().collect(
-                Collectors.toMap(Veiculo::getId, Veiculo::getDescricao)));
+        model.addAttribute("treValues", tRERepository.findAll().stream().collect(
+                Collectors.toMap(TRE::getId, TRE::getUf)));
         model.addAttribute("centroDistribuicaoValues", centroDistribuicaoRepository.findAll().stream().collect(
                 Collectors.toMap(CentroDistribuicao::getId, CentroDistribuicao::getNome)));
     }
 
     @GetMapping
     public String list(final Model model) {
-        model.addAttribute("simulacaos", simulacaoService.findAll());
-        return "simulacao/list";
+        model.addAttribute("zonaEleitorals", zonaEleitoralService.findAll());
+        return "zonaEleitoral/list";
     }
 
     @GetMapping("/add")
-    public String add(@ModelAttribute("simulacao") final SimulacaoDTO simulacaoDTO) {
-        return "simulacao/add";
+    public String add(@ModelAttribute("zonaEleitoral") final ZonaEleitoralDTO zonaEleitoralDTO) {
+        return "zonaEleitoral/add";
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("simulacao") @Valid final SimulacaoDTO simulacaoDTO,
+    public String add(
+            @ModelAttribute("zonaEleitoral") @Valid final ZonaEleitoralDTO zonaEleitoralDTO,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "simulacao/add";
+            return "zonaEleitoral/add";
         }
-        simulacaoService.create(simulacaoDTO);
-        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("simulacao.create.success"));
-        return "redirect:/simulacaos";
+        zonaEleitoralService.create(zonaEleitoralDTO);
+        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("zonaEleitoral.create.success"));
+        return "redirect:/zonaEleitorals";
     }
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable final Long id, final Model model) {
-        model.addAttribute("simulacao", simulacaoService.get(id));
-        return "simulacao/edit";
+        model.addAttribute("zonaEleitoral", zonaEleitoralService.get(id));
+        return "zonaEleitoral/edit";
     }
 
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable final Long id,
-            @ModelAttribute("simulacao") @Valid final SimulacaoDTO simulacaoDTO,
+            @ModelAttribute("zonaEleitoral") @Valid final ZonaEleitoralDTO zonaEleitoralDTO,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "simulacao/edit";
+            return "zonaEleitoral/edit";
         }
-        simulacaoService.update(id, simulacaoDTO);
-        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("simulacao.update.success"));
-        return "redirect:/simulacaos";
+        zonaEleitoralService.update(id, zonaEleitoralDTO);
+        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("zonaEleitoral.update.success"));
+        return "redirect:/zonaEleitorals";
     }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable final Long id, final RedirectAttributes redirectAttributes) {
-        final String referencedWarning = simulacaoService.getReferencedWarning(id);
+        final String referencedWarning = zonaEleitoralService.getReferencedWarning(id);
         if (referencedWarning != null) {
             redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, referencedWarning);
         } else {
-            simulacaoService.delete(id);
-            redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("simulacao.delete.success"));
+            zonaEleitoralService.delete(id);
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("zonaEleitoral.delete.success"));
         }
-        return "redirect:/simulacaos";
+        return "redirect:/zonaEleitorals";
     }
 
 }

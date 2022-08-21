@@ -86,7 +86,7 @@ public class LoadCSVService {
 		centroDistribuicao.setNome(centroDistribuicaoCSVDto.getNome());
 		centroDistribuicaoRepository.save(centroDistribuicao);
 		if (CollectionUtils.isNotEmpty(centroDistribuicaoCSVDto.getZonasEleitorais())) {
-			for (Long numeroZE : centroDistribuicaoCSVDto.getZonasEleitorais()) {
+			for (Integer numeroZE : centroDistribuicaoCSVDto.getZonasEleitorais()) {
 				Optional<ZonaEleitoral> zonaEleitoralSalva = zonaEleitoralRepository.findByNumero(numeroZE);
 				if (zonaEleitoralSalva.isPresent()) {
 					ZonaEleitoral zonaEleitoral = zonaEleitoralSalva.get();
@@ -123,7 +123,7 @@ public class LoadCSVService {
 		localVotacao.setEndereco(localVotacaoCSVDto.getEndereco());
 		localVotacao.setLocalizacao(localizacao);
 		localVotacao.setNome(localVotacaoCSVDto.getNome());
-		localVotacao.setNumero(localVotacaoCSVDto.getNumeroLocalVotacao().longValue());
+		localVotacao.setNumero(localVotacaoCSVDto.getNumeroLocalVotacao());
 		localVotacao.setQuantidadeSecoes(localVotacaoCSVDto.getQuantidadeSecoes());
 		localVotacao.setZonaEleitoral(zonaEleitoral);
 		return localVotacao;
@@ -152,7 +152,7 @@ public class LoadCSVService {
 		if (zonaEleitoralSalva.isEmpty()) {
 			TRE tre = getTRE(localVotacaoCSVDto);
 			zonaEleitoral = new ZonaEleitoral();
-			Long numeroZE = localVotacaoCSVDto.getNumeroZE();
+			Integer numeroZE = localVotacaoCSVDto.getNumeroZE();
 			zonaEleitoral.setNome("Zona Eleitoral nº " + numeroZE);
 			zonaEleitoral.setNumero(numeroZE);
 			zonaEleitoral.setTre(tre);
@@ -168,7 +168,7 @@ public class LoadCSVService {
 		Optional<TRE> treSalvo = treRepository.findByUf(localVotacaoCSVDto.getUf());
 		if (treSalvo.isEmpty()) {
 			tre = new TRE();
-			tre.setNumero(1l);
+			tre.setNumero(1);
 			tre.setUf(localVotacaoCSVDto.getUf());
 			treRepository.save(tre);
 		} else {

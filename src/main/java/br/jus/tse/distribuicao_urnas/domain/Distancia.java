@@ -32,6 +32,12 @@ public class Distancia {
     )
     private Long id;
 
+    @Column
+    private Long menorTempoViagem;
+
+    @Column
+    private Double menorDistancia;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "origem_id")
     private Localizacao origem;
@@ -39,8 +45,5 @@ public class Distancia {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "destino_id")
     private Localizacao destino;
-
-    @Column
-    private Long tempoViagem;
 
 }

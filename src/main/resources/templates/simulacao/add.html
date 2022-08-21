@@ -16,6 +16,7 @@
             <form th:action="${#httpServletRequest.requestURI}" method="post">
                 <div th:replace="fragments/forms::inputRow(object='simulacao', field='descricao')" />
                 <div th:replace="fragments/forms::inputRow(object='simulacao', field='dataHora')" />
+                <div th:replace="fragments/forms::inputRow(object='simulacao', field='tipoOtimizacao', type='radio')" />
                 <div th:replace="fragments/forms::inputRow(object='simulacao', field='veiculoSimulacaos', type='multiselect')" />
                 <div th:replace="fragments/forms::inputRow(object='simulacao', field='centroDistribuicao', type='select')" />
                 <input type="submit" th:value="#{simulacao.add.headline}" class="btn btn-primary mt-4" />

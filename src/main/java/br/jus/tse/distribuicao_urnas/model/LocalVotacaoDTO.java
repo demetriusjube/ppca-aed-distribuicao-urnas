@@ -13,7 +13,7 @@ public class LocalVotacaoDTO {
     private Long id;
 
     @NotNull
-    private Long numero;
+    private Integer numero;
 
     @Size(max = 255)
     private String nome;

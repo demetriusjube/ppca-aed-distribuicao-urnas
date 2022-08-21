@@ -68,6 +68,7 @@ public class SimulacaoService {
         simulacaoDTO.setId(simulacao.getId());
         simulacaoDTO.setDescricao(simulacao.getDescricao());
         simulacaoDTO.setDataHora(simulacao.getDataHora());
+        simulacaoDTO.setTipoOtimizacao(simulacao.getTipoOtimizacao());
         simulacaoDTO.setVeiculoSimulacaos(simulacao.getVeiculoSimulacaoVeiculos() == null ? null : simulacao.getVeiculoSimulacaoVeiculos().stream()
                 .map(veiculo -> veiculo.getId())
                 .collect(Collectors.toList()));
@@ -78,6 +79,7 @@ public class SimulacaoService {
     private Simulacao mapToEntity(final SimulacaoDTO simulacaoDTO, final Simulacao simulacao) {
         simulacao.setDescricao(simulacaoDTO.getDescricao());
         simulacao.setDataHora(simulacaoDTO.getDataHora());
+        simulacao.setTipoOtimizacao(simulacaoDTO.getTipoOtimizacao());
         final List<Veiculo> veiculoSimulacaos = veiculoRepository.findAllById(
                 simulacaoDTO.getVeiculoSimulacaos() == null ? Collections.emptyList() : simulacaoDTO.getVeiculoSimulacaos());
         if (veiculoSimulacaos.size() != (simulacaoDTO.getVeiculoSimulacaos() == null ? 0 : simulacaoDTO.getVeiculoSimulacaos().size())) {

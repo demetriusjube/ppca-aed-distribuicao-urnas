@@ -20,6 +20,8 @@ public class SimulacaoDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dataHora;
 
+    private TipoOtimizacaoEnum tipoOtimizacao;
+
     private List<Long> veiculoSimulacaos;
 
     private Long centroDistribuicao;

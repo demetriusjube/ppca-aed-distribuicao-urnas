@@ -12,9 +12,9 @@ public class LocalVotacaoCSVDto {
 	@CsvBindByName
 	private String uf;
 	@CsvBindByName
-	private Long numeroZE;
+	private Integer numeroZE;
 	@CsvBindByName
-	private Long numeroLocalVotacao;
+	private Integer numeroLocalVotacao;
 	@CsvBindByName
 	private String nome;
 	@CsvBindByName

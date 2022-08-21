@@ -33,7 +33,7 @@ public class LocalVotacao {
     private Long id;
 
     @Column(nullable = false)
-    private Long numero;
+    private Integer numero;
 
     @Column
     private String nome;

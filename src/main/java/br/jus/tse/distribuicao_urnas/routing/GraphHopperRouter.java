@@ -35,18 +35,19 @@ class GraphHopperRouter implements Router, DistanceCalculator, Region {
 	}
 
 	@Override
-	public List<Localizacao> getPath(Localizacao from, Localizacao to) {
-		GHRequest ghRequest = new GHRequest(from.getLatitude().doubleValue(), from.getLongitude().doubleValue(),
-				to.getLatitude().doubleValue(), to.getLongitude().doubleValue());
+	public List<Coordinates> getPath(Coordinates from, Coordinates to) {
+		GHRequest ghRequest = new GHRequest(from.latitude().doubleValue(), from.longitude().doubleValue(),
+				to.latitude().doubleValue(), to.longitude().doubleValue());
 		PointList points = graphHopper.route(ghRequest).getBest().getPoints();
 		return StreamSupport.stream(points.spliterator(), false)
-				.map(ghPoint3D -> Localizacao.of(ghPoint3D.lat, ghPoint3D.lon)).collect(toList());
+				.map(ghPoint3D -> Coordinates.of(ghPoint3D.lat, ghPoint3D.lon)).collect(toList());
 	}
 
+
 	@Override
-	public long travelTimeMillis(Localizacao from, Localizacao to) {
-		GHRequest ghRequest = new GHRequest(from.getLatitude().doubleValue(), from.getLongitude().doubleValue(),
-				to.getLatitude().doubleValue(), to.getLongitude().doubleValue());
+	public GHResponse getRoutes(Coordinates from, Coordinates to) {
+		GHRequest ghRequest = new GHRequest(from.latitude().doubleValue(), from.longitude().doubleValue(),
+				to.latitude().doubleValue(), to.longitude().doubleValue());
 		GHResponse ghResponse = graphHopper.route(ghRequest);
 		// TODO return wrapper that can hold both the result and error explanation
 		// instead of throwing exception
@@ -54,13 +55,13 @@ class GraphHopperRouter implements Router, DistanceCalculator, Region {
 			throw new DistanceCalculationException("No route from " + from + " to " + to,
 					ghResponse.getErrors().get(0));
 		}
-		return ghResponse.getBest().getTime();
+		return ghResponse;
 	}
 
 	@Override
 	public BoundingBox getBounds() {
 		BBox bounds = graphHopper.getGraphHopperStorage().getBounds();
-		return new BoundingBox(Localizacao.of(bounds.minLat, bounds.minLon),
-				Localizacao.of(bounds.maxLat, bounds.maxLon));
+		return new BoundingBox(Coordinates.of(bounds.minLat, bounds.minLon),
+				Coordinates.of(bounds.maxLat, bounds.maxLon));
 	}
 }

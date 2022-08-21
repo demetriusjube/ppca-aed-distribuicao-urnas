@@ -35,7 +35,7 @@ public class ZonaEleitoral {
     private Long id;
 
     @Column(nullable = false)
-    private Long numero;
+    private Integer numero;
 
     @Column(length = 300)
     private String nome;

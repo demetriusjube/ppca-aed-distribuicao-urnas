@@ -1,16 +1,5 @@
 package br.jus.tse.distribuicao_urnas.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
-import br.jus.tse.distribuicao_urnas.csv.LocalVotacaoCSVDto;
 import br.jus.tse.distribuicao_urnas.domain.LocalVotacao;
 import br.jus.tse.distribuicao_urnas.domain.Localizacao;
 import br.jus.tse.distribuicao_urnas.domain.ZonaEleitoral;
@@ -18,6 +7,12 @@ import br.jus.tse.distribuicao_urnas.model.LocalVotacaoDTO;
 import br.jus.tse.distribuicao_urnas.repos.LocalVotacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalizacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.ZonaEleitoralRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @Service
@@ -91,5 +86,5 @@ public class LocalVotacaoService {
         localVotacao.setLocalizacao(localizacao);
         return localVotacao;
     }
-    
+
 }

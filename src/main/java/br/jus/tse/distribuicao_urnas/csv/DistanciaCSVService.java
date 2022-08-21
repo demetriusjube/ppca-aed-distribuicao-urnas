@@ -5,11 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.graphhopper.GHResponse;
+
 import br.jus.tse.distribuicao_urnas.distance.DistanceCalculationException;
 import br.jus.tse.distribuicao_urnas.distance.DistanceCalculator;
 import br.jus.tse.distribuicao_urnas.domain.Distancia;
 import br.jus.tse.distribuicao_urnas.domain.Localizacao;
 import br.jus.tse.distribuicao_urnas.repos.DistanciaRepository;
+import br.jus.tse.distribuicao_urnas.routing.Coordinates;
+import br.jus.tse.distribuicao_urnas.routing.GHRouteUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -26,21 +30,22 @@ public class DistanciaCSVService {
 	public void salvaDistancia(Localizacao origem, Localizacao destino) {
 		try {
 			if (!origem.getId().equals(destino.getId())) {
-				Long tempoViagem = distanceCalculator.travelTimeMillis(origem, destino);
-				salvaTempoDeViagem(origem, destino, tempoViagem);
+				GHResponse rotas = distanceCalculator.getRoutes(new Coordinates(origem.getLatitude(), origem.getLongitude()), new Coordinates(destino.getLatitude(), destino.getLongitude()));
+				salvaDadosDaViagem(origem, destino, rotas);
 			} else {
-				salvaTempoDeViagem(origem, destino, 0l);
+				salvaDadosDaViagem(origem, destino, null);
 			}
 		} catch (DistanceCalculationException e) {
 			log.error("Não foi possível calcular a distância de {} para {} !", origem.getId(), destino.getId());
 		}
 	}
 
-	private void salvaTempoDeViagem(Localizacao origem, Localizacao destino, Long tempoViagem) {
+	private void salvaDadosDaViagem(Localizacao origem, Localizacao destino, GHResponse ghResponse) {
 		Distancia distancia = new Distancia();
 		distancia.setOrigem(origem);
 		distancia.setDestino(destino);
-		distancia.setTempoViagem(tempoViagem);
+		distancia.setMenorTempoViagem(GHRouteUtil.getMenorTempoEmMilis(ghResponse));
+		distancia.setMenorDistancia(GHRouteUtil.getMenorDistanciaEmMetros(ghResponse));
 		distanciaRepository.save(distancia);
 	}
 

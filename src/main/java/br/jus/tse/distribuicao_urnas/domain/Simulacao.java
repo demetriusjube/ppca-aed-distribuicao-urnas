@@ -1,10 +1,13 @@
 package br.jus.tse.distribuicao_urnas.domain;
 
+import br.jus.tse.distribuicao_urnas.model.TipoOtimizacaoEnum;
 import java.time.LocalDateTime;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -43,6 +46,10 @@ public class Simulacao {
 
     @Column
     private LocalDateTime dataHora;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private TipoOtimizacaoEnum tipoOtimizacao;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(

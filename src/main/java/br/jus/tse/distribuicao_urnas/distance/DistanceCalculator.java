@@ -1,19 +1,13 @@
 package br.jus.tse.distribuicao_urnas.distance;
 
-import br.jus.tse.distribuicao_urnas.domain.Localizacao;
+import com.graphhopper.GHResponse;
+
+import br.jus.tse.distribuicao_urnas.routing.Coordinates;
 
 /**
  * Calculates distances between coordinates.
  */
 public interface DistanceCalculator {
 
-    /**
-     * Calculate travel time in milliseconds.
-     *
-     * @param from origin
-     * @param to destination
-     * @return travel time in milliseconds
-     * @throws DistanceCalculationException when the distance between given coordinates cannot be calculated
-     */
-    long travelTimeMillis(Localizacao from, Localizacao to);
+	GHResponse getRoutes(Coordinates from, Coordinates to);
 }

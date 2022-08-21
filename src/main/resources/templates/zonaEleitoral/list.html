@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{zonaEleitoral.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{zonaEleitoral.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/zonaEleitorals/add}" th:text="#{zonaEleitoral.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:if="${zonaEleitorals.empty}" th:text="#{zonaEleitoral.list.empty}" />
+            <div th:if="${!zonaEleitorals.empty}" class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th th:text="#{zonaEleitoral.id.label}" scope="col" />
+                            <th th:text="#{zonaEleitoral.numero.label}" scope="col" />
+                            <th th:text="#{zonaEleitoral.nome.label}" scope="col" />
+                            <th th:text="#{zonaEleitoral.tre.label}" scope="col" />
+                            <th th:text="#{zonaEleitoral.centroDistribuicao.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="zonaEleitoral : ${zonaEleitorals}">
+                            <td th:text="${zonaEleitoral.id}" />
+                            <td th:text="${zonaEleitoral.numero}" />
+                            <td th:text="${zonaEleitoral.nome}" />
+                            <td th:text="${zonaEleitoral.tre}" />
+                            <td th:text="${zonaEleitoral.centroDistribuicao}" />
+                            <td>
+                                <form th:action="@{/zonaEleitorals/delete/{id}(id=${zonaEleitoral.id})}" th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm float-end">
+                                    <a th:href="@{/zonaEleitorals/edit/{id}(id=${zonaEleitoral.id})}" th:text="#{zonaEleitoral.list.edit}" class="btn btn-sm btn-info" />
+                                    <button th:text="#{zonaEleitoral.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title th:text="#{distancia.list.headline}" />
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 th:text="#{distancia.list.headline}" class="flex-grow-1" />
+                <div>
+                    <a th:href="@{/distancias/add}" th:text="#{distancia.list.createNew}" class="btn btn-primary ms-2" />
+                </div>
+            </div>
+            <div th:if="${distancias.empty}" th:text="#{distancia.list.empty}" />
+            <div th:if="${!distancias.empty}" class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th th:text="#{distancia.id.label}" scope="col" />
+                            <th th:text="#{distancia.menorTempoViagem.label}" scope="col" />
+                            <th th:text="#{distancia.menorDistancia.label}" scope="col" />
+                            <th th:text="#{distancia.origem.label}" scope="col" />
+                            <th th:text="#{distancia.destino.label}" scope="col" />
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="distancia : ${distancias}">
+                            <td th:text="${distancia.id}" />
+                            <td th:text="${distancia.menorTempoViagem}" />
+                            <td th:text="${distancia.menorDistancia}" />
+                            <td th:text="${distancia.origem}" />
+                            <td th:text="${distancia.destino}" />
+                            <td>
+                                <form th:action="@{/distancias/delete/{id}(id=${distancia.id})}" th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm float-end">
+                                    <a th:href="@{/distancias/edit/{id}(id=${distancia.id})}" th:text="#{distancia.list.edit}" class="btn btn-sm btn-info" />
+                                    <button th:text="#{distancia.list.delete}" type="submit" class="btn btn-sm btn-danger" />
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

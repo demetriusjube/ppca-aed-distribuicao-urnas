@@ -8,15 +8,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TREDTO {
+public class ZonaEleitoralDTO {
 
     private Long id;
 
     @NotNull
     private Integer numero;
 
-    @NotNull
-    @Size(max = 2)
-    private String uf;
+    @Size(max = 300)
+    private String nome;
+
+    private Long tre;
+
+    private Long centroDistribuicao;
 
 }
