@@ -30,7 +30,7 @@ public class CalculadorDistanciaService implements DistanceCalculator {
 			}
 			return GHRouteUtil.getMenorTempoEmMilis(routes).doubleValue();
 		} catch (DistanceCalculationException e) {
-			return null;
+			return Double.POSITIVE_INFINITY;
 		}
 	}
 
