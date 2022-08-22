@@ -16,7 +16,6 @@ import com.graphhopper.util.PointList;
 import com.graphhopper.util.shapes.BBox;
 
 import br.jus.tse.distribuicao_urnas.distance.DistanceCalculationException;
-import br.jus.tse.distribuicao_urnas.distance.DistanceCalculator;
 import br.jus.tse.distribuicao_urnas.model.TipoOtimizacaoEnum;
 import br.jus.tse.distribuicao_urnas.region.BoundingBox;
 import br.jus.tse.distribuicao_urnas.region.Region;
@@ -26,7 +25,7 @@ import br.jus.tse.distribuicao_urnas.route.Router;
  * Provides geographical information needed for route optimization.
  */
 @Service
-class GraphHopperRouter implements Router, DistanceCalculator, Region {
+class GraphHopperRouter implements Router, Region {
 
 	private final GraphHopperOSM graphHopper;
 

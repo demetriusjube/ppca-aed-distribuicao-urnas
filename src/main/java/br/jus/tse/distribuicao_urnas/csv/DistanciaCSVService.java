@@ -12,6 +12,7 @@ import br.jus.tse.distribuicao_urnas.distance.DistanceCalculator;
 import br.jus.tse.distribuicao_urnas.domain.Distancia;
 import br.jus.tse.distribuicao_urnas.domain.Localizacao;
 import br.jus.tse.distribuicao_urnas.repos.DistanciaRepository;
+import br.jus.tse.distribuicao_urnas.route.Router;
 import br.jus.tse.distribuicao_urnas.routing.Coordinates;
 import br.jus.tse.distribuicao_urnas.routing.GHRouteUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +25,13 @@ public class DistanciaCSVService {
 	private DistanciaRepository distanciaRepository;
 
 	@Autowired
-	private DistanceCalculator distanceCalculator;
+	private Router router;
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void salvaDistancia(Localizacao origem, Localizacao destino) {
 		try {
 			if (!origem.getId().equals(destino.getId())) {
-				GHResponse rotas = distanceCalculator.getRoutes(new Coordinates(origem.getLatitude(), origem.getLongitude()), new Coordinates(destino.getLatitude(), destino.getLongitude()));
+				GHResponse rotas = router.getRoutes(new Coordinates(origem.getLatitude(), origem.getLongitude()), new Coordinates(destino.getLatitude(), destino.getLongitude()));
 				salvaDadosDaViagem(origem, destino, rotas);
 			} else {
 				salvaDadosDaViagem(origem, destino, null);
