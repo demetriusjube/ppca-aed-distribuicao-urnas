@@ -19,8 +19,7 @@ public class GHRouteUtil {
 
 	public static Double getMenorDistanciaEmMetros(GHResponse ghResponse) {
 		if (ghResponse != null && CollectionUtils.isNotEmpty(ghResponse.getAll())) {
-			return getRotaMaisCurta(ghResponse)
-					.map(path -> path.getDistance()).orElse(null);
+			return getRotaMaisCurta(ghResponse).map(path -> path.getDistance()).orElse(null);
 		}
 		return null;
 	}

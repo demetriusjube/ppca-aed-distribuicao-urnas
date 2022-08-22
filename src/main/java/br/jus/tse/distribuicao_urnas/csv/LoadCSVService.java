@@ -55,12 +55,6 @@ public class LoadCSVService {
 	@Autowired
 	private CentroDistribuicaoRepository centroDistribuicaoRepository;
 
-	@Autowired
-	private DistanciaCSVService distanciaCsvService;
-
-	@Autowired
-	private DistanciaRepository distanciaRepository;
-
 	@Transactional
 	public CentroDistribuicao saveCentroDistribuicaoFromCSV(CentroDistribuicaoCSVDto centroDistribuicaoCSVDto) {
 
@@ -183,24 +177,11 @@ public class LoadCSVService {
 		try {
 			importarLocaisVotacao();
 			importarCentrosDistribuicao();
-			calcularDistanciasEntreLocais();
 		} catch (IllegalStateException | IOException e) {
 			throw new RuntimeException("Erro ao importar os locais de votacao!");
 		}
 	}
 
-	private void calcularDistanciasEntreLocais() {
-		List<Localizacao> origens = localizacaoRepository.findAll();
-		List<Localizacao> destinos = new ArrayList<Localizacao>(origens);
-		for (Localizacao origem : origens) {
-			for (Localizacao destino : destinos) {
-				boolean distanciaSalva = distanciaRepository.existsByOrigemEqualsAndDestinoEquals(origem, destino);
-				if (!distanciaSalva) {
-					distanciaCsvService.salvaDistancia(origem, destino);
-				}
-			}
-		}
-	}
 
 	private void importarCentrosDistribuicao() throws IllegalStateException, FileNotFoundException, IOException {
 		List<CentroDistribuicaoCSVDto> centrosDistribuicaoCSV = new CsvToBeanBuilder(

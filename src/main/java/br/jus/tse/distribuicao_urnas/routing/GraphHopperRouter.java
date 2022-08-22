@@ -17,7 +17,6 @@ import com.graphhopper.util.shapes.BBox;
 
 import br.jus.tse.distribuicao_urnas.distance.DistanceCalculationException;
 import br.jus.tse.distribuicao_urnas.distance.DistanceCalculator;
-import br.jus.tse.distribuicao_urnas.domain.Localizacao;
 import br.jus.tse.distribuicao_urnas.model.TipoOtimizacaoEnum;
 import br.jus.tse.distribuicao_urnas.region.BoundingBox;
 import br.jus.tse.distribuicao_urnas.region.Region;

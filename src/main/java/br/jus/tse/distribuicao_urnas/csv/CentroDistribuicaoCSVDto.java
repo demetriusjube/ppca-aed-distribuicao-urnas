@@ -15,7 +15,7 @@ public class CentroDistribuicaoCSVDto {
 	private String nome;
 	@CsvBindByName
 	private String endereco;
-	@CsvBindAndSplitByName(elementType = Long.class, splitOn = ",")
+	@CsvBindAndSplitByName(elementType = Integer.class, splitOn = ",")
 	private List<Integer> zonasEleitorais;
 	@CsvBindByName
 	private BigDecimal latitude;

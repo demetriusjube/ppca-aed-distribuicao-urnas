@@ -5,9 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-
 @Configuration
-@EntityScan("br.jus.tse.distribuicao_urnas.domain")
+@EntityScan({ "br.jus.tse.distribuicao_urnas.domain", "br.jus.tse.distribuicao_urnas.solver.domain" })
 @EnableJpaRepositories("br.jus.tse.distribuicao_urnas.repos")
 @EnableTransactionManagement
 public class DomainConfig {

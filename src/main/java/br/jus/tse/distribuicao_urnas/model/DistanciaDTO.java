@@ -10,7 +10,7 @@ public class DistanciaDTO {
 
     private Long id;
     private Long menorTempoViagem;
-    private Long menorDistancia;
+    private Double menorDistancia;
     private Long origem;
     private Long destino;
 

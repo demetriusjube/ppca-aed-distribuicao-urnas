@@ -1,6 +1,9 @@
 spring:
+  devtools: 
+    restart: 
+      enabled: false
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:h2:mem:distribuicao-urnas}
+    url: ${JDBC_DATABASE_URL:jdbc:h2:file:~/distribuicao-urnas}
     username: ${JDBC_DATABASE_USERNAME:sa}
     password: ${JDBC_DATABASE_PASSWORD:}
     dbcp2:
@@ -20,3 +23,10 @@ spring:
           new_generator_mappings: true
 springdoc:
   pathsToMatch: /api/**
+
+app:
+  routing:
+    osm-dir: ${user.home}/distribuicao-urnas/openstreetmap
+    gh-dir: ${user.home}/distribuicao-urnas/graphhopper
+    osm-file: centro-oeste-latest.osm.pbf
+    
