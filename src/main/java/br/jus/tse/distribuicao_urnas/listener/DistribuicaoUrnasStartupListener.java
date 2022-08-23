@@ -23,7 +23,7 @@ public class DistribuicaoUrnasStartupListener {
 	@EventListener
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		VehicleRoutingSolution problem = distribuicaoUrnasSolutionBuilder.build(11240l, 18, 40,
+		VehicleRoutingSolution problem = distribuicaoUrnasSolutionBuilder.build(11240l, 18, 400,
 				TipoOtimizacaoEnum.MENOR_DISTANCIA);
 		vehicleRoutingSolutionRepository.update(problem);
 	}

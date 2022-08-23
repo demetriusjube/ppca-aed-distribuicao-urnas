@@ -12,8 +12,10 @@ import br.jus.tse.distribuicao_urnas.route.Router;
 import br.jus.tse.distribuicao_urnas.routing.Coordinates;
 import br.jus.tse.distribuicao_urnas.routing.GHRouteUtil;
 import br.jus.tse.distribuicao_urnas.solver.domain.Location;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class CalculadorDistanciaService implements DistanceCalculator {
 
 	@Autowired
@@ -30,7 +32,8 @@ public class CalculadorDistanciaService implements DistanceCalculator {
 			}
 			return GHRouteUtil.getMenorTempoEmMilis(routes).doubleValue();
 		} catch (DistanceCalculationException e) {
-			return Double.POSITIVE_INFINITY;
+			log.warn(e.getMessage());
+			return 99999999999d;
 		}
 	}
 
