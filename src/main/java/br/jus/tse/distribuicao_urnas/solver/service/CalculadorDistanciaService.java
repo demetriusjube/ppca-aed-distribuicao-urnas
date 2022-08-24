@@ -28,12 +28,12 @@ public class CalculadorDistanciaService implements DistanceCalculator {
 			Coordinates coordenadasDestino = new Coordinates(to.getLatitude(), to.getLongitude());
 			GHResponse routes = router.getRoutes(coordenadasOrigem, coordenadasDestino);
 			if (TipoOtimizacaoEnum.MENOR_DISTANCIA.equals(tipoOtimizacao)) {
-				GHRouteUtil.getMenorDistanciaEmMetros(routes);
+				return GHRouteUtil.getMenorDistanciaEmMetros(routes);
 			}
 			return GHRouteUtil.getMenorTempoEmMilis(routes).doubleValue();
 		} catch (DistanceCalculationException e) {
 			log.warn(e.getMessage());
-			return 99999999999d;
+			return Double.POSITIVE_INFINITY;
 		}
 	}
 
