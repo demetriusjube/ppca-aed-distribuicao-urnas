@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core';
 import * as L from 'leaflet';
 import { interval, Observable, Subscription } from 'rxjs';
 import { MarkerService } from '../marker.service';
-import { Depot, Status } from '../shared/model/distribuicao-urnas-model';
+import { Depot, Status, Vehicle } from '../shared/model/distribuicao-urnas-model';
 import { SolverService } from '../solver.service';
 import * as _ from 'lodash';
 
@@ -77,16 +77,41 @@ export class MapComponent implements AfterViewInit {
   public getDistanciaFormatada(): string {
     if (!_.isNil(this.statusSolucaoAtual) && !_.isNil(this.statusSolucaoAtual.solution) && !_.isNil(this.statusSolucaoAtual.solution.distanceMeters)) {
       const distanceInMeters = this.statusSolucaoAtual.solution.distanceMeters;
-      return `${Math.floor(distanceInMeters / 1000)}km ${distanceInMeters % 1000}m`
+      return this.getDistanciaEmMetros(distanceInMeters)
     }
     return '0Km'
   }
 
-  public getIdCrossHairDepot(depot: Depot): string {
-    return 'crosshairs-' + depot.id;
+  public getDistanciaEmMetros(distanceInMeters: number): string {
+    if (distanceInMeters) {
+      return `${Math.floor(distanceInMeters / 1000)}km ${distanceInMeters % 1000}m`;
+    }
+    return '0Km';
   }
+
+  public getIdCrossHairDepot(depot: Depot): string {
+    return 'crosshairs-depot-' + depot.id;
+  }
+
+  public getIdCrossHairVehicle(vehicle: Vehicle): string {
+    return 'crosshairs-vehicle-' + vehicle.id;
+  }
+
 
   public getDepotStyle(depot: Depot): string {
     return `background-color: ${this.markerService.getDepotColorById(depot.id)}; display: inline-block; width: 1rem; height: 1rem; text-align: center`
   }
+
+  public getVehicleStyle(vehicle: Vehicle): string {
+    return `background-color: ${this.markerService.getVehicleColorById(vehicle.id)}; display: inline-block; width: 1rem; height: 1rem; text-align: center`
+  }
+
+  public getVehicleTitle(vehicle: Vehicle): string {
+    return `Carga: ${vehicle.totalDemand}<br/>Capacity: ${vehicle.capacity}`;
+  }
+
+  public getVehicleProgressBarStyle(vehicle: Vehicle): string {
+    return `width: ${(vehicle.totalDemand / vehicle.capacity) * 100}%`;
+  }
+
 }

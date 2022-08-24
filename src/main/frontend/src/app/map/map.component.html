@@ -51,7 +51,7 @@
                             </tr>
                         </thead>
                         <tbody id="depots">
-                            <tr  *ngFor="let depot of statusSolucaoAtual.solution.depotList">
+                            <tr *ngFor="let depot of statusSolucaoAtual.solution.depotList">
                                 <td><i class="fas fa-crosshairs" [id]='getIdCrossHairDepot(depot)'
                                         [style]="getDepotStyle(depot)">
                                     </i></td>
@@ -62,22 +62,40 @@
                     </table>
                 </div>
                 <div class="col">
-                    <h5>Vehicles list</h5>
-                    <table class="table-sm w-100">
+                    <h5>Veículos</h5>
+                    <table class="table-sm w-100" *ngIf="statusSolucaoAtual?.solution?.vehicleList">
                         <thead>
                             <tr>
                                 <th class="col-1"></th>
-                                <th class="col-3">Name</th>
+                                <th class="col-3">Nome</th>
                                 <th class="col-3">
-                                    Load
+                                    Carga
                                     <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top"
                                         data-html="true"
-                                        title="Vehicle load is displayed as <em>total cargo / vehicle capacity</em>."></i>
+                                        title="Carga dos veículos mostrada na forma <em>Carga total / Capacidade</em>."></i>
                                 </th>
-                                <th class="col-3">Distance</th>
+                                <th class="col-3">Distância</th>
                             </tr>
                         </thead>
-                        <tbody id="vehicles"></tbody>
+                        <tbody id="vehicles">
+                            <tr *ngFor="let vehicle of statusSolucaoAtual.solution.vehicleList">
+                                <td>
+                                    <i class="fas fa-crosshairs" [id]='getIdCrossHairVehicle(vehicle)'
+                                        [style]="getVehicleStyle(vehicle)">
+                                    </i>
+                                </td>
+                                <td>Veículo {{vehicle.id}}</td>
+                                <td>
+                                    <div class="progress" data-toggle="tooltip-load" data-placement="left"
+                                        data-html="true" [title]="getVehicleTitle(vehicle)">
+                                        <div class="progress-bar" role="progressbar" [style]="getVehicleProgressBarStyle(vehicle)">
+                                            {{vehicle.totalDemand}}/{{vehicle.capacity}}</div>
+                                    </div>
+                                </td>
+                                <td>{{getDistanciaEmMetros(vehicle.totalDistanceMeters)}}</td>
+                            </tr>
+
+                        </tbody>
                     </table>
                 </div>
             </div>

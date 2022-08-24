@@ -30,9 +30,8 @@ export class MarkerService {
 
       if (!_.isNil(vehicle.customerList) && vehicle.customerList.length > 0) {
         var visits: L.LatLng[] = [];
-        visits.push(this.buildLatLongFromLocation(vehicle.depot.location));
-        vehicle.customerList.forEach(customer => {
-          visits.push(this.buildLatLongFromLocation(customer.location));
+        vehicle.route.forEach(location => {
+          visits.push(this.buildLatLongFromLocation(location));
         });
         const vehicleColor = this.getVehicleColorById(vehicle.id);
         const lineOptions: L.Routing.LineOptions = {

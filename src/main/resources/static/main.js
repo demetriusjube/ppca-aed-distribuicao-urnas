@@ -136,50 +136,101 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function MapComponent_button_9_Template(rf, ctx) { if (rf & 1) {
-    const _r4 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "button", 30);
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵlistener"]("click", function MapComponent_button_9_Template_button_click_0_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵrestoreView"](_r4); const ctx_r3 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵnextContext"](); return _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵresetView"](ctx_r3.startSolving()); });
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](1, "i", 31);
+    const _r5 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵgetCurrentView"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "button", 25);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵlistener"]("click", function MapComponent_button_9_Template_button_click_0_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵrestoreView"](_r5); const ctx_r4 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵnextContext"](); return _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵresetView"](ctx_r4.startSolving()); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](1, "i", 26);
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](2, " Resolver ");
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
 } }
 function MapComponent_button_10_Template(rf, ctx) { if (rf & 1) {
-    const _r6 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "button", 32);
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵlistener"]("click", function MapComponent_button_10_Template_button_click_0_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵrestoreView"](_r6); const ctx_r5 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵnextContext"](); return _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵresetView"](ctx_r5.stopSolving()); });
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](1, "i", 33);
+    const _r7 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵgetCurrentView"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "button", 27);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵlistener"]("click", function MapComponent_button_10_Template_button_click_0_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵrestoreView"](_r7); const ctx_r6 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵnextContext"](); return _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵresetView"](ctx_r6.stopSolving()); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](1, "i", 28);
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](2, " Parar resolu\u00E7\u00E3o ");
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
 } }
 function MapComponent_table_32_tr_7_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "tr")(1, "td");
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](2, "i", 37);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](2, "i", 34);
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](3, "td");
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](4);
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()();
 } if (rf & 2) {
-    const depot_r8 = ctx.$implicit;
-    const ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵnextContext"](2);
+    const depot_r9 = ctx.$implicit;
+    const ctx_r8 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵnextContext"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵstyleMap"](ctx_r7.getDepotStyle(depot_r8));
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("id", ctx_r7.getIdCrossHairDepot(depot_r8));
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵstyleMap"](ctx_r8.getDepotStyle(depot_r9));
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("id", ctx_r8.getIdCrossHairDepot(depot_r9));
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtextInterpolate"](depot_r8.name);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtextInterpolate"](depot_r9.name);
 } }
 function MapComponent_table_32_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "table", 18)(1, "thead")(2, "tr");
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](3, "th", 19);
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](4, "th", 34);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "table", 29)(1, "thead")(2, "tr");
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](3, "th", 30);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](4, "th", 31);
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](5, "Nome");
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()()();
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](6, "tbody", 35);
-    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtemplate"](7, MapComponent_table_32_tr_7_Template, 5, 4, "tr", 36);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](6, "tbody", 32);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtemplate"](7, MapComponent_table_32_tr_7_Template, 5, 4, "tr", 33);
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()();
 } if (rf & 2) {
     const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](7);
     _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("ngForOf", ctx_r2.statusSolucaoAtual.solution.depotList);
+} }
+function MapComponent_table_36_tr_12_Template(rf, ctx) { if (rf & 1) {
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "tr")(1, "td");
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](2, "i", 34);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](3, "td");
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](5, "td")(6, "div", 38)(7, "div", 39);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](8);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()()();
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](9, "td");
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](10);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()();
+} if (rf & 2) {
+    const vehicle_r11 = ctx.$implicit;
+    const ctx_r10 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵnextContext"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵstyleMap"](ctx_r10.getVehicleStyle(vehicle_r11));
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("id", ctx_r10.getIdCrossHairVehicle(vehicle_r11));
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtextInterpolate1"]("Ve\u00EDculo ", vehicle_r11.id, "");
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("title", ctx_r10.getVehicleTitle(vehicle_r11));
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵstyleMap"](ctx_r10.getVehicleProgressBarStyle(vehicle_r11));
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtextInterpolate2"](" ", vehicle_r11.totalDemand, "/", vehicle_r11.capacity, "");
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](2);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtextInterpolate"](ctx_r10.getDistanciaEmMetros(vehicle_r11.totalDistanceMeters));
+} }
+function MapComponent_table_36_Template(rf, ctx) { if (rf & 1) {
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "table", 29)(1, "thead")(2, "tr");
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](3, "th", 30);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](4, "th", 35);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](5, "Nome");
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](6, "th", 35);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](7, " Carga ");
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](8, "i", 36);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](9, "th", 35);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](10, "Dist\u00E2ncia");
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()()();
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](11, "tbody", 37);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtemplate"](12, MapComponent_table_36_tr_12_Template, 11, 10, "tr", 33);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()();
+} if (rf & 2) {
+    const ctx_r3 = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵnextContext"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](12);
+    _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("ngForOf", ctx_r3.statusSolucaoAtual.solution.vehicleList);
 } }
 class MapComponent {
     constructor(markerService, solverService) {
@@ -234,19 +285,37 @@ class MapComponent {
     getDistanciaFormatada() {
         if (!lodash__WEBPACK_IMPORTED_MODULE_1__.isNil(this.statusSolucaoAtual) && !lodash__WEBPACK_IMPORTED_MODULE_1__.isNil(this.statusSolucaoAtual.solution) && !lodash__WEBPACK_IMPORTED_MODULE_1__.isNil(this.statusSolucaoAtual.solution.distanceMeters)) {
             const distanceInMeters = this.statusSolucaoAtual.solution.distanceMeters;
+            return this.getDistanciaEmMetros(distanceInMeters);
+        }
+        return '0Km';
+    }
+    getDistanciaEmMetros(distanceInMeters) {
+        if (distanceInMeters) {
             return `${Math.floor(distanceInMeters / 1000)}km ${distanceInMeters % 1000}m`;
         }
         return '0Km';
     }
     getIdCrossHairDepot(depot) {
-        return 'crosshairs-' + depot.id;
+        return 'crosshairs-depot-' + depot.id;
+    }
+    getIdCrossHairVehicle(vehicle) {
+        return 'crosshairs-vehicle-' + vehicle.id;
     }
     getDepotStyle(depot) {
         return `background-color: ${this.markerService.getDepotColorById(depot.id)}; display: inline-block; width: 1rem; height: 1rem; text-align: center`;
     }
+    getVehicleStyle(vehicle) {
+        return `background-color: ${this.markerService.getVehicleColorById(vehicle.id)}; display: inline-block; width: 1rem; height: 1rem; text-align: center`;
+    }
+    getVehicleTitle(vehicle) {
+        return `Carga: ${vehicle.totalDemand}<br/>Capacity: ${vehicle.capacity}`;
+    }
+    getVehicleProgressBarStyle(vehicle) {
+        return `width: ${(vehicle.totalDemand / vehicle.capacity) * 100}%`;
+    }
 }
 MapComponent.ɵfac = function MapComponent_Factory(t) { return new (t || MapComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdirectiveInject"](_marker_service__WEBPACK_IMPORTED_MODULE_2__.MarkerService), _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdirectiveInject"](_solver_service__WEBPACK_IMPORTED_MODULE_3__.SolverService)); };
-MapComponent.ɵcmp = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdefineComponent"]({ type: MapComponent, selectors: [["app-map"]], decls: 60, vars: 5, consts: [[1, "sticky-top", "d-flex", "justify-content-center", "align-items-center"], ["id", "notificationPanel", 2, "position", "absolute", "top", ".5rem"], [1, "container-fluid"], [1, "row"], [1, "col-7", "col-lg-8", "col-xl-9"], ["id", "map", 2, "width", "100%", "height", "100vh"], [1, "col-5", "col-lg-4", "col-xl-3", 2, "height", "100vh", "overflow-y", "scroll"], [1, "row", "pt-2", "row-cols-1"], [1, "col", "mb-3"], ["id", "solveButton", "type", "button", "class", "btn btn-success", 3, "click", 4, "ngIf"], ["id", "stopSolvingButton", "type", "button", "class", "btn btn-danger", 3, "click", 4, "ngIf"], [1, "col"], ["href", "#", "data-toggle", "modal", "data-target", "#scoreDialog", 1, "float-right"], [1, "fas", "fa-info-circle"], [1, "table"], ["id", "score"], ["id", "distance"], ["class", "table-sm w-100", 4, "ngIf"], [1, "table-sm", "w-100"], [1, "col-1"], [1, "col-3"], ["data-toggle", "tooltip", "data-placement", "top", "data-html", "true", "title", "Vehicle load is displayed as <em>total cargo / vehicle capacity</em>.", 1, "fas", "fa-info-circle"], ["id", "vehicles"], ["id", "scoreDialog", "tabindex", "-1", "role", "dialog", 1, "modal", "fade"], ["role", "dialog", 1, "modal-dialog", "modal-lg"], [1, "modal-content"], [1, "modal-header"], ["type", "button", "data-dismiss", "modal", 1, "close"], [1, "modal-body"], ["id", "scoreInfo"], ["id", "solveButton", "type", "button", 1, "btn", "btn-success", 3, "click"], [1, "fas", "fa-play"], ["id", "stopSolvingButton", "type", "button", 1, "btn", "btn-danger", 3, "click"], [1, "fas", "fa-stop"], [1, "col-11"], ["id", "depots"], [4, "ngFor", "ngForOf"], [1, "fas", "fa-crosshairs", 3, "id"]], template: function MapComponent_Template(rf, ctx) { if (rf & 1) {
+MapComponent.ɵcmp = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdefineComponent"]({ type: MapComponent, selectors: [["app-map"]], decls: 49, vars: 6, consts: [[1, "sticky-top", "d-flex", "justify-content-center", "align-items-center"], ["id", "notificationPanel", 2, "position", "absolute", "top", ".5rem"], [1, "container-fluid"], [1, "row"], [1, "col-7", "col-lg-8", "col-xl-9"], ["id", "map", 2, "width", "100%", "height", "100vh"], [1, "col-5", "col-lg-4", "col-xl-3", 2, "height", "100vh", "overflow-y", "scroll"], [1, "row", "pt-2", "row-cols-1"], [1, "col", "mb-3"], ["id", "solveButton", "type", "button", "class", "btn btn-success", 3, "click", 4, "ngIf"], ["id", "stopSolvingButton", "type", "button", "class", "btn btn-danger", 3, "click", 4, "ngIf"], [1, "col"], ["href", "#", "data-toggle", "modal", "data-target", "#scoreDialog", 1, "float-right"], [1, "fas", "fa-info-circle"], [1, "table"], ["id", "score"], ["id", "distance"], ["class", "table-sm w-100", 4, "ngIf"], ["id", "scoreDialog", "tabindex", "-1", "role", "dialog", 1, "modal", "fade"], ["role", "dialog", 1, "modal-dialog", "modal-lg"], [1, "modal-content"], [1, "modal-header"], ["type", "button", "data-dismiss", "modal", 1, "close"], [1, "modal-body"], ["id", "scoreInfo"], ["id", "solveButton", "type", "button", 1, "btn", "btn-success", 3, "click"], [1, "fas", "fa-play"], ["id", "stopSolvingButton", "type", "button", 1, "btn", "btn-danger", 3, "click"], [1, "fas", "fa-stop"], [1, "table-sm", "w-100"], [1, "col-1"], [1, "col-11"], ["id", "depots"], [4, "ngFor", "ngForOf"], [1, "fas", "fa-crosshairs", 3, "id"], [1, "col-3"], ["data-toggle", "tooltip", "data-placement", "top", "data-html", "true", "title", "Carga dos ve\u00EDculos mostrada na forma <em>Carga total / Capacidade</em>.", 1, "fas", "fa-info-circle"], ["id", "vehicles"], ["data-toggle", "tooltip-load", "data-placement", "left", "data-html", "true", 1, "progress", 3, "title"], ["role", "progressbar", 1, "progress-bar"]], template: function MapComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](1, "div", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
@@ -280,30 +349,18 @@ MapComponent.ɵcmp = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_4__["�
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtemplate"](32, MapComponent_table_32_Template, 8, 1, "table", 17);
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](33, "div", 11)(34, "h5");
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](35, "Vehicles list");
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](35, "Ve\u00EDculos");
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](36, "table", 18)(37, "thead")(38, "tr");
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](39, "th", 19);
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](40, "th", 20);
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](41, "Name");
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtemplate"](36, MapComponent_table_36_Template, 13, 1, "table", 17);
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()()()()();
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](37, "div", 18)(38, "div", 19)(39, "div", 20)(40, "div", 21)(41, "h5");
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](42, "Score explanation");
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](42, "th", 20);
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](43, " Load ");
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](44, "i", 21);
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](45, "th", 20);
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](46, "Distance");
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](43, "button", 22)(44, "span");
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](45, "\u00D7");
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()()();
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](47, "tbody", 22);
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()()()()()();
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](48, "div", 23)(49, "div", 24)(50, "div", 25)(51, "div", 26)(52, "h5");
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](53, "Score explanation");
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](54, "button", 27)(55, "span");
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](56, "\u00D7");
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()()();
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](57, "div", 28)(58, "pre", 29);
-        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](59, "        ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](46, "div", 23)(47, "pre", 24);
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](48, "        ");
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()()()()();
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](9);
@@ -316,6 +373,8 @@ MapComponent.ɵcmp = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_4__["�
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtextInterpolate"](ctx.getDistanciaFormatada());
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](4);
         _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("ngIf", ctx.statusSolucaoAtual == null ? null : ctx.statusSolucaoAtual.solution == null ? null : ctx.statusSolucaoAtual.solution.depotList);
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"](4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("ngIf", ctx.statusSolucaoAtual == null ? null : ctx.statusSolucaoAtual.solution == null ? null : ctx.statusSolucaoAtual.solution.vehicleList);
     } }, dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_6__.NgForOf, _angular_common__WEBPACK_IMPORTED_MODULE_6__.NgIf], styles: [".map-container[_ngcontent-%COMP%] {\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n    bottom: 0;\r\n    margin: 30px;\r\n}\r\n\r\n.map-frame[_ngcontent-%COMP%] {\r\n    border: 2px solid black;\r\n    height: 100%;\r\n}\r\n\r\n#map[_ngcontent-%COMP%] {\r\n    height: 100%;\r\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1hcC5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0ksa0JBQWtCO0lBQ2xCLE1BQU07SUFDTixPQUFPO0lBQ1AsUUFBUTtJQUNSLFNBQVM7SUFDVCxZQUFZO0FBQ2hCOztBQUVBO0lBQ0ksdUJBQXVCO0lBQ3ZCLFlBQVk7QUFDaEI7O0FBRUE7SUFDSSxZQUFZO0FBQ2hCIiwiZmlsZSI6Im1hcC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm1hcC1jb250YWluZXIge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgdG9wOiAwO1xyXG4gICAgbGVmdDogMDtcclxuICAgIHJpZ2h0OiAwO1xyXG4gICAgYm90dG9tOiAwO1xyXG4gICAgbWFyZ2luOiAzMHB4O1xyXG59XHJcblxyXG4ubWFwLWZyYW1lIHtcclxuICAgIGJvcmRlcjogMnB4IHNvbGlkIGJsYWNrO1xyXG4gICAgaGVpZ2h0OiAxMDAlO1xyXG59XHJcblxyXG4jbWFwIHtcclxuICAgIGhlaWdodDogMTAwJTtcclxufSJdfQ== */"] });
 
 
@@ -363,9 +422,8 @@ class MarkerService {
         solution.vehicleList.forEach(vehicle => {
             if (!lodash__WEBPACK_IMPORTED_MODULE_1__.isNil(vehicle.customerList) && vehicle.customerList.length > 0) {
                 var visits = [];
-                visits.push(this.buildLatLongFromLocation(vehicle.depot.location));
-                vehicle.customerList.forEach(customer => {
-                    visits.push(this.buildLatLongFromLocation(customer.location));
+                vehicle.route.forEach(location => {
+                    visits.push(this.buildLatLongFromLocation(location));
                 });
                 const vehicleColor = this.getVehicleColorById(vehicle.id);
                 const lineOptions = {
