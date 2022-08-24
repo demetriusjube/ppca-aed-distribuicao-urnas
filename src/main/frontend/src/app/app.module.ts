@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SolverService } from './solver.service';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule
   ],
   providers: [
-    MarkerService
+    MarkerService,
+    SolverService
   ],
   bootstrap: [AppComponent]
 })

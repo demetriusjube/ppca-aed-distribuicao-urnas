@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import * as _ from 'lodash';
-import { Customer, Depot, Status, VehicleRoutingSolution } from './shared/model/distribuicao-urnas-model';
+import 'leaflet-routing-machine';
+import { Customer, Depot, Location, Status, VehicleRoutingSolution } from './shared/model/distribuicao-urnas-model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,19 +11,52 @@ import { Customer, Depot, Status, VehicleRoutingSolution } from './shared/model/
 export class MarkerService {
 
   private colorMap = new Map<number, string>();
+  private vehicleColorMap = new Map<number, string>();
 
   private letters = '0123456789ABCDEF';
 
   constructor(private http: HttpClient) { }
 
-  public marcarSolucaoNoMapa(map: L.Map): void {
-    this.http.get<Status>("/vrp/status").subscribe(statusSolucao => {
-      if (this.existeSolucaoComLocalizacoes(statusSolucao)) {
-        const solution = statusSolucao.solution;
-        this.adicionaCentrosDeDistribuicao(solution, map);
-        this.adicionaLocaisDeVotacao(solution, map);
+  public marcarSolucaoNoMapa(map: L.Map, statusSolucao: Status): void {
+    if (this.existeSolucaoComLocalizacoes(statusSolucao)) {
+      const solution = statusSolucao.solution;
+      this.adicionaCentrosDeDistribuicao(solution, map);
+      this.adicionaLocaisDeVotacao(solution, map);
+      this.adicionaRotas(solution, map);
+    }
+  }
+  public adicionaRotas(solution: VehicleRoutingSolution, map: L.Map) {
+    solution.vehicleList.forEach(vehicle => {
+
+      if (!_.isNil(vehicle.customerList) && vehicle.customerList.length > 0) {
+        var visits: L.LatLng[] = [];
+        visits.push(this.buildLatLongFromLocation(vehicle.depot.location));
+        vehicle.customerList.forEach(customer => {
+          visits.push(this.buildLatLongFromLocation(customer.location));
+        });
+        const vehicleColor = this.getVehicleColorById(vehicle.id);
+        const lineOptions: L.Routing.LineOptions = {
+          extendToWaypoints: true,
+          missingRouteTolerance: 10,
+          styles: [{
+            color: vehicleColor,
+            weight: 5
+          }]
+        }
+        const rota = L.Routing.control({
+          show: false,
+          waypoints: visits,
+          pointMarkerStyle: { color: vehicleColor },
+          lineOptions: lineOptions,
+          routeWhileDragging: false,
+        });
+        rota.addTo(map);
       }
-    })
+    });
+  }
+
+  private buildLatLongFromLocation(location: Location) {
+    return L.latLng(location.latitude, location.longitude);
   }
 
   private adicionaLocaisDeVotacao(solution: VehicleRoutingSolution, map: L.Map) {
@@ -38,7 +72,9 @@ export class MarkerService {
   }
 
   private montaPopupLocalVotacao(customer: Customer): L.Content {
-    return this.montaPopup(customer.id, customer.name, customer.location.endereco);;
+    const popup: L.Content = `<h5>CD ${customer.id} - ${customer.name}</h5>
+            <div>${customer.location.endereco}</div>`
+    return popup;
   }
 
   private adicionaCentrosDeDistribuicao(solution: VehicleRoutingSolution, map: L.Map) {
@@ -61,7 +97,7 @@ export class MarkerService {
   }
 
   private montaPopup(id: number, name: string, endereco: string) {
-    const color = this.getColorById(id);
+    const color = this.getDepotColorById(id);
     const popup: L.Content = `<h5>CD ${id} - ${name}</h5>
             <div>${endereco}</div>
             <ul class="list-unstyled">
@@ -75,7 +111,14 @@ export class MarkerService {
     return !_.isNil(statusSolucao) && !_.isNil(statusSolucao.solution) && !_.isNil(statusSolucao.solution.locationList) && statusSolucao.solution.locationList.length > 0;
   }
 
-  private getColorById(id: number) {
+  public getVehicleColorById(id: number) {
+    if (!this.vehicleColorMap.has(id)) {
+      this.vehicleColorMap.set(id, this.getRandomColor());
+    }
+    return this.vehicleColorMap.get(id);
+  }
+
+  public getDepotColorById(id: number) {
     if (!this.colorMap.has(id)) {
       this.colorMap.set(id, this.getRandomColor());
     }
@@ -89,4 +132,5 @@ export class MarkerService {
     }
     return color;
   }
+
 }
