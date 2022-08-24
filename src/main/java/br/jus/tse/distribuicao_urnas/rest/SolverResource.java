@@ -12,57 +12,57 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.jus.tse.distribuicao_urnas.solver.domain.Status;
 import br.jus.tse.distribuicao_urnas.solver.domain.VehicleRoutingSolution;
 import br.jus.tse.distribuicao_urnas.solver.persistence.VehicleRoutingSolutionRepository;
 
 @RestController
-@RequestMapping(value = "/vrp", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/vrp")
 public class SolverResource {
 
-    private static final long PROBLEM_ID = 0L;
+	private static final long PROBLEM_ID = 0L;
 
-    private final AtomicReference<Throwable> solverError = new AtomicReference<>();
+	private final AtomicReference<Throwable> solverError = new AtomicReference<>();
 
-    private final VehicleRoutingSolutionRepository repository;
-    private final SolverManager<VehicleRoutingSolution, Long> solverManager;
-    private final ScoreManager<VehicleRoutingSolution, HardSoftLongScore> scoreManager;
+	private final VehicleRoutingSolutionRepository repository;
+	private final SolverManager<VehicleRoutingSolution, Long> solverManager;
+	private final ScoreManager<VehicleRoutingSolution, HardSoftLongScore> scoreManager;
 
-    public SolverResource(VehicleRoutingSolutionRepository repository,
-            SolverManager<VehicleRoutingSolution, Long> solverManager,
-            ScoreManager<VehicleRoutingSolution, HardSoftLongScore> scoreManager) {
-        this.repository = repository;
-        this.solverManager = solverManager;
-        this.scoreManager = scoreManager;
-    }
+	public SolverResource(VehicleRoutingSolutionRepository repository,
+			SolverManager<VehicleRoutingSolution, Long> solverManager,
+			ScoreManager<VehicleRoutingSolution, HardSoftLongScore> scoreManager) {
+		this.repository = repository;
+		this.solverManager = solverManager;
+		this.scoreManager = scoreManager;
+	}
 
-    private Status statusFromSolution(VehicleRoutingSolution solution) {
-        return new Status(solution, scoreManager.explainScore(solution).getSummary(),
-                solverManager.getSolverStatus(PROBLEM_ID));
-    }
+	private Status statusFromSolution(VehicleRoutingSolution solution) {
+		return new Status(solution, scoreManager.explainScore(solution).getSummary(),
+				solverManager.getSolverStatus(PROBLEM_ID));
+	}
 
-    
-    @GetMapping("status")
-    public Status status() {
-        Optional.ofNullable(solverError.getAndSet(null)).ifPresent(throwable -> {
-            throw new RuntimeException("Solver failed", throwable);
-        });
+	@GetMapping(value = "status", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Status status() {
+		Optional.ofNullable(solverError.getAndSet(null)).ifPresent(throwable -> {
+			throw new RuntimeException("Solver failed", throwable);
+		});
 
-        Optional<VehicleRoutingSolution> s1 = repository.solution();
+		Optional<VehicleRoutingSolution> s1 = repository.solution();
 
-        VehicleRoutingSolution s = s1.orElse(VehicleRoutingSolution.empty());
-        return statusFromSolution(s);
-    }
+		VehicleRoutingSolution s = s1.orElse(VehicleRoutingSolution.empty());
+		return statusFromSolution(s);
+	}
 
-    @PostMapping("solve")
-    public void solve() {
-        Optional<VehicleRoutingSolution> maybeSolution = repository.solution();
-        maybeSolution.ifPresent(
-                vehicleRoutingSolution -> solverManager.solveAndListen(PROBLEM_ID, id -> vehicleRoutingSolution,
-                        repository::update, (problemId, throwable) -> solverError.set(throwable)));
-    }
+	@PostMapping("solve")
+	public void solve() {
+		Optional<VehicleRoutingSolution> maybeSolution = repository.solution();
+		maybeSolution.ifPresent(
+				vehicleRoutingSolution -> solverManager.solveAndListen(PROBLEM_ID, id -> vehicleRoutingSolution,
+						repository::update, (problemId, throwable) -> solverError.set(throwable)));
+	}
 
-    @PostMapping("stopSolving")
-    public void stopSolving() {
-        solverManager.terminateEarly(PROBLEM_ID);
-    }
+	@PostMapping("stopSolving")
+	public void stopSolving() {
+		solverManager.terminateEarly(PROBLEM_ID);
+	}
 }

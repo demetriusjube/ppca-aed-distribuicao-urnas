@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.PrimitiveIterator;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -48,15 +46,16 @@ public class DistribuicaoUrnasSolutionBuilder {
 	public VehicleRoutingSolution build(Long idCentroDistribuicao, Integer numeroVeiculos, Integer capacidade,
 			TipoOtimizacaoEnum tipoOtimizacao) {
 
-		Location southWestCorner = new Location(0L, new BigDecimal(-16.04871827), new BigDecimal(-48.04740728));
-		Location northEastCorner = new Location(0L, new BigDecimal(-15.7041622), new BigDecimal(-47.3737344));
+		Location southWestCorner = new Location(0L, new BigDecimal(-16.04871827), new BigDecimal(-48.04740728), "");
+		Location northEastCorner = new Location(0L, new BigDecimal(-15.7041622), new BigDecimal(-47.3737344), "");
 		;
 
 		Optional<CentroDistribuicao> consultaCentroDistribuicao = centroDistribuicaoRepository
 				.findById(idCentroDistribuicao);
 		if (consultaCentroDistribuicao.isPresent()) {
 			CentroDistribuicao centroDistribuicao = consultaCentroDistribuicao.get();
-			Depot depot = new Depot(centroDistribuicao.getId(), LocationBuilder.buildFrom(centroDistribuicao));
+			Depot depot = new Depot(centroDistribuicao.getId(), LocationBuilder.buildFrom(centroDistribuicao),
+					centroDistribuicao.getNome());
 
 			List<Depot> depotList = Arrays.asList(depot);
 
@@ -75,8 +74,8 @@ public class DistribuicaoUrnasSolutionBuilder {
 
 			List<Customer> customers = new ArrayList<Customer>();
 			for (LocalVotacao localVotacao : locaisVotacaoDoCentro) {
-				Customer customer = new Customer(localVotacao.getId(), LocationBuilder.buildFrom(localVotacao),
-						localVotacao.getQuantidadeSecoes());
+				Customer customer = new Customer(localVotacao.getId(), localVotacao.getNome(),
+						LocationBuilder.buildFrom(localVotacao), localVotacao.getQuantidadeSecoes());
 				customers.add(customer);
 			}
 

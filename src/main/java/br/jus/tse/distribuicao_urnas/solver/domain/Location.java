@@ -3,20 +3,19 @@ package br.jus.tse.distribuicao_urnas.solver.domain;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonFormat(shape = JsonFormat.Shape.ARRAY)
-@JsonIgnoreProperties({ "id" })
+//@JsonFormat(shape = JsonFormat.Shape.ARRAY)
+//@JsonIgnoreProperties({ "id" })
 public class Location {
 
 	private final long id;
+	private final String endereco;
 	private final BigDecimal latitude;
 	private final BigDecimal longitude;
 	private Map<Location, Double> distanceMap;
 
-	public Location(long id, BigDecimal latitude, BigDecimal longitude) {
+	public Location(long id, BigDecimal latitude, BigDecimal longitude, String endereco) {
 		this.id = id;
+		this.endereco = endereco;
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
@@ -31,6 +30,10 @@ public class Location {
 
 	public BigDecimal getLongitude() {
 		return longitude;
+	}
+
+	public String getEndereco() {
+		return endereco;
 	}
 
 	/**

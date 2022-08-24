@@ -134,6 +134,22 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>cz.habarta.typescript-generator</groupId>
+				<artifactId>typescript-generator-maven-plugin</artifactId>
+				<version>2.28.785</version>
+				<configuration>
+					<jsonLibrary>jackson2</jsonLibrary>
+					<classPatterns>
+						<classPattern>br.jus.tse.distribuicao_urnas.solver.domain.*</classPattern>
+					</classPatterns>
+					<outputKind>module</outputKind>
+					<outputFileType>implementationFile</outputFileType>
+					<outputFile>${project.basedir}/src/main/frontend/src/app/shared/model/distribuicao-urnas-model.ts</outputFile>
+				</configuration>
+			</plugin>
+
+
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
