@@ -84,6 +84,11 @@ public class DistribuicaoUrnasSolutionBuilder {
 			adicionaVeiculos13m3(simulacaoRequest, volumeUrna, depot, vehicleList);
 			adicionaVeiculos7_5m3(simulacaoRequest, volumeUrna, depot, vehicleList);
 
+			if (CollectionUtils.isEmpty(vehicleList)) {
+				throw new IllegalArgumentException(
+						"Não é possível fazer a simulação com uma quantidade nula de veículos!");
+			}
+
 			List<LocalVotacao> locaisVotacaoDoCentro = localVotacaoRepository
 					.findByZonaEleitoralCentroDistribuicaoEquals(centroDistribuicao);
 
@@ -97,6 +102,10 @@ public class DistribuicaoUrnasSolutionBuilder {
 				Customer customer = new Customer(localVotacao.getId(), localVotacao.getNome(),
 						LocationBuilder.buildFrom(localVotacao), localVotacao.getQuantidadeSecoes());
 				customers.add(customer);
+			}
+
+			if (CollectionUtils.isEmpty(customers)) {
+				throw new IllegalArgumentException("Não é possível fazer a simulação sem locais de votação!");
 			}
 
 			List<Location> locationList = Stream
@@ -115,38 +124,32 @@ public class DistribuicaoUrnasSolutionBuilder {
 
 	private void adicionaVeiculos38m3(SimulacaoRequest simulacaoRequest, Double volumeUrna, Depot depot,
 			List<Vehicle> vehicleList) {
-		if (simulacaoRequest.getQuantidadeCaminhoes38m3() != null) {
-			adicionaVeiculo(simulacaoRequest, volumeUrna, depot, vehicleList, VOLUME_38M3);
-		}
+		adicionaVeiculo(simulacaoRequest.getQuantidadeCaminhoes38m3(), volumeUrna, depot, vehicleList, VOLUME_38M3);
 	}
 
-	private void adicionaVeiculo(SimulacaoRequest simulacaoRequest, Double volumeUrna, Depot depot,
-			List<Vehicle> vehicleList, float volumeVeiculo) {
-		Long capacidade = Math.round(volumeVeiculo / volumeUrna);
-		Supplier<Vehicle> vehicleSupplier = () -> new Vehicle(sequence.incrementAndGet(), capacidade.intValue(), depot);
-		vehicleList.addAll(Stream.generate(vehicleSupplier).limit(simulacaoRequest.getQuantidadeCaminhoes38m3())
-				.collect(Collectors.toList()));
+	private void adicionaVeiculo(Integer quantidadeVeiculos, Double volumeUrna, Depot depot, List<Vehicle> vehicleList,
+			float volumeVeiculo) {
+		if (quantidadeVeiculos != null) {
+			Long capacidade = Math.round(volumeVeiculo / volumeUrna);
+			Supplier<Vehicle> vehicleSupplier = () -> new Vehicle(sequence.incrementAndGet(), capacidade.intValue(),
+					depot);
+			vehicleList.addAll(Stream.generate(vehicleSupplier).limit(quantidadeVeiculos).collect(Collectors.toList()));
+		}
 	}
 
 	private void adicionaVeiculos22m3(SimulacaoRequest simulacaoRequest, Double volumeUrna, Depot depot,
 			List<Vehicle> vehicleList) {
-		if (simulacaoRequest.getQuantidadeCaminhoes22m3() != null) {
-			adicionaVeiculo(simulacaoRequest, volumeUrna, depot, vehicleList, VOLUME_22M3);
-		}
+		adicionaVeiculo(simulacaoRequest.getQuantidadeCaminhoes22m3(), volumeUrna, depot, vehicleList, VOLUME_22M3);
 	}
 
 	private void adicionaVeiculos13m3(SimulacaoRequest simulacaoRequest, Double volumeUrna, Depot depot,
 			List<Vehicle> vehicleList) {
-		if (simulacaoRequest.getQuantidadeCaminhoes13m3() != null) {
-			adicionaVeiculo(simulacaoRequest, volumeUrna, depot, vehicleList, VOLUME_13M3);
-		}
+		adicionaVeiculo(simulacaoRequest.getQuantidadeCaminhoes13m3(), volumeUrna, depot, vehicleList, VOLUME_13M3);
 	}
 
 	private void adicionaVeiculos7_5m3(SimulacaoRequest simulacaoRequest, Double volumeUrna, Depot depot,
 			List<Vehicle> vehicleList) {
-		if (simulacaoRequest.getQuantidadeCaminhoes7_5m3() != null) {
-			adicionaVeiculo(simulacaoRequest, volumeUrna, depot, vehicleList, VOLUME_7_5M3);
-		}
+		adicionaVeiculo(simulacaoRequest.getQuantidadeCaminhoes7_5m3(), volumeUrna, depot, vehicleList, VOLUME_7_5M3);
 	}
 
 }

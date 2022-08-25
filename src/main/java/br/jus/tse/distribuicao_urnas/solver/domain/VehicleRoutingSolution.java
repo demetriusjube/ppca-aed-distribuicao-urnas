@@ -1,5 +1,6 @@
 package br.jus.tse.distribuicao_urnas.solver.domain;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,17 +18,17 @@ public class VehicleRoutingSolution {
 	private String name;
 
 	@ProblemFactCollectionProperty
-	private List<Location> locationList;
+	private List<Location> locationList = new ArrayList<Location>();
 
 	@ProblemFactCollectionProperty
-	private List<Depot> depotList;
+	private List<Depot> depotList = new ArrayList<Depot>();
 
 	@PlanningEntityCollectionProperty
-	private List<Vehicle> vehicleList;
+	private List<Vehicle> vehicleList = new ArrayList<Vehicle>();
 
 	@ProblemFactCollectionProperty
 	@ValueRangeProvider(id = "customerRange")
-	private List<Customer> customerList;
+	private List<Customer> customerList = new ArrayList<Customer>();
 
 	@PlanningScore
 	private HardSoftLongScore score;

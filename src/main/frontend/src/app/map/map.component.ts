@@ -4,6 +4,7 @@ import * as L from 'leaflet';
 import * as _ from 'lodash';
 import { interval, Subscription } from 'rxjs';
 import { MarkerService } from '../marker.service';
+import { ErrorUtils } from '../shared/error-utils';
 import { CentroDistribuicaoDTO, Depot, SimulacaoRequest, Status, Vehicle } from '../shared/model/distribuicao-urnas-model';
 import { SolverService } from '../solver.service';
 
@@ -34,7 +35,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         quantidadeCaminhoes22m3: this.formBuilder.control(null),
         quantidadeCaminhoes13m3: this.formBuilder.control(null),
         quantidadeCaminhoes7_5m3: this.formBuilder.control(null),
-        tipoOtimizacaoEnum: this.formBuilder.control(null)
+        tipoOtimizacaoEnum: this.formBuilder.control(null, Validators.required)
       })
     })
   }
@@ -82,15 +83,36 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   public startSolving(): void {
+    this.form.updateValueAndValidity();
+    if (!this.form.valid) {
+      ErrorUtils.displayError("Os dados estão inválidos para a simulação!");
+      return;
+    }
+
     const simulacaoRequest = this.form.value as SimulacaoRequest;
-    this.solverService.startSolving(simulacaoRequest);
-    this.updateSubscription = interval(12000).subscribe((val) => {
-      this.atualizarMapa();
+    this.updateSolvingStatus(true);
+    this.solverService.startSolving(simulacaoRequest).subscribe({
+      next: () => {
+        this.updateSubscription = interval(12000).subscribe((val) => {
+          this.atualizarMapa();
+        });
+      },
+      error: (err) => {
+        ErrorUtils.displayError(err);
+      }
     });
   }
 
   public stopSolving(): void {
-    this.solverService.stopSolving();
+    this.updateSolvingStatus(false);
+    this.solverService.stopSolving().subscribe({
+      next: () => {
+
+      },
+      error: (err) => {
+        ErrorUtils.displayError(err);
+      }
+    });
 
   }
 

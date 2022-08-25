@@ -5,20 +5,21 @@ import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 public class CentroDistribuicaoDTO {
 
-    private Long id;
+	private Long id;
 
-    @NotNull
-    @Size(max = 255)
-    private String nome;
+	@NotNull
+	@Size(max = 255)
+	private String nome;
 
-    @Size(max = 500)
-    private String endereco;
+	@Size(max = 500)
+	private String endereco;
 
-    private Long localizacao;
+	private Long localizacao;
+
+	private Integer totalDeUrnas;
 
 }

@@ -14,12 +14,12 @@ export class SolverService {
     return this.http.get<Status>("/vrp/status");
   }
 
-  public startSolving(simulacaoRequest: SimulacaoRequest): void {
-    this.http.post("/vrp/solve", simulacaoRequest).subscribe(() => { })
+  public startSolving(simulacaoRequest: SimulacaoRequest): Observable<void> {
+    return this.http.post<void>("/vrp/solve", simulacaoRequest);
   }
 
-  public stopSolving(): void {
-    this.http.post("/vrp/stopSolving", {}).subscribe(() => { })
+  public stopSolving(): Observable<void> {
+    return this.http.post<void>("/vrp/stopSolving", {});
   }
 
   public getCentrosDistribuicao(): Observable<CentroDistribuicaoDTO[]> {

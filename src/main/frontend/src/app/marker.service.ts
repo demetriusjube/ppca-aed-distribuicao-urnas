@@ -71,7 +71,7 @@ export class MarkerService {
   }
 
   private montaPopupLocalVotacao(customer: Customer): L.Content {
-    const popup: L.Content = `<h5>CD ${customer.id} - ${customer.name}</h5>
+    const popup: L.Content = `<h5>LV ${customer.id} - ${customer.name}</h5>
             <div>${customer.location.endereco}</div>`
     return popup;
   }
