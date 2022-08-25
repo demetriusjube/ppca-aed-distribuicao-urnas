@@ -346,6 +346,7 @@ class MapComponent {
         this.markerService = markerService;
         this.solverService = solverService;
         this.formBuilder = formBuilder;
+        this.layerGroup = leaflet__WEBPACK_IMPORTED_MODULE_0__.layerGroup();
         this.isSolving = false;
         this.centrosDistribuicao = [];
     }
@@ -353,19 +354,27 @@ class MapComponent {
         this.solverService.getCentrosDistribuicao().subscribe(centrosDistribuicao => {
             this.centrosDistribuicao = centrosDistribuicao;
             this.form = this.formBuilder.group({
-                idCentroDistribuicao: this.formBuilder.control(null, _angular_forms__WEBPACK_IMPORTED_MODULE_6__.Validators.required),
-                quantidadeCaminhoes38m3: this.formBuilder.control(null),
-                quantidadeCaminhoes22m3: this.formBuilder.control(null),
-                quantidadeCaminhoes13m3: this.formBuilder.control(null),
-                quantidadeCaminhoes7_5m3: this.formBuilder.control(null),
-                tipoOtimizacaoEnum: this.formBuilder.control(null, _angular_forms__WEBPACK_IMPORTED_MODULE_6__.Validators.required)
+                idCentroDistribuicao: this.getCentroDistribuicaoControl(),
+                quantidadeCaminhoes38m3: this.formBuilder.control(0),
+                quantidadeCaminhoes22m3: this.formBuilder.control(0),
+                quantidadeCaminhoes13m3: this.formBuilder.control(0),
+                quantidadeCaminhoes7_5m3: this.formBuilder.control(0),
+                tipoOtimizacaoEnum: this.formBuilder.control('MENOR_DISTANCIA', _angular_forms__WEBPACK_IMPORTED_MODULE_6__.Validators.required)
             });
         });
+    }
+    getCentroDistribuicaoControl() {
+        const centroDistribuicaoControl = this.formBuilder.control(null, _angular_forms__WEBPACK_IMPORTED_MODULE_6__.Validators.required);
+        centroDistribuicaoControl.valueChanges.subscribe(idCentroDistribuicao => {
+            this.marcarCentroDistribuicaoELocaisVotacao(idCentroDistribuicao);
+        });
+        return centroDistribuicaoControl;
     }
     initMap() {
         this.map = this.buildMap();
         const tiles = this.buildTiles();
         tiles.addTo(this.map);
+        this.layerGroup.addTo(this.map);
         // this.atualizarMapa();
     }
     buildMap() {
@@ -388,6 +397,11 @@ class MapComponent {
             this.updateSolvingStatus(this.statusSolucaoAtual.isSolving);
         });
     }
+    marcarCentroDistribuicaoELocaisVotacao(idCentroDistribuicao) {
+        this.solverService.getCentroDistribuicaoELocaisVotacao(idCentroDistribuicao).subscribe(depotCustomers => {
+            this.markerService.marcarCentroDistribuicaoELocaisVotacao(this.layerGroup, depotCustomers);
+        });
+    }
     updateSolvingStatus(solvingStatus) {
         this.isSolving = solvingStatus;
         if (!solvingStatus) {
@@ -407,7 +421,7 @@ class MapComponent {
         this.updateSolvingStatus(true);
         this.solverService.startSolving(simulacaoRequest).subscribe({
             next: () => {
-                this.updateSubscription = (0,rxjs__WEBPACK_IMPORTED_MODULE_7__.interval)(12000).subscribe((val) => {
+                this.updateSubscription = (0,rxjs__WEBPACK_IMPORTED_MODULE_7__.interval)(30000).subscribe((val) => {
                     this.atualizarMapa();
                 });
             },
@@ -515,11 +529,18 @@ class MarkerService {
         this.vehicleColorMap = new Map();
         this.letters = '0123456789ABCDEF';
     }
+    marcarCentroDistribuicaoELocaisVotacao(layerGroup, depotCustomer) {
+        if (depotCustomer) {
+            layerGroup.clearLayers();
+            this.adicionaCentroDeDistribuicao(depotCustomer.depot, layerGroup);
+            this.adicionaLocaisDeVotacao(depotCustomer.customerList, layerGroup);
+        }
+    }
     marcarSolucaoNoMapa(map, statusSolucao) {
         if (this.existeSolucaoComLocalizacoes(statusSolucao)) {
             const solution = statusSolucao.solution;
-            this.adicionaCentrosDeDistribuicao(solution, map);
-            this.adicionaLocaisDeVotacao(solution, map);
+            // this.adicionaCentrosDeDistribuicao(solution, map);
+            // this.adicionaLocaisDeVotacao(solution.customerList, map);
             this.adicionaRotas(solution, map);
         }
     }
@@ -553,15 +574,15 @@ class MarkerService {
     buildLatLongFromLocation(location) {
         return leaflet__WEBPACK_IMPORTED_MODULE_0__.latLng(location.latitude, location.longitude);
     }
-    adicionaLocaisDeVotacao(solution, map) {
-        solution.customerList.forEach(customer => {
+    adicionaLocaisDeVotacao(customerList, layerGroup) {
+        customerList.forEach(customer => {
             const latLong = [customer.location.latitude, customer.location.longitude];
             const options = {
                 title: customer.name + ' - ' + customer.id
             };
             const popup = this.montaPopupLocalVotacao(customer);
             const marcador = leaflet__WEBPACK_IMPORTED_MODULE_0__.circleMarker(latLong, options).bindPopup(popup);
-            marcador.addTo(map);
+            marcador.addTo(layerGroup);
         });
     }
     montaPopupLocalVotacao(customer) {
@@ -569,16 +590,19 @@ class MarkerService {
             <div>${customer.location.endereco}</div>`;
         return popup;
     }
-    adicionaCentrosDeDistribuicao(solution, map) {
-        solution.depotList.forEach(depot => {
-            const latLong = [depot.location.latitude, depot.location.longitude];
-            const options = {
-                title: depot.name + ' - ' + depot.id
-            };
-            const popup = this.montaPopupCentroDistribuicao(depot);
-            const marcador = leaflet__WEBPACK_IMPORTED_MODULE_0__.marker(latLong, options).bindPopup(popup);
-            marcador.addTo(map);
-        });
+    // private adicionaCentrosDeDistribuicao(solution: VehicleRoutingSolution, map: L.Map) {
+    //   solution.depotList.forEach(depot => {
+    //     this.adicionaCentroDeDistribuicao(depot, map);
+    //   });
+    // }
+    adicionaCentroDeDistribuicao(depot, layerGroup) {
+        const latLong = [depot.location.latitude, depot.location.longitude];
+        const options = {
+            title: depot.name + ' - ' + depot.id
+        };
+        const popup = this.montaPopupCentroDistribuicao(depot);
+        const marcador = leaflet__WEBPACK_IMPORTED_MODULE_0__.marker(latLong, options).bindPopup(popup);
+        marcador.addTo(layerGroup);
     }
     montaPopupCentroDistribuicao(depot) {
         const id = depot.id;
@@ -731,6 +755,9 @@ class SolverService {
     }
     getCentrosDistribuicao() {
         return this.http.get("/vrp/centros-distribuicao", {});
+    }
+    getCentroDistribuicaoELocaisVotacao(idCentroDistribuicao) {
+        return this.http.get(`/vrp/depot-customers/${idCentroDistribuicao}`, {});
     }
 }
 SolverService.ɵfac = function SolverService_Factory(t) { return new (t || SolverService)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_1__.HttpClient)); };

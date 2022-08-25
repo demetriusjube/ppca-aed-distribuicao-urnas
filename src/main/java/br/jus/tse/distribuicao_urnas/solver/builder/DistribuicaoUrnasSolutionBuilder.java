@@ -25,6 +25,7 @@ import br.jus.tse.distribuicao_urnas.repos.LocalVotacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.ParametroCalculoRepository;
 import br.jus.tse.distribuicao_urnas.solver.domain.Customer;
 import br.jus.tse.distribuicao_urnas.solver.domain.Depot;
+import br.jus.tse.distribuicao_urnas.solver.domain.DepotCustomers;
 import br.jus.tse.distribuicao_urnas.solver.domain.Location;
 import br.jus.tse.distribuicao_urnas.solver.domain.SimulacaoRequest;
 import br.jus.tse.distribuicao_urnas.solver.domain.Vehicle;
@@ -43,16 +44,13 @@ public class DistribuicaoUrnasSolutionBuilder {
 	private static final AtomicLong sequence = new AtomicLong();
 
 	@Autowired
-	private CentroDistribuicaoRepository centroDistribuicaoRepository;
-
-	@Autowired
-	private LocalVotacaoRepository localVotacaoRepository;
-
-	@Autowired
 	private ParametroCalculoRepository parametroCalculoRepository;
 
 	@Autowired
 	private DistanceCalculator distanceCalculator;
+
+	@Autowired
+	private DepotCustomerBuilder depotCustomerBuilder;
 
 	private DistribuicaoUrnasSolutionBuilder() {
 	}
@@ -61,64 +59,37 @@ public class DistribuicaoUrnasSolutionBuilder {
 
 		Location southWestCorner = new Location(0L, new BigDecimal(-16.04871827), new BigDecimal(-48.04740728), "");
 		Location northEastCorner = new Location(0L, new BigDecimal(-15.7041622), new BigDecimal(-47.3737344), "");
-		;
 
-		Optional<CentroDistribuicao> consultaCentroDistribuicao = centroDistribuicaoRepository
-				.findById(simulacaoRequest.getIdCentroDistribuicao());
-		if (consultaCentroDistribuicao.isPresent()) {
-			Optional<ParametroCalculo> parametroVolumeUrna = parametroCalculoRepository
-					.findByTipoParametroEquals(TipoParametroEnum.VOLUME_URNA_APOS_2020);
-			Double volumeUrna = VALOR_MAIOR_VOLUME_URNA;
-			if (parametroVolumeUrna.isPresent()) {
-				volumeUrna = parametroVolumeUrna.get().getValor();
-			}
-			CentroDistribuicao centroDistribuicao = consultaCentroDistribuicao.get();
-			Depot depot = new Depot(centroDistribuicao.getId(), LocationBuilder.buildFrom(centroDistribuicao),
-					centroDistribuicao.getNome());
-
-			List<Depot> depotList = Arrays.asList(depot);
-
-			List<Vehicle> vehicleList = new ArrayList<Vehicle>();
-			adicionaVeiculos38m3(simulacaoRequest, volumeUrna, depot, vehicleList);
-			adicionaVeiculos22m3(simulacaoRequest, volumeUrna, depot, vehicleList);
-			adicionaVeiculos13m3(simulacaoRequest, volumeUrna, depot, vehicleList);
-			adicionaVeiculos7_5m3(simulacaoRequest, volumeUrna, depot, vehicleList);
-
-			if (CollectionUtils.isEmpty(vehicleList)) {
-				throw new IllegalArgumentException(
-						"Não é possível fazer a simulação com uma quantidade nula de veículos!");
-			}
-
-			List<LocalVotacao> locaisVotacaoDoCentro = localVotacaoRepository
-					.findByZonaEleitoralCentroDistribuicaoEquals(centroDistribuicao);
-
-			if (CollectionUtils.isEmpty(locaisVotacaoDoCentro)) {
-				throw new IllegalArgumentException(
-						"O centro de distribuição selecionado não tem locais de votação cadastrados!");
-			}
-
-			List<Customer> customers = new ArrayList<Customer>();
-			for (LocalVotacao localVotacao : locaisVotacaoDoCentro) {
-				Customer customer = new Customer(localVotacao.getId(), localVotacao.getNome(),
-						LocationBuilder.buildFrom(localVotacao), localVotacao.getQuantidadeSecoes());
-				customers.add(customer);
-			}
-
-			if (CollectionUtils.isEmpty(customers)) {
-				throw new IllegalArgumentException("Não é possível fazer a simulação sem locais de votação!");
-			}
-
-			List<Location> locationList = Stream
-					.concat(customers.stream().map(Customer::getLocation), depotList.stream().map(Depot::getLocation))
-					.collect(Collectors.toList());
-
-			distanceCalculator.initDistanceMaps(locationList, simulacaoRequest.getTipoOtimizacaoEnum());
-
-			return new VehicleRoutingSolution("Teste de otimização", locationList, depotList, vehicleList, customers,
-					southWestCorner, northEastCorner);
-
+		DepotCustomers depotCustomers = depotCustomerBuilder.build(simulacaoRequest.getIdCentroDistribuicao());
+		Optional<ParametroCalculo> parametroVolumeUrna = parametroCalculoRepository
+				.findByTipoParametroEquals(TipoParametroEnum.VOLUME_URNA_APOS_2020);
+		Double volumeUrna = VALOR_MAIOR_VOLUME_URNA;
+		if (parametroVolumeUrna.isPresent()) {
+			volumeUrna = parametroVolumeUrna.get().getValor();
 		}
-		throw new IllegalArgumentException("Não foi possível encontrar o centro de distribuição informado!");
+
+		Depot depot = depotCustomers.getDepot();
+		List<Depot> depotList = Arrays.asList(depot);
+
+		List<Vehicle> vehicleList = new ArrayList<Vehicle>();
+		adicionaVeiculos38m3(simulacaoRequest, volumeUrna, depot, vehicleList);
+		adicionaVeiculos22m3(simulacaoRequest, volumeUrna, depot, vehicleList);
+		adicionaVeiculos13m3(simulacaoRequest, volumeUrna, depot, vehicleList);
+		adicionaVeiculos7_5m3(simulacaoRequest, volumeUrna, depot, vehicleList);
+
+		if (CollectionUtils.isEmpty(vehicleList)) {
+			throw new IllegalArgumentException("Não é possível fazer a simulação com uma quantidade nula de veículos!");
+		}
+
+		List<Customer> customers = depotCustomers.getCustomerList();
+		List<Location> locationList = Stream
+				.concat(customers.stream().map(Customer::getLocation), depotList.stream().map(Depot::getLocation))
+				.collect(Collectors.toList());
+
+		distanceCalculator.initDistanceMaps(locationList, simulacaoRequest.getTipoOtimizacaoEnum());
+
+		return new VehicleRoutingSolution("Teste de otimização", locationList, depotList, vehicleList, customers,
+				southWestCorner, northEastCorner);
 
 	}
 
@@ -130,7 +101,7 @@ public class DistribuicaoUrnasSolutionBuilder {
 	private void adicionaVeiculo(Integer quantidadeVeiculos, Double volumeUrna, Depot depot, List<Vehicle> vehicleList,
 			float volumeVeiculo) {
 		if (quantidadeVeiculos != null) {
-			Long capacidade = Math.round(volumeVeiculo / volumeUrna);
+			Double capacidade = Math.floor(volumeVeiculo / volumeUrna);
 			Supplier<Vehicle> vehicleSupplier = () -> new Vehicle(sequence.incrementAndGet(), capacidade.intValue(),
 					depot);
 			vehicleList.addAll(Stream.generate(vehicleSupplier).limit(quantidadeVeiculos).collect(Collectors.toList()));

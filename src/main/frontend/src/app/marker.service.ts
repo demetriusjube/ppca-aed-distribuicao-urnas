@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
 import * as _ from 'lodash';
 import 'leaflet-routing-machine';
-import { Customer, Depot, Location, Status, VehicleRoutingSolution } from './shared/model/distribuicao-urnas-model';
+import { Customer, Depot, DepotCustomers, Location, Status, VehicleRoutingSolution } from './shared/model/distribuicao-urnas-model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,14 +17,23 @@ export class MarkerService {
 
   constructor(private http: HttpClient) { }
 
+  public marcarCentroDistribuicaoELocaisVotacao(layerGroup: L.LayerGroup, depotCustomer: DepotCustomers): void {
+    if (depotCustomer) {
+      layerGroup.clearLayers();
+      this.adicionaCentroDeDistribuicao(depotCustomer.depot, layerGroup);
+      this.adicionaLocaisDeVotacao(depotCustomer.customerList, layerGroup);
+    }
+  }
+
   public marcarSolucaoNoMapa(map: L.Map, statusSolucao: Status): void {
     if (this.existeSolucaoComLocalizacoes(statusSolucao)) {
       const solution = statusSolucao.solution;
-      this.adicionaCentrosDeDistribuicao(solution, map);
-      this.adicionaLocaisDeVotacao(solution, map);
+      // this.adicionaCentrosDeDistribuicao(solution, map);
+      // this.adicionaLocaisDeVotacao(solution.customerList, map);
       this.adicionaRotas(solution, map);
     }
   }
+
   public adicionaRotas(solution: VehicleRoutingSolution, map: L.Map) {
     solution.vehicleList.forEach(vehicle => {
 
@@ -58,15 +67,15 @@ export class MarkerService {
     return L.latLng(location.latitude, location.longitude);
   }
 
-  private adicionaLocaisDeVotacao(solution: VehicleRoutingSolution, map: L.Map) {
-    solution.customerList.forEach(customer => {
+  private adicionaLocaisDeVotacao(customerList: Customer[], layerGroup: L.LayerGroup) {
+    customerList.forEach(customer => {
       const latLong: L.LatLngExpression = [customer.location.latitude, customer.location.longitude];
       const options: L.MarkerOptions = {
         title: customer.name + ' - ' + customer.id
       };
       const popup: L.Content = this.montaPopupLocalVotacao(customer);
       const marcador = L.circleMarker(latLong, options).bindPopup(popup);
-      marcador.addTo(map);
+      marcador.addTo(layerGroup);
     });
   }
 
@@ -76,16 +85,20 @@ export class MarkerService {
     return popup;
   }
 
-  private adicionaCentrosDeDistribuicao(solution: VehicleRoutingSolution, map: L.Map) {
-    solution.depotList.forEach(depot => {
-      const latLong: L.LatLngExpression = [depot.location.latitude, depot.location.longitude];
-      const options: L.MarkerOptions = {
-        title: depot.name + ' - ' + depot.id
-      };
-      const popup: L.Content = this.montaPopupCentroDistribuicao(depot);
-      const marcador = L.marker(latLong, options).bindPopup(popup);
-      marcador.addTo(map);
-    });
+  // private adicionaCentrosDeDistribuicao(solution: VehicleRoutingSolution, map: L.Map) {
+  //   solution.depotList.forEach(depot => {
+  //     this.adicionaCentroDeDistribuicao(depot, map);
+  //   });
+  // }
+
+  private adicionaCentroDeDistribuicao(depot: Depot, layerGroup: L.LayerGroup) {
+    const latLong: L.LatLngExpression = [depot.location.latitude, depot.location.longitude];
+    const options: L.MarkerOptions = {
+      title: depot.name + ' - ' + depot.id
+    };
+    const popup: L.Content = this.montaPopupCentroDistribuicao(depot);
+    const marcador = L.marker(latLong, options).bindPopup(popup);
+    marcador.addTo(layerGroup);
   }
 
   private montaPopupCentroDistribuicao(depot: Depot) {

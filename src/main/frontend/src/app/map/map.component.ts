@@ -15,6 +15,7 @@ import { SolverService } from '../solver.service';
 })
 export class MapComponent implements OnInit, AfterViewInit {
   private map: L.Map;
+  private layerGroup = L.layerGroup();
   private updateSubscription: Subscription;
   public isSolving = false;
   public statusSolucaoAtual: Status;
@@ -30,20 +31,29 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.solverService.getCentrosDistribuicao().subscribe(centrosDistribuicao => {
       this.centrosDistribuicao = centrosDistribuicao;
       this.form = this.formBuilder.group({
-        idCentroDistribuicao: this.formBuilder.control(null, Validators.required),
-        quantidadeCaminhoes38m3: this.formBuilder.control(null),
-        quantidadeCaminhoes22m3: this.formBuilder.control(null),
-        quantidadeCaminhoes13m3: this.formBuilder.control(null),
-        quantidadeCaminhoes7_5m3: this.formBuilder.control(null),
-        tipoOtimizacaoEnum: this.formBuilder.control(null, Validators.required)
+        idCentroDistribuicao: this.getCentroDistribuicaoControl(),
+        quantidadeCaminhoes38m3: this.formBuilder.control(0),
+        quantidadeCaminhoes22m3: this.formBuilder.control(0),
+        quantidadeCaminhoes13m3: this.formBuilder.control(0),
+        quantidadeCaminhoes7_5m3: this.formBuilder.control(0),
+        tipoOtimizacaoEnum: this.formBuilder.control('MENOR_DISTANCIA', Validators.required)
       })
     })
+  }
+
+  private getCentroDistribuicaoControl() {
+    const centroDistribuicaoControl = this.formBuilder.control(null, Validators.required);
+    centroDistribuicaoControl.valueChanges.subscribe(idCentroDistribuicao => {
+      this.marcarCentroDistribuicaoELocaisVotacao(idCentroDistribuicao);
+    });
+    return centroDistribuicaoControl;
   }
 
   private initMap(): void {
     this.map = this.buildMap();
     const tiles = this.buildTiles();
     tiles.addTo(this.map);
+    this.layerGroup.addTo(this.map);
     // this.atualizarMapa();
   }
 
@@ -71,6 +81,12 @@ export class MapComponent implements OnInit, AfterViewInit {
     })
   }
 
+  private marcarCentroDistribuicaoELocaisVotacao(idCentroDistribuicao: number): void {
+    this.solverService.getCentroDistribuicaoELocaisVotacao(idCentroDistribuicao).subscribe(depotCustomers => {
+      this.markerService.marcarCentroDistribuicaoELocaisVotacao(this.layerGroup, depotCustomers);
+    });
+  }
+
   private updateSolvingStatus(solvingStatus: boolean): void {
     this.isSolving = solvingStatus;
     if (!solvingStatus) {
@@ -93,7 +109,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.updateSolvingStatus(true);
     this.solverService.startSolving(simulacaoRequest).subscribe({
       next: () => {
-        this.updateSubscription = interval(12000).subscribe((val) => {
+        this.updateSubscription = interval(30000).subscribe((val) => {
           this.atualizarMapa();
         });
       },

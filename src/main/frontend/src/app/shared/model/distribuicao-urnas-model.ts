@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-08-25 12:03:40.
+// Generated using typescript-generator version 2.28.785 on 2022-08-25 15:57:12.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -106,6 +106,11 @@ export interface Depot {
     location: Location;
 }
 
+export interface DepotCustomers {
+    depot: Depot;
+    customerList: Customer[];
+}
+
 export interface Location {
     id: number;
     endereco: string;
@@ -163,9 +168,9 @@ export interface Serializable {
 
 export interface Score<Score_> extends Comparable<Score_> {
     zero: boolean;
-    solutionInitialized: boolean;
     feasible: boolean;
     initScore: number;
+    solutionInitialized: boolean;
 }
 
 export interface Comparable<T> {
