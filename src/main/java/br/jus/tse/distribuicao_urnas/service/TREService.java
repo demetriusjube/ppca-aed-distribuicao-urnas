@@ -54,13 +54,11 @@ public class TREService {
 
     private TREDTO mapToDTO(final TRE tRE, final TREDTO tREDTO) {
         tREDTO.setId(tRE.getId());
-        tREDTO.setNumero(tRE.getNumero());
         tREDTO.setUf(tRE.getUf());
         return tREDTO;
     }
 
     private TRE mapToEntity(final TREDTO tREDTO, final TRE tRE) {
-        tRE.setNumero(tREDTO.getNumero());
         tRE.setUf(tREDTO.getUf());
         return tRE;
     }

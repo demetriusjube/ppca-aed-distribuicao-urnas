@@ -7,8 +7,10 @@ import br.jus.tse.distribuicao_urnas.model.LocalVotacaoDTO;
 import br.jus.tse.distribuicao_urnas.repos.LocalVotacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalizacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.ZonaEleitoralRepository;
+import br.jus.tse.distribuicao_urnas.util.WebUtils;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -85,6 +87,16 @@ public class LocalVotacaoService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "localizacao not found"));
         localVotacao.setLocalizacao(localizacao);
         return localVotacao;
+    }
+
+    @Transactional
+    public String getReferencedWarning(final Long id) {
+        final LocalVotacao localVotacao = localVotacaoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (!localVotacao.getLocalVotacaoVisitas().isEmpty()) {
+            return WebUtils.getMessage("localVotacao.visita.manyToOne.referenced", localVotacao.getLocalVotacaoVisitas().iterator().next().getId());
+        }
+        return null;
     }
 
 }

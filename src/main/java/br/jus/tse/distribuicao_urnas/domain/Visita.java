@@ -36,11 +36,11 @@ public class Visita {
     private Integer ordem;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "localizacao_id")
-    private Localizacao localizacao;
+    @JoinColumn(name = "local_votacao_id")
+    private LocalVotacao localVotacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "visitas_id")
-    private PlanoRota visitas;
+    @JoinColumn(name = "plano_rota_id")
+    private PlanoRota planoRota;
 
 }

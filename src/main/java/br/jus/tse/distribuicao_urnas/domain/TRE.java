@@ -31,9 +31,6 @@ public class TRE {
     )
     private Long id;
 
-    @Column(nullable = false)
-    private Integer numero;
-
     @Column(nullable = false, length = 2)
     private String uf;
 

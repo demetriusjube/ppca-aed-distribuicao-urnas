@@ -71,10 +71,8 @@ public class VeiculoService {
     public String getReferencedWarning(final Long id) {
         final Veiculo veiculo = veiculoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (!veiculo.getVeiculoPlanoRotas().isEmpty()) {
-            return WebUtils.getMessage("veiculo.planoRota.manyToOne.referenced", veiculo.getVeiculoPlanoRotas().iterator().next().getId());
-        } else if (!veiculo.getVeiculoSimulacaoSimulacaos().isEmpty()) {
-            return WebUtils.getMessage("veiculo.simulacao.manyToMany.referenced", veiculo.getVeiculoSimulacaoSimulacaos().iterator().next().getId());
+        if (!veiculo.getVeiculoVeiculoSimulacaos().isEmpty()) {
+            return WebUtils.getMessage("veiculo.veiculoSimulacao.manyToOne.referenced", veiculo.getVeiculoVeiculoSimulacaos().iterator().next().getId());
         }
         return null;
     }

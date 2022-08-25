@@ -1,11 +1,11 @@
 package br.jus.tse.distribuicao_urnas.controller;
 
 import br.jus.tse.distribuicao_urnas.domain.CentroDistribuicao;
-import br.jus.tse.distribuicao_urnas.domain.Veiculo;
+import br.jus.tse.distribuicao_urnas.domain.VeiculoSimulacao;
 import br.jus.tse.distribuicao_urnas.model.SimulacaoDTO;
 import br.jus.tse.distribuicao_urnas.model.TipoOtimizacaoEnum;
 import br.jus.tse.distribuicao_urnas.repos.CentroDistribuicaoRepository;
-import br.jus.tse.distribuicao_urnas.repos.VeiculoRepository;
+import br.jus.tse.distribuicao_urnas.repos.VeiculoSimulacaoRepository;
 import br.jus.tse.distribuicao_urnas.service.SimulacaoService;
 import br.jus.tse.distribuicao_urnas.util.WebUtils;
 import java.util.stream.Collectors;
@@ -26,24 +26,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class SimulacaoController {
 
     private final SimulacaoService simulacaoService;
-    private final VeiculoRepository veiculoRepository;
     private final CentroDistribuicaoRepository centroDistribuicaoRepository;
+    private final VeiculoSimulacaoRepository veiculoSimulacaoRepository;
 
     public SimulacaoController(final SimulacaoService simulacaoService,
-            final VeiculoRepository veiculoRepository,
-            final CentroDistribuicaoRepository centroDistribuicaoRepository) {
+            final CentroDistribuicaoRepository centroDistribuicaoRepository,
+            final VeiculoSimulacaoRepository veiculoSimulacaoRepository) {
         this.simulacaoService = simulacaoService;
-        this.veiculoRepository = veiculoRepository;
         this.centroDistribuicaoRepository = centroDistribuicaoRepository;
+        this.veiculoSimulacaoRepository = veiculoSimulacaoRepository;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
         model.addAttribute("tipoOtimizacaoValues", TipoOtimizacaoEnum.values());
-        model.addAttribute("veiculoSimulacaosValues", veiculoRepository.findAll().stream().collect(
-                Collectors.toMap(Veiculo::getId, Veiculo::getDescricao)));
         model.addAttribute("centroDistribuicaoValues", centroDistribuicaoRepository.findAll().stream().collect(
                 Collectors.toMap(CentroDistribuicao::getId, CentroDistribuicao::getNome)));
+        model.addAttribute("veiculosValues", veiculoSimulacaoRepository.findAll().stream().collect(
+                Collectors.toMap(VeiculoSimulacao::getId, VeiculoSimulacao::getId)));
     }
 
     @GetMapping

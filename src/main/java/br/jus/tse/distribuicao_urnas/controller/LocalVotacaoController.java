@@ -86,8 +86,13 @@ public class LocalVotacaoController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable final Long id, final RedirectAttributes redirectAttributes) {
-        localVotacaoService.delete(id);
-        redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("localVotacao.delete.success"));
+        final String referencedWarning = localVotacaoService.getReferencedWarning(id);
+        if (referencedWarning != null) {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, referencedWarning);
+        } else {
+            localVotacaoService.delete(id);
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("localVotacao.delete.success"));
+        }
         return "redirect:/localVotacaos";
     }
 

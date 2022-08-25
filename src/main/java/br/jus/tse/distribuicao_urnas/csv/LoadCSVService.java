@@ -25,12 +25,14 @@ import br.jus.tse.distribuicao_urnas.domain.CentroDistribuicao;
 import br.jus.tse.distribuicao_urnas.domain.Distancia;
 import br.jus.tse.distribuicao_urnas.domain.LocalVotacao;
 import br.jus.tse.distribuicao_urnas.domain.Localizacao;
+import br.jus.tse.distribuicao_urnas.domain.ParametroCalculo;
 import br.jus.tse.distribuicao_urnas.domain.TRE;
 import br.jus.tse.distribuicao_urnas.domain.ZonaEleitoral;
 import br.jus.tse.distribuicao_urnas.repos.CentroDistribuicaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.DistanciaRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalVotacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalizacaoRepository;
+import br.jus.tse.distribuicao_urnas.repos.ParametroCalculoRepository;
 import br.jus.tse.distribuicao_urnas.repos.TRERepository;
 import br.jus.tse.distribuicao_urnas.repos.ZonaEleitoralRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +56,9 @@ public class LoadCSVService {
 
 	@Autowired
 	private CentroDistribuicaoRepository centroDistribuicaoRepository;
+
+	@Autowired
+	private ParametroCalculoRepository parametroCalculoRepository;
 
 	@Transactional
 	public CentroDistribuicao saveCentroDistribuicaoFromCSV(CentroDistribuicaoCSVDto centroDistribuicaoCSVDto) {
@@ -162,7 +167,6 @@ public class LoadCSVService {
 		Optional<TRE> treSalvo = treRepository.findByUf(localVotacaoCSVDto.getUf());
 		if (treSalvo.isEmpty()) {
 			tre = new TRE();
-			tre.setNumero(1);
 			tre.setUf(localVotacaoCSVDto.getUf());
 			treRepository.save(tre);
 		} else {
@@ -177,11 +181,46 @@ public class LoadCSVService {
 		try {
 			importarLocaisVotacao();
 			importarCentrosDistribuicao();
+			importarParametros();
 		} catch (IllegalStateException | IOException e) {
 			throw new RuntimeException("Erro ao importar os locais de votacao!");
 		}
 	}
 
+	private void importarParametros() throws IllegalStateException, FileNotFoundException, IOException {
+		List<ParametroCSVDto> parametrosCSV = new CsvToBeanBuilder(new FileReader(getArquivoParametroCSV()))
+				.withType(ParametroCSVDto.class).withQuoteChar('\"').build().parse();
+		log.info("Foram recuperados {} parâmetros do CSV", parametrosCSV.size());
+		for (ParametroCSVDto parametroCSVDto : parametrosCSV) {
+			ParametroCalculo parametroCalculo = saveParametroFromCSV(parametroCSVDto);
+			log.info("Salvando o Parâmetro {}", parametroCalculo.getTipoParametro());
+		}
+
+	}
+
+	private ParametroCalculo saveParametroFromCSV(ParametroCSVDto parametroCSVDto) {
+		Optional<ParametroCalculo> tipoParametroSalvo = parametroCalculoRepository
+				.findByTipoParametroEquals(parametroCSVDto.getTipoParametro());
+		if (tipoParametroSalvo.isPresent()) {
+			log.info("PARÂMETRO DO TIPO {} JÁ CADASTRADO!", parametroCSVDto.getTipoParametro());
+			return tipoParametroSalvo.get();
+		}
+		log.info("Iniciando cadastro do parâmetro {}", parametroCSVDto.getTipoParametro());
+		ParametroCalculo parametroCalculo = montaParametro(parametroCSVDto);
+		parametroCalculoRepository.save(parametroCalculo);
+		return parametroCalculo;
+	}
+
+	private ParametroCalculo montaParametro(ParametroCSVDto parametroCSVDto) {
+		ParametroCalculo parametro = new ParametroCalculo();
+		parametro.setTipoParametro(parametroCSVDto.getTipoParametro());
+		parametro.setValor(parametroCSVDto.getValor());
+		return parametro;
+	}
+
+	private File getArquivoParametroCSV() throws IOException {
+		return getArquivoDoClasspath("csv/parametros.csv");
+	}
 
 	private void importarCentrosDistribuicao() throws IllegalStateException, FileNotFoundException, IOException {
 		List<CentroDistribuicaoCSVDto> centrosDistribuicaoCSV = new CsvToBeanBuilder(

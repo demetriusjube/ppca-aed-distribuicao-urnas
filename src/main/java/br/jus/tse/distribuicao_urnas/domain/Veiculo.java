@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import lombok.Getter;
@@ -42,9 +41,6 @@ public class Veiculo {
     private Integer capacidade;
 
     @OneToMany(mappedBy = "veiculo")
-    private Set<PlanoRota> veiculoPlanoRotas;
-
-    @ManyToMany(mappedBy = "veiculoSimulacaoVeiculos")
-    private Set<Simulacao> veiculoSimulacaoSimulacaos;
+    private Set<VeiculoSimulacao> veiculoVeiculoSimulacaos;
 
 }

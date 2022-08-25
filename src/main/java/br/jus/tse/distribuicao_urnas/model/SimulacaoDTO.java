@@ -1,7 +1,6 @@
 package br.jus.tse.distribuicao_urnas.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,8 +21,7 @@ public class SimulacaoDTO {
 
     private TipoOtimizacaoEnum tipoOtimizacao;
 
-    private List<Long> veiculoSimulacaos;
-
     private Long centroDistribuicao;
+
 
 }

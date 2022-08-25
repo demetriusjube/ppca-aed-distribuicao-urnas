@@ -2,13 +2,12 @@ package br.jus.tse.distribuicao_urnas.service;
 
 import br.jus.tse.distribuicao_urnas.domain.CentroDistribuicao;
 import br.jus.tse.distribuicao_urnas.domain.Simulacao;
-import br.jus.tse.distribuicao_urnas.domain.Veiculo;
+import br.jus.tse.distribuicao_urnas.domain.VeiculoSimulacao;
 import br.jus.tse.distribuicao_urnas.model.SimulacaoDTO;
 import br.jus.tse.distribuicao_urnas.repos.CentroDistribuicaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.SimulacaoRepository;
-import br.jus.tse.distribuicao_urnas.repos.VeiculoRepository;
+import br.jus.tse.distribuicao_urnas.repos.VeiculoSimulacaoRepository;
 import br.jus.tse.distribuicao_urnas.util.WebUtils;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -18,20 +17,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 
-@Transactional
 @Service
 public class SimulacaoService {
 
     private final SimulacaoRepository simulacaoRepository;
-    private final VeiculoRepository veiculoRepository;
     private final CentroDistribuicaoRepository centroDistribuicaoRepository;
+    private final VeiculoSimulacaoRepository veiculoSimulacaoRepository;
 
     public SimulacaoService(final SimulacaoRepository simulacaoRepository,
-            final VeiculoRepository veiculoRepository,
-            final CentroDistribuicaoRepository centroDistribuicaoRepository) {
+            final CentroDistribuicaoRepository centroDistribuicaoRepository,
+            final VeiculoSimulacaoRepository veiculoSimulacaoRepository) {
         this.simulacaoRepository = simulacaoRepository;
-        this.veiculoRepository = veiculoRepository;
         this.centroDistribuicaoRepository = centroDistribuicaoRepository;
+        this.veiculoSimulacaoRepository = veiculoSimulacaoRepository;
     }
 
     public List<SimulacaoDTO> findAll() {
@@ -69,9 +67,6 @@ public class SimulacaoService {
         simulacaoDTO.setDescricao(simulacao.getDescricao());
         simulacaoDTO.setDataHora(simulacao.getDataHora());
         simulacaoDTO.setTipoOtimizacao(simulacao.getTipoOtimizacao());
-        simulacaoDTO.setVeiculoSimulacaos(simulacao.getVeiculoSimulacaoVeiculos() == null ? null : simulacao.getVeiculoSimulacaoVeiculos().stream()
-                .map(veiculo -> veiculo.getId())
-                .collect(Collectors.toList()));
         simulacaoDTO.setCentroDistribuicao(simulacao.getCentroDistribuicao() == null ? null : simulacao.getCentroDistribuicao().getId());
         return simulacaoDTO;
     }
@@ -80,12 +75,6 @@ public class SimulacaoService {
         simulacao.setDescricao(simulacaoDTO.getDescricao());
         simulacao.setDataHora(simulacaoDTO.getDataHora());
         simulacao.setTipoOtimizacao(simulacaoDTO.getTipoOtimizacao());
-        final List<Veiculo> veiculoSimulacaos = veiculoRepository.findAllById(
-                simulacaoDTO.getVeiculoSimulacaos() == null ? Collections.emptyList() : simulacaoDTO.getVeiculoSimulacaos());
-        if (veiculoSimulacaos.size() != (simulacaoDTO.getVeiculoSimulacaos() == null ? 0 : simulacaoDTO.getVeiculoSimulacaos().size())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "one of veiculoSimulacaos not found");
-        }
-        simulacao.setVeiculoSimulacaoVeiculos(veiculoSimulacaos.stream().collect(Collectors.toSet()));
         final CentroDistribuicao centroDistribuicao = simulacaoDTO.getCentroDistribuicao() == null ? null : centroDistribuicaoRepository.findById(simulacaoDTO.getCentroDistribuicao())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "centroDistribuicao not found"));
         simulacao.setCentroDistribuicao(centroDistribuicao);
@@ -98,6 +87,8 @@ public class SimulacaoService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (!simulacao.getRestricoesRestricaoSimulacaos().isEmpty()) {
             return WebUtils.getMessage("simulacao.restricaoSimulacao.oneToMany.referenced", simulacao.getRestricoesRestricaoSimulacaos().iterator().next().getId());
+        } else if (!simulacao.getSimulacaoVeiculoSimulacaos().isEmpty()) {
+            return WebUtils.getMessage("simulacao.veiculoSimulacao.manyToOne.referenced", simulacao.getSimulacaoVeiculoSimulacaos().iterator().next().getId());
         }
         return null;
     }

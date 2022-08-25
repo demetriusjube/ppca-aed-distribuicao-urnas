@@ -9,6 +9,5 @@ import lombok.Setter;
 public class PlanoRotaDTO {
 
     private Long id;
-    private Long veiculo;
 
 }

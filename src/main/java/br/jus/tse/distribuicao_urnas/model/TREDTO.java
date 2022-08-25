@@ -13,9 +13,6 @@ public class TREDTO {
     private Long id;
 
     @NotNull
-    private Integer numero;
-
-    @NotNull
     @Size(max = 2)
     private String uf;
 

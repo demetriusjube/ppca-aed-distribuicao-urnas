@@ -1,10 +1,8 @@
 package br.jus.tse.distribuicao_urnas.service;
 
 import br.jus.tse.distribuicao_urnas.domain.PlanoRota;
-import br.jus.tse.distribuicao_urnas.domain.Veiculo;
 import br.jus.tse.distribuicao_urnas.model.PlanoRotaDTO;
 import br.jus.tse.distribuicao_urnas.repos.PlanoRotaRepository;
-import br.jus.tse.distribuicao_urnas.repos.VeiculoRepository;
 import br.jus.tse.distribuicao_urnas.util.WebUtils;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,12 +17,9 @@ import org.springframework.web.server.ResponseStatusException;
 public class PlanoRotaService {
 
     private final PlanoRotaRepository planoRotaRepository;
-    private final VeiculoRepository veiculoRepository;
 
-    public PlanoRotaService(final PlanoRotaRepository planoRotaRepository,
-            final VeiculoRepository veiculoRepository) {
+    public PlanoRotaService(final PlanoRotaRepository planoRotaRepository) {
         this.planoRotaRepository = planoRotaRepository;
-        this.veiculoRepository = veiculoRepository;
     }
 
     public List<PlanoRotaDTO> findAll() {
@@ -59,14 +54,10 @@ public class PlanoRotaService {
 
     private PlanoRotaDTO mapToDTO(final PlanoRota planoRota, final PlanoRotaDTO planoRotaDTO) {
         planoRotaDTO.setId(planoRota.getId());
-        planoRotaDTO.setVeiculo(planoRota.getVeiculo() == null ? null : planoRota.getVeiculo().getId());
         return planoRotaDTO;
     }
 
     private PlanoRota mapToEntity(final PlanoRotaDTO planoRotaDTO, final PlanoRota planoRota) {
-        final Veiculo veiculo = planoRotaDTO.getVeiculo() == null ? null : veiculoRepository.findById(planoRotaDTO.getVeiculo())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "veiculo not found"));
-        planoRota.setVeiculo(veiculo);
         return planoRota;
     }
 
@@ -74,8 +65,10 @@ public class PlanoRotaService {
     public String getReferencedWarning(final Long id) {
         final PlanoRota planoRota = planoRotaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (!planoRota.getVisitasVisitas().isEmpty()) {
-            return WebUtils.getMessage("planoRota.visita.oneToMany.referenced", planoRota.getVisitasVisitas().iterator().next().getId());
+        if (!planoRota.getVisitas().isEmpty()) {
+            return WebUtils.getMessage("planoRota.visita.oneToMany.referenced", planoRota.getVisitas().iterator().next().getId());
+        } else if (!planoRota.getPlanoRotaVeiculoSimulacaos().isEmpty()) {
+            return WebUtils.getMessage("planoRota.veiculoSimulacao.manyToOne.referenced", planoRota.getPlanoRotaVeiculoSimulacaos().iterator().next().getId());
         }
         return null;
     }

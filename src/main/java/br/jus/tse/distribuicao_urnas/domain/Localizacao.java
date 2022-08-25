@@ -48,9 +48,6 @@ public class Localizacao {
     private Set<Distancia> destinoDistancias;
 
     @OneToMany(mappedBy = "localizacao")
-    private Set<Visita> localizacaoVisitas;
-
-    @OneToMany(mappedBy = "localizacao")
     private Set<CentroDistribuicao> localizacaoCentroDistribuicaos;
 
 }
