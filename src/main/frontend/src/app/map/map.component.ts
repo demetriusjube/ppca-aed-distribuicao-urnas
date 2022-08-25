@@ -1,30 +1,49 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as L from 'leaflet';
-import { interval, Observable, Subscription } from 'rxjs';
-import { MarkerService } from '../marker.service';
-import { Depot, Status, Vehicle } from '../shared/model/distribuicao-urnas-model';
-import { SolverService } from '../solver.service';
 import * as _ from 'lodash';
+import { interval, Subscription } from 'rxjs';
+import { MarkerService } from '../marker.service';
+import { CentroDistribuicaoDTO, Depot, SimulacaoRequest, Status, Vehicle } from '../shared/model/distribuicao-urnas-model';
+import { SolverService } from '../solver.service';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements OnInit, AfterViewInit {
   private map: L.Map;
   private updateSubscription: Subscription;
   public isSolving = false;
   public statusSolucaoAtual: Status;
+  public form: FormGroup;
+  public centrosDistribuicao: CentroDistribuicaoDTO[] = [];
 
   constructor(private markerService: MarkerService,
-    private solverService: SolverService) { }
+    private solverService: SolverService,
+    private formBuilder: FormBuilder) { }
+
+
+  ngOnInit(): void {
+    this.solverService.getCentrosDistribuicao().subscribe(centrosDistribuicao => {
+      this.centrosDistribuicao = centrosDistribuicao;
+      this.form = this.formBuilder.group({
+        idCentroDistribuicao: this.formBuilder.control(null, Validators.required),
+        quantidadeCaminhoes38m3: this.formBuilder.control(null),
+        quantidadeCaminhoes22m3: this.formBuilder.control(null),
+        quantidadeCaminhoes13m3: this.formBuilder.control(null),
+        quantidadeCaminhoes7_5m3: this.formBuilder.control(null),
+        tipoOtimizacaoEnum: this.formBuilder.control(null)
+      })
+    })
+  }
 
   private initMap(): void {
     this.map = this.buildMap();
     const tiles = this.buildTiles();
     tiles.addTo(this.map);
-    this.atualizarMapa();
+    // this.atualizarMapa();
   }
 
 
@@ -63,7 +82,8 @@ export class MapComponent implements AfterViewInit {
   }
 
   public startSolving(): void {
-    this.solverService.startSolving();
+    const simulacaoRequest = this.form.value as SimulacaoRequest;
+    this.solverService.startSolving(simulacaoRequest);
     this.updateSubscription = interval(12000).subscribe((val) => {
       this.atualizarMapa();
     });

@@ -141,6 +141,7 @@
 					<jsonLibrary>jackson2</jsonLibrary>
 					<classPatterns>
 						<classPattern>br.jus.tse.distribuicao_urnas.solver.domain.*</classPattern>
+						<classPattern>br.jus.tse.distribuicao_urnas.model.*</classPattern>
 					</classPatterns>
 					<outputKind>module</outputKind>
 					<outputFileType>implementationFile</outputFileType>

@@ -20,12 +20,12 @@ public class DistribuicaoUrnasStartupListener {
 	@Autowired
 	private DistribuicaoUrnasSolutionBuilder distribuicaoUrnasSolutionBuilder;
 
-	@EventListener
-	@Transactional
-	public void onApplicationEvent(ContextRefreshedEvent event) {
-		VehicleRoutingSolution problem = distribuicaoUrnasSolutionBuilder.build(11240l, 18, 400,
-				TipoOtimizacaoEnum.MENOR_DISTANCIA);
-		vehicleRoutingSolutionRepository.update(problem);
-	}
+//	@EventListener
+//	@Transactional
+//	public void onApplicationEvent(ContextRefreshedEvent event) {
+//		VehicleRoutingSolution problem = distribuicaoUrnasSolutionBuilder.build(11240l, 18, 400,
+//				TipoOtimizacaoEnum.MENOR_DISTANCIA);
+//		vehicleRoutingSolutionRepository.update(problem);
+//	}
 
 }

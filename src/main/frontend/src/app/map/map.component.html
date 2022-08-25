@@ -11,92 +11,129 @@
             <!-- </div>
             </div> -->
         </div>
-        <div class="col-5 col-lg-4 col-xl-3" style="height: 100vh; overflow-y: scroll;">
-            <div class="row pt-2 row-cols-1">
-                <div class="col mb-3">
-                    <button id="solveButton" type="button" class="btn btn-success" (click)="startSolving()"
-                        *ngIf="!isSolving">
-                        <i class="fas fa-play"></i> Resolver
-                    </button>
-                    <button id="stopSolvingButton" type="button" class="btn btn-danger" (click)="stopSolving()"
-                        *ngIf="isSolving">
-                        <i class="fas fa-stop"></i> Parar resolução
-                    </button>
+        <div *ngIf="form" [formGroup]="form">
+            <div class="col-5 col-lg-4 col-xl-3" style="height: 100vh; overflow-y: scroll;">
+                <div class="row pt-2 row-cols-1">
+                    <select class="form-control" formControlName="idCentroDistribuicao">
+                        <option *ngFor="let centroDistribuicao of centrosDistribuicao" value={{centroDistribuicao.id}}>
+                            {{centroDistribuicao.nome}}
+                        </option>
+                    </select>
                 </div>
-                <div class="col">
-                    <h5>
-                        Resumo da solução
-                        <a href="#" class="float-right" data-toggle="modal" data-target="#scoreDialog">
-                            <i class="fas fa-info-circle"></i>
-                        </a>
-                    </h5>
-                    <table class="table">
-                        <tr>
-                            <td>Score:</td>
-                            <td><span id="score">{{statusSolucaoAtual?.solution?.score}}</span></td>
-                        </tr>
-                        <tr>
-                            <td>Distância total percorrida:</td>
-                            <td><span id="distance">{{getDistanciaFormatada()}}</span></td>
-                        </tr>
-                    </table>
+                <div class="row pt-2 row-cols-1">
+                    <label for="quantidadeCaminhoes38m3">Veículos 38m3</label>
+                    <input type="number" class="form-control" formControlName="quantidadeCaminhoes38m3" min="0" />
                 </div>
-                <div class="col">
-                    <h5>Centro de Distribuição</h5>
-                    <table class="table-sm w-100" *ngIf="statusSolucaoAtual?.solution?.depotList">
-                        <thead>
-                            <tr>
-                                <th class="col-1"></th>
-                                <th class="col-11">Nome</th>
-                            </tr>
-                        </thead>
-                        <tbody id="depots">
-                            <tr *ngFor="let depot of statusSolucaoAtual.solution.depotList">
-                                <td><i class="fas fa-crosshairs" [id]='getIdCrossHairDepot(depot)'
-                                        [style]="getDepotStyle(depot)">
-                                    </i></td>
-                                <td>{{depot.name}}</td>
-                            </tr>
+                <div class="row pt-2 row-cols-1">
+                    <label for="quantidadeCaminhoes22m3">Veículos 22m3</label>
+                    <input type="number" class="form-control" formControlName="quantidadeCaminhoes22m3" min="0" />
+                </div>
+                <div class="row pt-2 row-cols-1">
+                    <label for="quantidadeCaminhoes13m3">Veículos 13m3</label>
+                    <input type="number" class="form-control" formControlName="quantidadeCaminhoes13m3" min="0" />
+                </div>
+                <div class="row pt-2 row-cols-1">
+                    <label for="quantidadeCaminhoes7_5m3">Veículos 7,5m3</label>
+                    <input type="number" class="form-control" formControlName="quantidadeCaminhoes7_5m3" min="0" />
+                </div>
+                <div class="row pt-2 row-cols-1">
+                    <select class="form-control" formControlName="tipoOtimizacaoEnum">
+                        <option value="MENOR_DISTANCIA">
+                            Menor distância
+                        </option>
+                        <option value="MENOR_TEMPO">
+                            Menor tempo
+                        </option>
+                    </select>
+                </div>
 
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col">
-                    <h5>Veículos</h5>
-                    <table class="table-sm w-100" *ngIf="statusSolucaoAtual?.solution?.vehicleList">
-                        <thead>
+                <div class="row pt-2 row-cols-1">
+                    <div class="col mb-3">
+                        <button id="solveButton" type="button" class="btn btn-success" (click)="startSolving()"
+                            *ngIf="!isSolving">
+                            <i class="fas fa-play"></i> Resolver
+                        </button>
+                        <button id="stopSolvingButton" type="button" class="btn btn-danger" (click)="stopSolving()"
+                            *ngIf="isSolving">
+                            <i class="fas fa-stop"></i> Parar resolução
+                        </button>
+                    </div>
+                    <div class="col">
+                        <h5>
+                            Resumo da solução
+                            <a href="#" class="float-right" data-toggle="modal" data-target="#scoreDialog">
+                                <i class="fas fa-info-circle"></i>
+                            </a>
+                        </h5>
+                        <table class="table">
                             <tr>
-                                <th class="col-1"></th>
-                                <th class="col-3">Nome</th>
-                                <th class="col-3">
-                                    Carga
-                                    <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top"
-                                        data-html="true"
-                                        title="Carga dos veículos mostrada na forma <em>Carga total / Capacidade</em>."></i>
-                                </th>
-                                <th class="col-3">Distância</th>
+                                <td>Score:</td>
+                                <td><span id="score">{{statusSolucaoAtual?.solution?.score}}</span></td>
                             </tr>
-                        </thead>
-                        <tbody id="vehicles">
-                            <tr *ngFor="let vehicle of statusSolucaoAtual.solution.vehicleList">
-                                <td>
-                                    <i class="fas fa-crosshairs" [id]='getIdCrossHairVehicle(vehicle)'
-                                        [style]="getVehicleStyle(vehicle)">
-                                    </i>
-                                </td>
-                                <td>Veículo {{vehicle.id}}</td>
-                                <td>
-                                    <div class="progress" data-toggle="tooltip-load" data-placement="left"
-                                        data-html="true" [title]="getVehicleTitle(vehicle)">
-                                        <div class="progress-bar" role="progressbar" [style]="getVehicleProgressBarStyle(vehicle)">
-                                            {{vehicle.totalDemand}}/{{vehicle.capacity}}</div>
-                                    </div>
-                                </td>
-                                <td>{{getDistanciaEmMetros(vehicle.totalDistanceMeters)}}</td>
+                            <tr>
+                                <td>Distância total percorrida:</td>
+                                <td><span id="distance">{{getDistanciaFormatada()}}</span></td>
                             </tr>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <h5>Centro de Distribuição</h5>
+                        <table class="table-sm w-100" *ngIf="statusSolucaoAtual?.solution?.depotList">
+                            <thead>
+                                <tr>
+                                    <th class="col-1"></th>
+                                    <th class="col-11">Nome</th>
+                                </tr>
+                            </thead>
+                            <tbody id="depots">
+                                <tr *ngFor="let depot of statusSolucaoAtual.solution.depotList">
+                                    <td><i class="fas fa-crosshairs" [id]='getIdCrossHairDepot(depot)'
+                                            [style]="getDepotStyle(depot)">
+                                        </i></td>
+                                    <td>{{depot.name}}</td>
+                                </tr>
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <h5>Veículos</h5>
+                        <table class="table-sm w-100" *ngIf="statusSolucaoAtual?.solution?.vehicleList">
+                            <thead>
+                                <tr>
+                                    <th class="col-1"></th>
+                                    <th class="col-3">Nome</th>
+                                    <th class="col-3">
+                                        Carga
+                                        <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top"
+                                            data-html="true"
+                                            title="Carga dos veículos mostrada na forma <em>Carga total / Capacidade</em>."></i>
+                                    </th>
+                                    <th class="col-3">Distância</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vehicles">
+                                <tr *ngFor="let vehicle of statusSolucaoAtual.solution.vehicleList">
+                                    <td>
+                                        <i class="fas fa-crosshairs" [id]='getIdCrossHairVehicle(vehicle)'
+                                            [style]="getVehicleStyle(vehicle)">
+                                        </i>
+                                    </td>
+                                    <td>Veículo {{vehicle.id}}</td>
+                                    <td>
+                                        <div class="progress" data-toggle="tooltip-load" data-placement="left"
+                                            data-html="true" [title]="getVehicleTitle(vehicle)">
+                                            <div class="progress-bar" role="progressbar"
+                                                [style]="getVehicleProgressBarStyle(vehicle)">
+                                                {{vehicle.totalDemand}}/{{vehicle.capacity}}</div>
+                                        </div>
+                                    </td>
+                                    <td>{{getDistanciaEmMetros(vehicle.totalDistanceMeters)}}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
