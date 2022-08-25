@@ -12,6 +12,7 @@ export class MarkerService {
 
   private colorMap = new Map<number, string>();
   private vehicleColorMap = new Map<number, string>();
+  private routeControls : L.Control[] = [];
 
   private letters = '0123456789ABCDEF';
 
@@ -25,40 +26,45 @@ export class MarkerService {
     }
   }
 
-  public marcarSolucaoNoMapa(map: L.Map, statusSolucao: Status): void {
+  public marcarSolucaoNoMapa(map: L.Map, statusSolucao: Status, idsVehicles?: number[]): void {
     if (this.existeSolucaoComLocalizacoes(statusSolucao)) {
       const solution = statusSolucao.solution;
       // this.adicionaCentrosDeDistribuicao(solution, map);
       // this.adicionaLocaisDeVotacao(solution.customerList, map);
-      this.adicionaRotas(solution, map);
+      this.adicionaRotas(solution, map, idsVehicles);
     }
   }
 
-  public adicionaRotas(solution: VehicleRoutingSolution, map: L.Map) {
+  public adicionaRotas(solution: VehicleRoutingSolution, map: L.Map, idsVehicles?: number[]) {
+    this.routeControls.forEach(routeControl => {
+      map.removeControl(routeControl);
+    });
     solution.vehicleList.forEach(vehicle => {
-
-      if (!_.isNil(vehicle.customerList) && vehicle.customerList.length > 0) {
-        var visits: L.LatLng[] = [];
-        vehicle.route.forEach(location => {
-          visits.push(this.buildLatLongFromLocation(location));
-        });
-        const vehicleColor = this.getVehicleColorById(vehicle.id);
-        const lineOptions: L.Routing.LineOptions = {
-          extendToWaypoints: true,
-          missingRouteTolerance: 10,
-          styles: [{
-            color: vehicleColor,
-            weight: 5
-          }]
+      if ((_.isNil(idsVehicles) || idsVehicles.length === 0) || (!_.isNil(idsVehicles) && idsVehicles.indexOf(vehicle.id) != -1)) {
+        if (!_.isNil(vehicle.customerList) && vehicle.customerList.length > 0) {
+          var visits: L.LatLng[] = [];
+          vehicle.route.forEach(location => {
+            visits.push(this.buildLatLongFromLocation(location));
+          });
+          const vehicleColor = this.getVehicleColorById(vehicle.id);
+          const lineOptions: L.Routing.LineOptions = {
+            extendToWaypoints: true,
+            missingRouteTolerance: 10,
+            styles: [{
+              color: vehicleColor,
+              weight: 5
+            }]
+          }
+          const rota = L.Routing.control({
+            show: false,
+            waypoints: visits,
+            pointMarkerStyle: { color: vehicleColor },
+            lineOptions: lineOptions,
+            routeWhileDragging: false,
+          });
+          this.routeControls.push(rota);
+          rota.addTo(map);
         }
-        const rota = L.Routing.control({
-          show: false,
-          waypoints: visits,
-          pointMarkerStyle: { color: vehicleColor },
-          lineOptions: lineOptions,
-          routeWhileDragging: false,
-        });
-        rota.addTo(map);
       }
     });
   }

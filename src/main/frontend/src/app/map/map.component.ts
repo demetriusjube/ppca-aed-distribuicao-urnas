@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as L from 'leaflet';
 import * as _ from 'lodash';
 import { interval, Subscription } from 'rxjs';
@@ -20,6 +20,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   public isSolving = false;
   public statusSolucaoAtual: Status;
   public form: FormGroup;
+  public formRotasSelecionadas: FormGroup;
   public centrosDistribuicao: CentroDistribuicaoDTO[] = [];
 
   constructor(private markerService: MarkerService,
@@ -38,7 +39,28 @@ export class MapComponent implements OnInit, AfterViewInit {
         quantidadeCaminhoes7_5m3: this.formBuilder.control(0),
         tipoOtimizacaoEnum: this.formBuilder.control('MENOR_DISTANCIA', Validators.required)
       })
+      this.formRotasSelecionadas = this.formBuilder.group({
+        rotasSelecionadas: this.formBuilder.array([])
+      })
     })
+  }
+
+  public onRotasSelecionadasChange(event: any) {
+    const rotasSelecionadas = (this.formRotasSelecionadas.controls['rotasSelecionadas'] as FormArray);
+    const idVeiculoSelecionado = +event.target.value;
+    if (event.target.checked) {
+      rotasSelecionadas.push(this.formBuilder.control(idVeiculoSelecionado));
+    } else {
+      const index = rotasSelecionadas.controls
+        .findIndex(x => x.value === idVeiculoSelecionado);
+      rotasSelecionadas.removeAt(index);
+    }
+    this.atualizarRotasSelecionadas();
+  }
+  private atualizarRotasSelecionadas() {
+    const veiculosSelecionados = this.formRotasSelecionadas.value.rotasSelecionadas as number[];
+    this.marcarSolucaoNoMapa(this.map, this.statusSolucaoAtual, veiculosSelecionados);
+    
   }
 
   private getCentroDistribuicaoControl() {
@@ -75,10 +97,14 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private atualizarMapa() {
     this.solverService.status().subscribe(statusSolucao => {
-      this.markerService.marcarSolucaoNoMapa(this.map, statusSolucao);
+      this.marcarSolucaoNoMapa(this.map, statusSolucao);
       this.statusSolucaoAtual = statusSolucao;
       this.updateSolvingStatus(this.statusSolucaoAtual.isSolving);
     })
+  }
+
+  private marcarSolucaoNoMapa(map : L.Map, status: Status, idsVehicles?:number[]): void {
+    this.markerService.marcarSolucaoNoMapa(this.map, status,idsVehicles);
   }
 
   private marcarCentroDistribuicaoELocaisVotacao(idCentroDistribuicao: number): void {
@@ -109,7 +135,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.updateSolvingStatus(true);
     this.solverService.startSolving(simulacaoRequest).subscribe({
       next: () => {
-        this.updateSubscription = interval(30000).subscribe((val) => {
+        this.updateSubscription = interval(10000).subscribe((val) => {
           this.atualizarMapa();
         });
       },
@@ -119,11 +145,19 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
+  public showRouteCheckbox() {
+    return this.isSolving === false && this.statusSolucaoAtual && this.statusSolucaoAtual.solution && this.statusSolucaoAtual.solution.vehicleList && this.statusSolucaoAtual.solution.vehicleList.length > 0;
+  }
+
   public stopSolving(): void {
-    this.updateSolvingStatus(false);
     this.solverService.stopSolving().subscribe({
       next: () => {
-
+        this.updateSolvingStatus(false);
+        const rotasSelecionadasArray = this.formRotasSelecionadas.get('rotasSelecionadas') as FormArray;
+        rotasSelecionadasArray.clear();
+        this.statusSolucaoAtual.solution.vehicleList.forEach(vehicle => {
+          rotasSelecionadasArray.push(this.formBuilder.control(vehicle.id))
+        })
       },
       error: (err) => {
         ErrorUtils.displayError(err);

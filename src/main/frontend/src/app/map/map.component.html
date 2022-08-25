@@ -11,8 +11,8 @@
             <!-- </div>
             </div> -->
         </div>
-        <div class="col-6 col-lg-5 col-xl-4" style="height: 100vh; overflow-y: scroll;" *ngIf="form" [formGroup]="form">
-            <fieldset>
+        <div class="col-6 col-lg-5 col-xl-4" style="height: 100vh; overflow-y: scroll;">
+            <fieldset *ngIf="form" [formGroup]="form">
                 <legend>Dados para simulação</legend>
                 <div class="row">
                     <div class="row pt-2 row-cols-1">
@@ -112,13 +112,14 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col">
+                <div class="col" *ngIf="formRotasSelecionadas" [formGroup]="formRotasSelecionadas">
                     <h5>Veículos</h5>
                     <table class="table-sm w-100" *ngIf="statusSolucaoAtual?.solution?.vehicleList">
                         <thead>
                             <tr>
+                                <th class="col-1" *ngIf="showRouteCheckbox()"></th>
                                 <th class="col-1"></th>
-                                <th class="col-3">Nome</th>
+                                <th class="col-2">Nome</th>
                                 <th class="col-3">
                                     Carga
                                     <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top"
@@ -129,11 +130,14 @@
                             </tr>
                         </thead>
                         <tbody id="vehicles">
-                            <tr *ngFor="let vehicle of statusSolucaoAtual.solution.vehicleList">
+                            <tr *ngFor="let vehicle of statusSolucaoAtual.solution.vehicleList; let i=index">
+                                <td *ngIf="showRouteCheckbox()"><input type="checkbox" formArrayName="rotasSelecionadas"
+                                        [value]="vehicle.id" (change)="onRotasSelecionadasChange($event)" checked/></td>
                                 <td>
                                     <i class="fas fa-crosshairs" [id]='getIdCrossHairVehicle(vehicle)'
                                         [style]="getVehicleStyle(vehicle)">
                                     </i>
+
                                 </td>
                                 <td>Veículo {{vehicle.id}}</td>
                                 <td>
