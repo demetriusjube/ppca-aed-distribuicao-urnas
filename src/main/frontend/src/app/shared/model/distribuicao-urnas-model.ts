@@ -1,12 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-08-25 01:12:09.
+// Generated using typescript-generator version 2.28.785 on 2022-08-25 12:03:40.
 
 export interface CentroDistribuicaoDTO {
     id: number;
     nome: string;
     endereco: string;
     localizacao: number;
+    totalDeUrnas: number;
 }
 
 export interface DistanciaDTO {
@@ -133,8 +134,8 @@ export interface Vehicle {
     capacity: number;
     depot: Depot;
     customerList: Customer[];
-    route: Location[];
     totalDemand: number;
+    route: Location[];
     totalDistanceMeters: number;
 }
 
@@ -161,8 +162,8 @@ export interface Serializable {
 }
 
 export interface Score<Score_> extends Comparable<Score_> {
-    solutionInitialized: boolean;
     zero: boolean;
+    solutionInitialized: boolean;
     feasible: boolean;
     initScore: number;
 }
