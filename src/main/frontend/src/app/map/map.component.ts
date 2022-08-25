@@ -64,7 +64,7 @@ export class MapComponent implements AfterViewInit {
 
   public startSolving(): void {
     this.solverService.startSolving();
-    this.updateSubscription = interval(3000).subscribe((val) => {
+    this.updateSubscription = interval(12000).subscribe((val) => {
       this.atualizarMapa();
     });
   }

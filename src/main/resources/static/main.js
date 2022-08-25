@@ -275,7 +275,7 @@ class MapComponent {
     }
     startSolving() {
         this.solverService.startSolving();
-        this.updateSubscription = (0,rxjs__WEBPACK_IMPORTED_MODULE_5__.interval)(3000).subscribe((val) => {
+        this.updateSubscription = (0,rxjs__WEBPACK_IMPORTED_MODULE_5__.interval)(12000).subscribe((val) => {
             this.atualizarMapa();
         });
     }
