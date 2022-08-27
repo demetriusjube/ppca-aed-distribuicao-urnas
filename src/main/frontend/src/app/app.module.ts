@@ -9,7 +9,11 @@ import { NgbModalModule, NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bo
 import { SolverService } from './solver.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgxHumanizeDurationModule, NgxHumanizerOptions } from 'ngx-humanize-duration';
 
+const defaults: NgxHumanizerOptions = {
+  language: "pt",
+};
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +28,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     NgbModalModule,
     FormsModule,
     ReactiveFormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    NgxHumanizeDurationModule.forRoot(defaults)
 
   ],
   providers: [

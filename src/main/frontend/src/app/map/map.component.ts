@@ -197,6 +197,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     return '0Km';
   }
 
+  public getTempoEmHorasEMinutos(timeInMilis: number): string {
+    if (timeInMilis) {
+
+    }
+    return '0h';
+  }
+
   public getIdCrossHairDepot(depot: Depot): string {
     return 'crosshairs-depot-' + depot.id;
   }

@@ -123,8 +123,6 @@
                     <table class="table-sm w-100" *ngIf="statusSolucaoAtual?.solution?.vehicleList">
                         <thead>
                             <tr>
-                                <th class="col-1" *ngIf="showRouteCheckbox()"></th>
-                                <th class="col-1" *ngIf="showRouteCheckbox()"></th>
                                 <th class="col-1"></th>
                                 <th class="col-2">Nome</th>
                                 <th class="col-3">
@@ -134,17 +132,16 @@
                                     </fa-icon>
                                 </th>
                                 <th class="col-2">Distância</th>
+                                <th class="col-2">Tempo</th>
                             </tr>
                         </thead>
                         <tbody id="vehicles">
                             <tr *ngFor="let vehicle of statusSolucaoAtual.solution.vehicleList; let i=index">
-                                <td *ngIf="showRouteCheckbox()"><input type="checkbox" formArrayName="rotasSelecionadas"
-                                        [value]="vehicle.id" (change)="onRotasSelecionadasChange($event)" checked />
-                                </td>
-                                <td *ngIf="showRouteCheckbox()">
-                                    <fa-icon [icon]="faListCheck" (click)="abrirItinerario(content, vehicle)" style="cursor: pointer"></fa-icon>
-                                </td>
-                                <td>
+                                <td class="command-column"><input type="checkbox" formArrayName="rotasSelecionadas"
+                                        [value]="vehicle.id" (change)="onRotasSelecionadasChange($event)" checked
+                                        *ngIf="showRouteCheckbox()" />
+                                    <fa-icon [icon]="faListCheck" (click)="abrirItinerario(content, vehicle)"
+                                        style="cursor: pointer" *ngIf="showRouteCheckbox()"></fa-icon>
                                     <fa-icon [icon]="faTruckPickup" [id]=' getIdCrossHairVehicle(vehicle)'
                                         [style]="getVehicleStyle(vehicle)"></fa-icon>
                                 </td>
@@ -158,6 +155,7 @@
                                     </div>
                                 </td>
                                 <td>{{getDistanciaEmMetros(vehicle.totalDistanceMeters)}}</td>
+                                <td>{{vehicle.totalTimeMilis | humanizeDuration:{ delimiter: ' e ', largest:2 } }}</td>
                             </tr>
 
                         </tbody>
