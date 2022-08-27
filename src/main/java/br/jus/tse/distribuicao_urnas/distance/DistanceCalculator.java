@@ -10,6 +10,7 @@ import com.graphhopper.GHResponse;
 import br.jus.tse.distribuicao_urnas.model.TipoOtimizacaoEnum;
 import br.jus.tse.distribuicao_urnas.routing.Coordinates;
 import br.jus.tse.distribuicao_urnas.solver.domain.Location;
+import br.jus.tse.distribuicao_urnas.solver.domain.RouteData;
 
 /**
  * Calculates distances between coordinates.
@@ -24,14 +25,14 @@ public interface DistanceCalculator {
 	 * @param toLocations   never null
 	 * @return never null
 	 */
-	default Map<Location, Map<Location, Double>> calculateBulkDistance(Collection<Location> fromLocations,
+	default Map<Location, Map<Location, RouteData>> calculateBulkDistance(Collection<Location> fromLocations,
 			Collection<Location> toLocations, TipoOtimizacaoEnum tipoOtimizacaoEnum) {
 		return fromLocations.stream()
 				.collect(Collectors.toMap(Function.identity(), from -> toLocations.stream().collect(
 						Collectors.toMap(Function.identity(), to -> calculateDistance(from, to, tipoOtimizacaoEnum)))));
 	}
 
-	Double calculateDistance(Location from, Location to, TipoOtimizacaoEnum tipoOtimizacao);
+	RouteData calculateDistance(Location from, Location to, TipoOtimizacaoEnum tipoOtimizacao);
 
 	/**
 	 * Calculate distance matrix for the given list of locations and assign distance
@@ -40,7 +41,8 @@ public interface DistanceCalculator {
 	 * @param locationList
 	 */
 	default void initDistanceMaps(Collection<Location> locationList, TipoOtimizacaoEnum tipoOtimizacaoEnum) {
-		Map<Location, Map<Location, Double>> distanceMatrix = calculateBulkDistance(locationList, locationList, tipoOtimizacaoEnum);
+		Map<Location, Map<Location, RouteData>> distanceMatrix = calculateBulkDistance(locationList, locationList,
+				tipoOtimizacaoEnum);
 		locationList.forEach(location -> location.setDistanceMap(distanceMatrix.get(location)));
 	}
 }

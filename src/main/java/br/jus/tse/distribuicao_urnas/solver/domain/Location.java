@@ -11,7 +11,7 @@ public class Location {
 	private final String endereco;
 	private final BigDecimal latitude;
 	private final BigDecimal longitude;
-	private Map<Location, Double> distanceMap;
+	private Map<Location, RouteData> distanceMap;
 
 	public Location(long id, BigDecimal latitude, BigDecimal longitude, String endereco) {
 		this.id = id;
@@ -41,7 +41,7 @@ public class Location {
 	 *
 	 * @param distanceMap a map containing distances from here to other locations
 	 */
-	public void setDistanceMap(Map<Location, Double> distanceMap) {
+	public void setDistanceMap(Map<Location, RouteData> distanceMap) {
 		this.distanceMap = distanceMap;
 	}
 
@@ -52,7 +52,17 @@ public class Location {
 	 * @return distance in meters
 	 */
 	public Double getDistanceTo(Location location) {
-		return distanceMap.get(location);
+		return distanceMap.get(location).getDistanceMeters();
+	}
+
+	/**
+	 * Tempo de deslocamento até a outra localidade
+	 *
+	 * @param location other location
+	 * @return distance in meters
+	 */
+	public Long getTimeTo(Location location) {
+		return distanceMap.get(location).getDrivingTimeMilis();
 	}
 
 	// ************************************************************************
@@ -72,4 +82,5 @@ public class Location {
 		BigDecimal longitudeDifference = location.longitude.subtract(longitude);
 		return Math.atan2(latitudeDifference.doubleValue(), longitudeDifference.doubleValue());
 	}
+
 }

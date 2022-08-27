@@ -10,107 +10,122 @@ import org.optaplanner.core.api.domain.variable.PlanningListVariable;
 @PlanningEntity
 public class Vehicle {
 
-    private long id;
-    private int capacity;
-    private Depot depot;
+	private long id;
+	private int capacity;
+	private Depot depot;
 
-    @PlanningListVariable(valueRangeProviderRefs = "customerRange")
-    private List<Customer> customerList;
+	@PlanningListVariable(valueRangeProviderRefs = "customerRange")
+	private List<Customer> customerList;
 
-    public Vehicle() {
-    }
+	public Vehicle() {
+	}
 
-    public Vehicle(long id, int capacity, Depot depot) {
-        this.id = id;
-        this.capacity = capacity;
-        this.depot = depot;
-        this.customerList = new ArrayList<>();
-    }
+	public Vehicle(long id, int capacity, Depot depot) {
+		this.id = id;
+		this.capacity = capacity;
+		this.depot = depot;
+		this.customerList = new ArrayList<>();
+	}
 
-    public long getId() {
-        return id;
-    }
+	public long getId() {
+		return id;
+	}
 
-    public void setId(long id) {
-        this.id = id;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public int getCapacity() {
-        return capacity;
-    }
+	public int getCapacity() {
+		return capacity;
+	}
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
 
-    public Depot getDepot() {
-        return depot;
-    }
+	public Depot getDepot() {
+		return depot;
+	}
 
-    public void setDepot(Depot depot) {
-        this.depot = depot;
-    }
+	public void setDepot(Depot depot) {
+		this.depot = depot;
+	}
 
-    public List<Customer> getCustomerList() {
-        return customerList;
-    }
+	public List<Customer> getCustomerList() {
+		return customerList;
+	}
 
-    public void setCustomerList(List<Customer> customerList) {
-        this.customerList = customerList;
-    }
+	public void setCustomerList(List<Customer> customerList) {
+		this.customerList = customerList;
+	}
 
-    // ************************************************************************
-    // Complex methods
-    // ************************************************************************
+	// ************************************************************************
+	// Complex methods
+	// ************************************************************************
 
-    /**
-     * @return route of the vehicle
-     */
-    public List<Location> getRoute() {
-        if (customerList.isEmpty()) {
-            return Collections.emptyList();
-        }
+	/**
+	 * @return route of the vehicle
+	 */
+	public List<Location> getRoute() {
+		if (customerList.isEmpty()) {
+			return Collections.emptyList();
+		}
 
-        List<Location> route = new ArrayList<Location>();
+		List<Location> route = new ArrayList<Location>();
 
-        route.add(depot.getLocation());
-        for (Customer customer : customerList) {
-            route.add(customer.getLocation());
-        }
-        route.add(depot.getLocation());
+		route.add(depot.getLocation());
+		for (Customer customer : customerList) {
+			route.add(customer.getLocation());
+		}
+		route.add(depot.getLocation());
 
-        return route;
-    }
+		return route;
+	}
 
-    public int getTotalDemand() {
-        int totalDemand = 0;
-        for (Customer customer : customerList) {
-            totalDemand += customer.getDemand();
-        }
-        return totalDemand;
-    }
+	public int getTotalDemand() {
+		int totalDemand = 0;
+		for (Customer customer : customerList) {
+			totalDemand += customer.getDemand();
+		}
+		return totalDemand;
+	}
 
-    public long getTotalDistanceMeters() {
-        if (customerList.isEmpty()) {
-            return 0;
-        }
+	public long getTotalDistanceMeters() {
+		if (customerList.isEmpty()) {
+			return 0;
+		}
 
-        long totalDistance = 0;
-        Location previousLocation = depot.getLocation();
+		long totalDistance = 0;
+		Location previousLocation = depot.getLocation();
 
-        for (Customer customer : customerList) {
-            totalDistance += previousLocation.getDistanceTo(customer.getLocation());
-            previousLocation = customer.getLocation();
-        }
-        totalDistance += previousLocation.getDistanceTo(depot.getLocation());
+		for (Customer customer : customerList) {
+			totalDistance += previousLocation.getDistanceTo(customer.getLocation());
+			previousLocation = customer.getLocation();
+		}
+		totalDistance += previousLocation.getDistanceTo(depot.getLocation());
 
-        return totalDistance;
-    }
+		return totalDistance;
+	}
 
-    @Override
-    public String toString() {
-        return "Vehicle{" +
-                "id=" + id +
-                '}';
-    }
+	public long getTotalTimeMilis() {
+		if (customerList.isEmpty()) {
+			return 0;
+		}
+
+		long totalTime = 0;
+		Location previousLocation = depot.getLocation();
+
+		for (Customer customer : customerList) {
+			totalTime += previousLocation.getTimeTo(customer.getLocation());
+			previousLocation = customer.getLocation();
+		}
+		totalTime += previousLocation.getTimeTo(depot.getLocation());
+
+		return totalTime;
+	}
+
+	@Override
+	public String toString() {
+		return "Vehicle{" + "id=" + id + '}';
+	}
 }

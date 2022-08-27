@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-08-25 15:57:12.
+// Generated using typescript-generator version 2.28.785 on 2022-08-27 11:55:26.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -116,7 +116,12 @@ export interface Location {
     endereco: string;
     latitude: number;
     longitude: number;
-    distanceMap: { [index: string]: number };
+    distanceMap: { [index: string]: RouteData };
+}
+
+export interface RouteData {
+    distanceMeters: number;
+    drivingTimeMilis: number;
 }
 
 export interface SimulacaoRequest {
@@ -139,8 +144,9 @@ export interface Vehicle {
     capacity: number;
     depot: Depot;
     customerList: Customer[];
-    totalDemand: number;
     route: Location[];
+    totalDemand: number;
+    totalTimeMilis: number;
     totalDistanceMeters: number;
 }
 
@@ -151,8 +157,8 @@ export interface VehicleRoutingSolution {
     vehicleList: Vehicle[];
     customerList: Customer[];
     score: HardSoftLongScore;
-    bounds: Location[];
     distanceMeters: number;
+    bounds: Location[];
 }
 
 export interface HardSoftLongScore extends AbstractScore<HardSoftLongScore> {

@@ -46,7 +46,7 @@ public class DistanciaCSVService {
 		distancia.setOrigem(origem);
 		distancia.setDestino(destino);
 		distancia.setMenorTempoViagem(GHRouteUtil.getMenorTempoEmMilis(ghResponse));
-		distancia.setMenorDistancia(GHRouteUtil.getMenorDistanciaEmMetros(ghResponse));
+		distancia.setMenorDistancia(GHRouteUtil.getPathMenorDistanciaEmMetros(ghResponse).getDistance());
 		distanciaRepository.save(distancia);
 	}
 

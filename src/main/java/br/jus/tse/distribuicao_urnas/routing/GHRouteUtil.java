@@ -17,9 +17,16 @@ public class GHRouteUtil {
 		return null;
 	}
 
-	public static Double getMenorDistanciaEmMetros(GHResponse ghResponse) {
+	public static PathWrapper getPathMelhorTempo(GHResponse ghResponse) {
+		if (ghResponse != null) {
+			return ghResponse.getBest();
+		}
+		return null;
+	}
+
+	public static PathWrapper getPathMenorDistanciaEmMetros(GHResponse ghResponse) {
 		if (ghResponse != null && CollectionUtils.isNotEmpty(ghResponse.getAll())) {
-			return getRotaMaisCurta(ghResponse).map(path -> path.getDistance()).orElse(null);
+			return getRotaMaisCurta(ghResponse).orElse(null);
 		}
 		return null;
 	}
