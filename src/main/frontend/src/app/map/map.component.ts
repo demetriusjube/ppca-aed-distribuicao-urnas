@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { faClipboardList, faCrosshairs, faInfoCircle, faPlay, faSignsPost, faStop, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
 import * as L from 'leaflet';
 import * as _ from 'lodash';
 import { interval, Subscription } from 'rxjs';
@@ -14,14 +15,25 @@ import { SolverService } from '../solver.service';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit, AfterViewInit {
+
+  public faInfoCircle = faInfoCircle;
+  public faStop = faStop;
+  public faPlay = faPlay;
+  public faCrosshairs = faCrosshairs;
+  public faTruckPickup = faTruckPickup;
+  public faSignsPost = faSignsPost;
+
+
   private map: L.Map;
   private layerGroup = L.layerGroup();
   private updateSubscription: Subscription;
+  public solvingIsStarting = false;
   public isSolving = false;
   public statusSolucaoAtual: Status;
   public form: FormGroup;
   public formRotasSelecionadas: FormGroup;
   public centrosDistribuicao: CentroDistribuicaoDTO[] = [];
+  public veiculoItinerario: Vehicle;
 
   constructor(private markerService: MarkerService,
     private solverService: SolverService,
@@ -60,7 +72,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   private atualizarRotasSelecionadas() {
     const veiculosSelecionados = this.formRotasSelecionadas.value.rotasSelecionadas as number[];
     this.marcarSolucaoNoMapa(this.map, this.statusSolucaoAtual, veiculosSelecionados);
-    
+
   }
 
   private getCentroDistribuicaoControl() {
@@ -76,7 +88,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     const tiles = this.buildTiles();
     tiles.addTo(this.map);
     this.layerGroup.addTo(this.map);
-    // this.atualizarMapa();
   }
 
 
@@ -103,8 +114,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     })
   }
 
-  private marcarSolucaoNoMapa(map : L.Map, status: Status, idsVehicles?:number[]): void {
-    this.markerService.marcarSolucaoNoMapa(this.map, status,idsVehicles);
+  private marcarSolucaoNoMapa(map: L.Map, status: Status, idsVehicles?: number[]): void {
+    this.markerService.marcarSolucaoNoMapa(this.map, status, idsVehicles);
   }
 
   private marcarCentroDistribuicaoELocaisVotacao(idCentroDistribuicao: number): void {
@@ -133,8 +144,11 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     const simulacaoRequest = this.form.value as SimulacaoRequest;
     this.updateSolvingStatus(true);
+    this.solvingIsStarting = true;
     this.solverService.startSolving(simulacaoRequest).subscribe({
       next: () => {
+        this.solvingIsStarting = false;
+        this.atualizarMapa();
         this.updateSubscription = interval(10000).subscribe((val) => {
           this.atualizarMapa();
         });
@@ -204,6 +218,10 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   public getVehicleProgressBarStyle(vehicle: Vehicle): string {
     return `width: ${(vehicle.totalDemand / vehicle.capacity) * 100}%`;
+  }
+
+  public abrirItinerario(content, vehicle): void {
+
   }
 
 }

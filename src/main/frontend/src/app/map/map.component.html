@@ -67,18 +67,23 @@
                 <div class="col mb-3">
                     <button id="solveButton" type="button" class="btn btn-success" (click)="startSolving()"
                         *ngIf="!isSolving">
-                        <i class="fas fa-play"></i> Resolver
+                        <fa-icon [icon]="faPlay"></fa-icon> Resolver
                     </button>
                     <button id="stopSolvingButton" type="button" class="btn btn-danger" (click)="stopSolving()"
-                        *ngIf="isSolving">
-                        <i class="fas fa-stop"></i> Parar resolução
+                        *ngIf="isSolving && !solvingIsStarting">
+                        <fa-icon [icon]="faStop"></fa-icon> Parar resolução
                     </button>
+                    <div *ngIf="solvingIsStarting">
+                        <div class="spinner-border text-primary" role="status">
+                        </div>
+                        <span>Preparando para calcular rotas...</span>
+                    </div>
                 </div>
                 <div class="col">
                     <h5>
                         Resumo da solução
                         <a href="#" class="float-right" data-toggle="modal" data-target="#scoreDialog">
-                            <i class="fas fa-info-circle"></i>
+                            <fa-icon [icon]="faInfoCircle"></fa-icon>
                         </a>
                     </h5>
                     <table class="table">
@@ -103,9 +108,10 @@
                         </thead>
                         <tbody id="depots">
                             <tr *ngFor="let depot of statusSolucaoAtual.solution.depotList">
-                                <td><i class="fas fa-crosshairs" [id]='getIdCrossHairDepot(depot)'
-                                        [style]="getDepotStyle(depot)">
-                                    </i></td>
+                                <td>
+                                    <fa-icon [icon]="faCrosshairs" [id]='getIdCrossHairDepot(depot)'
+                                        [style]="getDepotStyle(depot)"></fa-icon>
+                                </td>
                                 <td>{{depot.name}}</td>
                             </tr>
 
@@ -118,26 +124,29 @@
                         <thead>
                             <tr>
                                 <th class="col-1" *ngIf="showRouteCheckbox()"></th>
+                                <th class="col-1" *ngIf="showRouteCheckbox()"></th>
                                 <th class="col-1"></th>
                                 <th class="col-2">Nome</th>
                                 <th class="col-3">
                                     Carga
-                                    <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top"
-                                        data-html="true"
-                                        title="Carga dos veículos mostrada na forma <em>Carga total / Capacidade</em>."></i>
+                                    <fa-icon [icon]="faInfoCircle" placement="top"
+                                        ngbTooltip="Carga dos veículos mostrada na forma Carga total / Capacidade.">
+                                    </fa-icon>
                                 </th>
-                                <th class="col-3">Distância</th>
+                                <th class="col-2">Distância</th>
                             </tr>
                         </thead>
                         <tbody id="vehicles">
                             <tr *ngFor="let vehicle of statusSolucaoAtual.solution.vehicleList; let i=index">
                                 <td *ngIf="showRouteCheckbox()"><input type="checkbox" formArrayName="rotasSelecionadas"
-                                        [value]="vehicle.id" (change)="onRotasSelecionadasChange($event)" checked/></td>
+                                        [value]="vehicle.id" (change)="onRotasSelecionadasChange($event)" checked />
+                                </td>
+                                <td *ngIf="showRouteCheckbox()">
+                                    <fa-icon [icon]="faSignsPost" (click)="abrirItinerario(content, vehicle)"></fa-icon>
+                                </td>
                                 <td>
-                                    <i class="fas fa-crosshairs" [id]='getIdCrossHairVehicle(vehicle)'
-                                        [style]="getVehicleStyle(vehicle)">
-                                    </i>
-
+                                    <fa-icon [icon]="faTruckPickup" [id]=' getIdCrossHairVehicle(vehicle)'
+                                        [style]="getVehicleStyle(vehicle)"></fa-icon>
                                 </td>
                                 <td>Veículo {{vehicle.id}}</td>
                                 <td>
@@ -175,3 +184,36 @@
         </div>
     </div>
 </div>
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Itinerário - Veículo {{veiculoItinerario.id}}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <h5>Saída : {{veiculoItinerario.depot.name}}</h5>
+        <table>
+            <thead>
+                <th>
+                    Número
+                </th>
+                <th>
+                    Nome
+                </th>
+                <th>
+                    Endereço
+                </th>
+
+            </thead>
+            <tbody>
+                <tr *ngFor="let customer of veiculoItinerario.customerList">
+                    <td>{{customer.id}}</td>
+                    <td>{{customer.name}}</td>
+                    <td>{{customer.location.endereco}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+</ng-template>
