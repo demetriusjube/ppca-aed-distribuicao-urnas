@@ -142,7 +142,7 @@
                                         [value]="vehicle.id" (change)="onRotasSelecionadasChange($event)" checked />
                                 </td>
                                 <td *ngIf="showRouteCheckbox()">
-                                    <fa-icon [icon]="faSignsPost" (click)="abrirItinerario(content, vehicle)"></fa-icon>
+                                    <fa-icon [icon]="faListCheck" (click)="abrirItinerario(content, vehicle)" style="cursor: pointer"></fa-icon>
                                 </td>
                                 <td>
                                     <fa-icon [icon]="faTruckPickup" [id]=' getIdCrossHairVehicle(vehicle)'
@@ -186,7 +186,7 @@
 </div>
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Itinerário - Veículo {{veiculoItinerario.id}}</h4>
+        <h5 class="modal-title" id="modal-basic-title">Locais de Votação - Veículo {{veiculoItinerario.id}}</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
@@ -214,6 +214,6 @@
         </table>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Fechar</button>
     </div>
 </ng-template>

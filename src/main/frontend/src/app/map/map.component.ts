@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { faClipboardList, faCrosshairs, faInfoCircle, faPlay, faSignsPost, faStop, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardList, faCrosshairs, faInfoCircle, faListCheck, faPlay, faSignsPost, faStop, faTasks, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as L from 'leaflet';
 import * as _ from 'lodash';
 import { interval, Subscription } from 'rxjs';
@@ -21,7 +22,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   public faPlay = faPlay;
   public faCrosshairs = faCrosshairs;
   public faTruckPickup = faTruckPickup;
-  public faSignsPost = faSignsPost;
+  public faListCheck = faListCheck;
 
 
   private map: L.Map;
@@ -37,7 +38,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   constructor(private markerService: MarkerService,
     private solverService: SolverService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private modalService: NgbModal) { }
 
 
   ngOnInit(): void {
@@ -220,7 +222,11 @@ export class MapComponent implements OnInit, AfterViewInit {
     return `width: ${(vehicle.totalDemand / vehicle.capacity) * 100}%`;
   }
 
-  public abrirItinerario(content, vehicle): void {
+  public abrirItinerario(content, vehicle: Vehicle): void {
+    this.veiculoItinerario = vehicle;
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+    }, (reason) => {
+    });
 
   }
 

@@ -105,6 +105,7 @@ AppModule.ɵinj = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵ
         _angular_common_http__WEBPACK_IMPORTED_MODULE_7__.HttpClientModule,
         _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_8__.NgbModule,
         _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_8__.NgbTooltipModule,
+        _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_8__.NgbModalModule,
         _angular_forms__WEBPACK_IMPORTED_MODULE_9__.FormsModule,
         _angular_forms__WEBPACK_IMPORTED_MODULE_9__.ReactiveFormsModule,
         _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_10__.FontAwesomeModule] });
@@ -114,6 +115,7 @@ AppModule.ɵinj = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵ
         _angular_common_http__WEBPACK_IMPORTED_MODULE_7__.HttpClientModule,
         _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_8__.NgbModule,
         _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_8__.NgbTooltipModule,
+        _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_8__.NgbModalModule,
         _angular_forms__WEBPACK_IMPORTED_MODULE_9__.FormsModule,
         _angular_forms__WEBPACK_IMPORTED_MODULE_9__.ReactiveFormsModule,
         _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_10__.FontAwesomeModule] }); })();
@@ -142,8 +144,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/core */ 2560);
 /* harmony import */ var _marker_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../marker.service */ 9937);
 /* harmony import */ var _solver_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../solver.service */ 1452);
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/common */ 4666);
-/* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ 4534);
+/* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ 4534);
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/common */ 4666);
 /* harmony import */ var _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @fortawesome/angular-fontawesome */ 9200);
 
 
@@ -298,7 +300,7 @@ function MapComponent_div_35_table_3_tr_14_td_2_Template(rf, ctx) { if (rf & 1) 
 } if (rf & 2) {
     const ctx_r23 = _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵnextContext"](4);
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵproperty"]("icon", ctx_r23.faSignsPost);
+    _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵproperty"]("icon", ctx_r23.faListCheck);
 } }
 function MapComponent_div_35_table_3_tr_14_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](0, "tr");
@@ -399,7 +401,7 @@ function MapComponent_ng_template_48_tr_16_Template(rf, ctx) { if (rf & 1) {
 } }
 function MapComponent_ng_template_48_Template(rf, ctx) { if (rf & 1) {
     const _r34 = _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](0, "div", 24)(1, "h4", 67);
+    _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](0, "div", 24)(1, "h5", 67);
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵtext"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](3, "button", 68);
@@ -422,28 +424,29 @@ function MapComponent_ng_template_48_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]()()();
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](17, "div", 69)(18, "button", 70);
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵlistener"]("click", function MapComponent_ng_template_48_Template_button_click_18_listener() { const restoredCtx = _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵrestoreView"](_r34); const modal_r30 = restoredCtx.$implicit; return _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵresetView"](modal_r30.close("Save click")); });
-    _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵtext"](19, "Save");
+    _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵtext"](19, "Fechar");
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]()();
 } if (rf & 2) {
     const ctx_r7 = _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵadvance"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵtextInterpolate1"]("Itiner\u00E1rio - Ve\u00EDculo ", ctx_r7.veiculoItinerario.id, "");
+    _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵtextInterpolate1"]("Locais de Vota\u00E7\u00E3o - Ve\u00EDculo ", ctx_r7.veiculoItinerario.id, "");
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵadvance"](4);
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵtextInterpolate1"]("Sa\u00EDda : ", ctx_r7.veiculoItinerario.depot.name, "");
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵadvance"](10);
     _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵproperty"]("ngForOf", ctx_r7.veiculoItinerario.customerList);
 } }
 class MapComponent {
-    constructor(markerService, solverService, formBuilder) {
+    constructor(markerService, solverService, formBuilder, modalService) {
         this.markerService = markerService;
         this.solverService = solverService;
         this.formBuilder = formBuilder;
+        this.modalService = modalService;
         this.faInfoCircle = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__.faInfoCircle;
         this.faStop = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__.faStop;
         this.faPlay = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__.faPlay;
         this.faCrosshairs = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__.faCrosshairs;
         this.faTruckPickup = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__.faTruckPickup;
-        this.faSignsPost = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__.faSignsPost;
+        this.faListCheck = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_6__.faListCheck;
         this.layerGroup = leaflet__WEBPACK_IMPORTED_MODULE_0__.layerGroup();
         this.solvingIsStarting = false;
         this.isSolving = false;
@@ -604,10 +607,14 @@ class MapComponent {
         return `width: ${(vehicle.totalDemand / vehicle.capacity) * 100}%`;
     }
     abrirItinerario(content, vehicle) {
+        this.veiculoItinerario = vehicle;
+        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+        }, (reason) => {
+        });
     }
 }
-MapComponent.ɵfac = function MapComponent_Factory(t) { return new (t || MapComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](_marker_service__WEBPACK_IMPORTED_MODULE_3__.MarkerService), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](_solver_service__WEBPACK_IMPORTED_MODULE_4__.SolverService), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](_angular_forms__WEBPACK_IMPORTED_MODULE_7__.FormBuilder)); };
-MapComponent.ɵcmp = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdefineComponent"]({ type: MapComponent, selectors: [["app-map"]], decls: 50, vars: 9, consts: [[1, "sticky-top", "d-flex", "justify-content-center", "align-items-center"], ["id", "notificationPanel", 2, "position", "absolute", "top", ".5rem"], [1, "container-fluid"], [1, "row"], [1, "col-6", "col-lg-7", "col-xl-8"], ["id", "map", 2, "width", "100%", "height", "100vh"], [1, "col-6", "col-lg-5", "col-xl-4", 2, "height", "100vh", "overflow-y", "scroll"], [3, "formGroup", 4, "ngIf"], [1, "row", "pt-2", "row-cols-1"], [1, "col", "mb-3"], ["id", "solveButton", "type", "button", "class", "btn btn-success", 3, "click", 4, "ngIf"], ["id", "stopSolvingButton", "type", "button", "class", "btn btn-danger", 3, "click", 4, "ngIf"], [4, "ngIf"], [1, "col"], ["href", "#", "data-toggle", "modal", "data-target", "#scoreDialog", 1, "float-right"], [3, "icon"], [1, "table"], ["id", "score"], ["id", "distance"], ["class", "table-sm w-100", 4, "ngIf"], ["class", "col", 3, "formGroup", 4, "ngIf"], ["id", "scoreDialog", "tabindex", "-1", "role", "dialog", 1, "modal", "fade"], ["role", "dialog", 1, "modal-dialog", "modal-lg"], [1, "modal-content"], [1, "modal-header"], ["type", "button", "data-dismiss", "modal", 1, "close"], [1, "modal-body"], ["id", "scoreInfo"], ["content", ""], [3, "formGroup"], [1, "col-12"], ["for", "idCentroDistribuicao"], ["formControlName", "idCentroDistribuicao", 1, "form-control"], [3, "value", 4, "ngFor", "ngForOf"], [1, "col-6"], ["for", "quantidadeCaminhoes38m3"], ["type", "number", "formControlName", "quantidadeCaminhoes38m3", "min", "0", 1, "form-control"], ["for", "quantidadeCaminhoes22m3"], ["type", "number", "formControlName", "quantidadeCaminhoes22m3", "min", "0", 1, "form-control"], ["for", "quantidadeCaminhoes13m3"], ["type", "number", "formControlName", "quantidadeCaminhoes13m3", "min", "0", 1, "form-control"], ["for", "quantidadeCaminhoes7_5m3"], ["type", "number", "formControlName", "quantidadeCaminhoes7_5m3", "min", "0", 1, "form-control"], ["for", "tipoOtimizacaoEnum"], ["formControlName", "tipoOtimizacaoEnum", 1, "form-control"], ["value", "MENOR_DISTANCIA", "selected", ""], ["value", "MENOR_TEMPO"], [3, "value"], ["id", "solveButton", "type", "button", 1, "btn", "btn-success", 3, "click"], ["id", "stopSolvingButton", "type", "button", 1, "btn", "btn-danger", 3, "click"], ["role", "status", 1, "spinner-border", "text-primary"], [1, "table-sm", "w-100"], [1, "col-1"], [1, "col-11"], ["id", "depots"], [4, "ngFor", "ngForOf"], [3, "icon", "id"], [1, "col", 3, "formGroup"], ["class", "col-1", 4, "ngIf"], [1, "col-2"], [1, "col-3"], ["placement", "top", "ngbTooltip", "Carga dos ve\u00EDculos mostrada na forma Carga total / Capacidade.", 3, "icon"], ["id", "vehicles"], ["data-toggle", "tooltip-load", "data-placement", "left", "data-html", "true", 1, "progress", 3, "title"], ["role", "progressbar", 1, "progress-bar"], ["type", "checkbox", "formArrayName", "rotasSelecionadas", "checked", "", 3, "value", "change"], [3, "icon", "click"], ["id", "modal-basic-title", 1, "modal-title"], ["type", "button", "aria-label", "Close", 1, "btn-close", 3, "click"], [1, "modal-footer"], ["type", "button", 1, "btn", "btn-outline-dark", 3, "click"]], template: function MapComponent_Template(rf, ctx) { if (rf & 1) {
+MapComponent.ɵfac = function MapComponent_Factory(t) { return new (t || MapComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](_marker_service__WEBPACK_IMPORTED_MODULE_3__.MarkerService), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](_solver_service__WEBPACK_IMPORTED_MODULE_4__.SolverService), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](_angular_forms__WEBPACK_IMPORTED_MODULE_7__.FormBuilder), _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdirectiveInject"](_ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_9__.NgbModal)); };
+MapComponent.ɵcmp = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵdefineComponent"]({ type: MapComponent, selectors: [["app-map"]], decls: 50, vars: 9, consts: [[1, "sticky-top", "d-flex", "justify-content-center", "align-items-center"], ["id", "notificationPanel", 2, "position", "absolute", "top", ".5rem"], [1, "container-fluid"], [1, "row"], [1, "col-6", "col-lg-7", "col-xl-8"], ["id", "map", 2, "width", "100%", "height", "100vh"], [1, "col-6", "col-lg-5", "col-xl-4", 2, "height", "100vh", "overflow-y", "scroll"], [3, "formGroup", 4, "ngIf"], [1, "row", "pt-2", "row-cols-1"], [1, "col", "mb-3"], ["id", "solveButton", "type", "button", "class", "btn btn-success", 3, "click", 4, "ngIf"], ["id", "stopSolvingButton", "type", "button", "class", "btn btn-danger", 3, "click", 4, "ngIf"], [4, "ngIf"], [1, "col"], ["href", "#", "data-toggle", "modal", "data-target", "#scoreDialog", 1, "float-right"], [3, "icon"], [1, "table"], ["id", "score"], ["id", "distance"], ["class", "table-sm w-100", 4, "ngIf"], ["class", "col", 3, "formGroup", 4, "ngIf"], ["id", "scoreDialog", "tabindex", "-1", "role", "dialog", 1, "modal", "fade"], ["role", "dialog", 1, "modal-dialog", "modal-lg"], [1, "modal-content"], [1, "modal-header"], ["type", "button", "data-dismiss", "modal", 1, "close"], [1, "modal-body"], ["id", "scoreInfo"], ["content", ""], [3, "formGroup"], [1, "col-12"], ["for", "idCentroDistribuicao"], ["formControlName", "idCentroDistribuicao", 1, "form-control"], [3, "value", 4, "ngFor", "ngForOf"], [1, "col-6"], ["for", "quantidadeCaminhoes38m3"], ["type", "number", "formControlName", "quantidadeCaminhoes38m3", "min", "0", 1, "form-control"], ["for", "quantidadeCaminhoes22m3"], ["type", "number", "formControlName", "quantidadeCaminhoes22m3", "min", "0", 1, "form-control"], ["for", "quantidadeCaminhoes13m3"], ["type", "number", "formControlName", "quantidadeCaminhoes13m3", "min", "0", 1, "form-control"], ["for", "quantidadeCaminhoes7_5m3"], ["type", "number", "formControlName", "quantidadeCaminhoes7_5m3", "min", "0", 1, "form-control"], ["for", "tipoOtimizacaoEnum"], ["formControlName", "tipoOtimizacaoEnum", 1, "form-control"], ["value", "MENOR_DISTANCIA", "selected", ""], ["value", "MENOR_TEMPO"], [3, "value"], ["id", "solveButton", "type", "button", 1, "btn", "btn-success", 3, "click"], ["id", "stopSolvingButton", "type", "button", 1, "btn", "btn-danger", 3, "click"], ["role", "status", 1, "spinner-border", "text-primary"], [1, "table-sm", "w-100"], [1, "col-1"], [1, "col-11"], ["id", "depots"], [4, "ngFor", "ngForOf"], [3, "icon", "id"], [1, "col", 3, "formGroup"], ["class", "col-1", 4, "ngIf"], [1, "col-2"], [1, "col-3"], ["placement", "top", "ngbTooltip", "Carga dos ve\u00EDculos mostrada na forma Carga total / Capacidade.", 3, "icon"], ["id", "vehicles"], ["data-toggle", "tooltip-load", "data-placement", "left", "data-html", "true", 1, "progress", 3, "title"], ["role", "progressbar", 1, "progress-bar"], ["type", "checkbox", "formArrayName", "rotasSelecionadas", "checked", "", 3, "value", "change"], [2, "cursor", "pointer", 3, "icon", "click"], ["id", "modal-basic-title", 1, "modal-title"], ["type", "button", "aria-label", "Close", 1, "btn-close", 3, "click"], [1, "modal-footer"], ["type", "button", 1, "btn", "btn-outline-dark", 3, "click"]], template: function MapComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelement"](1, "div", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵelementEnd"]();
@@ -674,7 +681,7 @@ MapComponent.ɵcmp = /*@__PURE__*/ _angular_core__WEBPACK_IMPORTED_MODULE_5__["�
         _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵproperty"]("ngIf", ctx.statusSolucaoAtual == null ? null : ctx.statusSolucaoAtual.solution == null ? null : ctx.statusSolucaoAtual.solution.depotList);
         _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_5__["ɵɵproperty"]("ngIf", ctx.formRotasSelecionadas);
-    } }, dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_9__.NgForOf, _angular_common__WEBPACK_IMPORTED_MODULE_9__.NgIf, _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_10__.NgbTooltip, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.NgSelectOption, _angular_forms__WEBPACK_IMPORTED_MODULE_7__["ɵNgSelectMultipleOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_7__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.NumberValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.SelectControlValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.MinValidator, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.FormControlName, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.FormArrayName, _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_11__.FaIconComponent], styles: [".map-container[_ngcontent-%COMP%] {\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n    bottom: 0;\r\n    margin: 30px;\r\n}\r\n\r\n.map-frame[_ngcontent-%COMP%] {\r\n    border: 2px solid black;\r\n    height: 100%;\r\n}\r\n\r\n#map[_ngcontent-%COMP%] {\r\n    height: 100%;\r\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1hcC5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0ksa0JBQWtCO0lBQ2xCLE1BQU07SUFDTixPQUFPO0lBQ1AsUUFBUTtJQUNSLFNBQVM7SUFDVCxZQUFZO0FBQ2hCOztBQUVBO0lBQ0ksdUJBQXVCO0lBQ3ZCLFlBQVk7QUFDaEI7O0FBRUE7SUFDSSxZQUFZO0FBQ2hCIiwiZmlsZSI6Im1hcC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm1hcC1jb250YWluZXIge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgdG9wOiAwO1xyXG4gICAgbGVmdDogMDtcclxuICAgIHJpZ2h0OiAwO1xyXG4gICAgYm90dG9tOiAwO1xyXG4gICAgbWFyZ2luOiAzMHB4O1xyXG59XHJcblxyXG4ubWFwLWZyYW1lIHtcclxuICAgIGJvcmRlcjogMnB4IHNvbGlkIGJsYWNrO1xyXG4gICAgaGVpZ2h0OiAxMDAlO1xyXG59XHJcblxyXG4jbWFwIHtcclxuICAgIGhlaWdodDogMTAwJTtcclxufSJdfQ== */"] });
+    } }, dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_10__.NgForOf, _angular_common__WEBPACK_IMPORTED_MODULE_10__.NgIf, _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_9__.NgbTooltip, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.NgSelectOption, _angular_forms__WEBPACK_IMPORTED_MODULE_7__["ɵNgSelectMultipleOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_7__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.NumberValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.SelectControlValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.MinValidator, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.FormControlName, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.FormArrayName, _fortawesome_angular_fontawesome__WEBPACK_IMPORTED_MODULE_11__.FaIconComponent], styles: [".map-container[_ngcontent-%COMP%] {\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n    bottom: 0;\r\n    margin: 30px;\r\n}\r\n\r\n.map-frame[_ngcontent-%COMP%] {\r\n    border: 2px solid black;\r\n    height: 100%;\r\n}\r\n\r\n#map[_ngcontent-%COMP%] {\r\n    height: 100%;\r\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1hcC5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0ksa0JBQWtCO0lBQ2xCLE1BQU07SUFDTixPQUFPO0lBQ1AsUUFBUTtJQUNSLFNBQVM7SUFDVCxZQUFZO0FBQ2hCOztBQUVBO0lBQ0ksdUJBQXVCO0lBQ3ZCLFlBQVk7QUFDaEI7O0FBRUE7SUFDSSxZQUFZO0FBQ2hCIiwiZmlsZSI6Im1hcC5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm1hcC1jb250YWluZXIge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgdG9wOiAwO1xyXG4gICAgbGVmdDogMDtcclxuICAgIHJpZ2h0OiAwO1xyXG4gICAgYm90dG9tOiAwO1xyXG4gICAgbWFyZ2luOiAzMHB4O1xyXG59XHJcblxyXG4ubWFwLWZyYW1lIHtcclxuICAgIGJvcmRlcjogMnB4IHNvbGlkIGJsYWNrO1xyXG4gICAgaGVpZ2h0OiAxMDAlO1xyXG59XHJcblxyXG4jbWFwIHtcclxuICAgIGhlaWdodDogMTAwJTtcclxufSJdfQ== */"] });
 
 
 /***/ }),
