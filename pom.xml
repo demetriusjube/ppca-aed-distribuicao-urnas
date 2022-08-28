@@ -207,6 +207,7 @@
 				</executions>
 				<configuration>
 					<nodeVersion>v16.16.0</nodeVersion>
+					<workingDirectory>src/main/frontend</workingDirectory>
 				</configuration>
 			</plugin>
 		</plugins>
