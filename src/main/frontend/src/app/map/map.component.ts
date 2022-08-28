@@ -51,6 +51,8 @@ export class MapComponent implements OnInit, AfterViewInit {
         quantidadeCaminhoes22m3: this.formBuilder.control(0),
         quantidadeCaminhoes13m3: this.formBuilder.control(0),
         quantidadeCaminhoes7_5m3: this.formBuilder.control(0),
+        tempoDescarregamentoMinutos: this.formBuilder.control(30, Validators.required),
+        tempoMaximoAtuacaoHoras: this.formBuilder.control(10, Validators.required),
         tipoOtimizacaoEnum: this.formBuilder.control('MENOR_DISTANCIA', Validators.required)
       })
       this.formRotasSelecionadas = this.formBuilder.group({

@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-08-27 11:55:26.
+// Generated using typescript-generator version 2.28.785 on 2022-08-28 06:41:24.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -131,6 +131,8 @@ export interface SimulacaoRequest {
     quantidadeCaminhoes13m3: number;
     quantidadeCaminhoes7_5m3: number;
     tipoOtimizacaoEnum: TipoOtimizacaoEnum;
+    tempoDescarregamentoMinutos: number;
+    tempoMaximoAtuacaoHoras: number;
 }
 
 export interface Status {
@@ -143,11 +145,15 @@ export interface Vehicle {
     id: number;
     capacity: number;
     depot: Depot;
+    tempoDescarregamentoMinutos: number;
+    tempoMaximoAtuacaoHoras: number;
     customerList: Customer[];
-    route: Location[];
-    totalDemand: number;
-    totalTimeMilis: number;
+    tempoMaximoAtuacaoUltrapassado: boolean;
+    tempoAtuacaoUltrapassadoMilis: number;
     totalDistanceMeters: number;
+    totalTimeMilis: number;
+    totalDemand: number;
+    route: Location[];
 }
 
 export interface VehicleRoutingSolution {
@@ -157,8 +163,8 @@ export interface VehicleRoutingSolution {
     vehicleList: Vehicle[];
     customerList: Customer[];
     score: HardSoftLongScore;
-    distanceMeters: number;
     bounds: Location[];
+    distanceMeters: number;
 }
 
 export interface HardSoftLongScore extends AbstractScore<HardSoftLongScore> {
@@ -174,8 +180,8 @@ export interface Serializable {
 
 export interface Score<Score_> extends Comparable<Score_> {
     zero: boolean;
-    feasible: boolean;
     initScore: number;
+    feasible: boolean;
     solutionInitialized: boolean;
 }
 

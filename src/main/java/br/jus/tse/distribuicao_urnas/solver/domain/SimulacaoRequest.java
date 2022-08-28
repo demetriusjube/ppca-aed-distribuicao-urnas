@@ -18,4 +18,8 @@ public class SimulacaoRequest {
 
 	private TipoOtimizacaoEnum tipoOtimizacaoEnum;
 
+	private Integer tempoDescarregamentoMinutos;
+
+	private Integer tempoMaximoAtuacaoHoras;
+
 }
