@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
+import 'leaflet-defaulticon-compatibility';
 import * as _ from 'lodash';
 import 'leaflet-routing-machine';
 import { Customer, Depot, DepotCustomers, Location, Status, VehicleRoutingSolution } from './shared/model/distribuicao-urnas-model';
@@ -12,7 +13,7 @@ export class MarkerService {
 
   private colorMap = new Map<number, string>();
   private vehicleColorMap = new Map<number, string>();
-  private routeControls : L.Control[] = [];
+  private routeControls: L.Control[] = [];
 
   private letters = '0123456789ABCDEF';
 
@@ -62,6 +63,8 @@ export class MarkerService {
             lineOptions: lineOptions,
             routeWhileDragging: false,
           });
+
+
           this.routeControls.push(rota);
           rota.addTo(map);
         }

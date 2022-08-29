@@ -27,6 +27,7 @@
     "bootstrap": "^5.2.0",
     "humanize-duration": "^3.27.3",
     "leaflet": "^1.7.1",
+    "leaflet-defaulticon-compatibility": "^0.1.1",
     "leaflet-routing-machine": "^3.2.12",
     "lodash": "^4.17.21",
     "ngx-humanize-duration": "^1.2.5",
