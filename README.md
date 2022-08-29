@@ -54,7 +54,7 @@ Node.js is automatically downloaded using the `frontend-maven-plugin` and the fi
 The application can then be started with the following command - here with the profile `production`:
 
 ```
-java -Dspring.profiles.active=production -jar ./target/distribuicao-urnas-0.0.1-SNAPSHOT.jar
+java -Dspring.profiles.active=production -jar ./target/ppca-distribuicao-urnas.jar
 ```
 
 ## Further readings
