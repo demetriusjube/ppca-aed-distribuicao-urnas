@@ -2,6 +2,16 @@
 
 This app was created with Bootify.io - more documentation [can be found here](https://bootify.io/docs/). Feel free to contact us for further questions.
 
+## Rodando o jar do SpringBoot
+
+Se já tiver acesso ao jar executável do Spring Boot, faça o seguinte:
+
+- Copie o conteúdo da pasta `distribuicao-urnas-files` para o diretório padrão do usuário (Geralmente C:\Users\<login usuário>)
+- Rode o seguinte comando na pasta onde o jar está (É necessário ter o Java 17 instalado e  no path): `java -jar ppca-distribuicao-urnas-exec.jar`
+- A aplicação vai subir um servidor que estará monitorando a porta 8080, e pode ser acessada com `http://localhost:8080` 
+
+
+
 ## Prerequisites
 
 * Java 17 or later - https://jdk.java.net/18/
