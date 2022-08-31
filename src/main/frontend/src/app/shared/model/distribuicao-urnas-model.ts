@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-08-28 06:41:24.
+// Generated using typescript-generator version 2.28.785 on 2022-08-31 18:45:30.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -143,17 +143,18 @@ export interface Status {
 
 export interface Vehicle {
     id: number;
+    description: string;
     capacity: number;
     depot: Depot;
     tempoDescarregamentoMinutos: number;
     tempoMaximoAtuacaoHoras: number;
     customerList: Customer[];
-    tempoMaximoAtuacaoUltrapassado: boolean;
+    totalTimeMilis: number;
+    route: Location[];
+    totalDemand: number;
     tempoAtuacaoUltrapassadoMilis: number;
     totalDistanceMeters: number;
-    totalTimeMilis: number;
-    totalDemand: number;
-    route: Location[];
+    tempoMaximoAtuacaoUltrapassado: boolean;
 }
 
 export interface VehicleRoutingSolution {
@@ -180,9 +181,9 @@ export interface Serializable {
 
 export interface Score<Score_> extends Comparable<Score_> {
     zero: boolean;
-    initScore: number;
-    feasible: boolean;
     solutionInitialized: boolean;
+    feasible: boolean;
+    initScore: number;
 }
 
 export interface Comparable<T> {

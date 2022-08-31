@@ -12,6 +12,35 @@
             </div> -->
         </div>
         <div class="col-6 col-lg-5 col-xl-4" style="height: 100vh; overflow-y: scroll;">
+            <fieldset *ngIf="formSimulacoes" [formGroup]="formSimulacoes">
+                <legend>Simulações salvas</legend>
+                <div class="row">
+                    <div class="row pt-2 row-cols-1">
+                        <div class="col-12">
+                            <label for="idSimulacao">Simulação</label>
+                            <select class="form-control" formControlName="idSimulacao">
+                                <option *ngFor="let simulacao of simulacoes" value={{simulacao.id}}>
+                                    {{simulacao.descricao}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+            <div class="row pt-2 row-cols-1" *ngIf="formSimulacoes">
+                <div class="col mb-3">
+                    <button id="loadButton" type="button" class="btn btn-primary" (click)="loadSimulacao()"
+                        *ngIf="!isSolving && !simulationIsLoading">
+                        <fa-icon [icon]="faDownload"></fa-icon> Carregar Simulação
+                    </button>
+                    <div *ngIf="simulationIsLoading">
+                        <div class="spinner-border text-primary" role="status">
+                        </div>
+                        <span>Carregando simulação...</span>
+                    </div>
+                </div>
+            </div>
             <fieldset *ngIf="form" [formGroup]="form">
                 <legend>Dados para simulação</legend>
                 <div class="row">
@@ -54,7 +83,8 @@
                             <input type="number" class="form-control" formControlName="tempoDescarregamentoMinutos"
                                 min="1" />
                         </div>
-                        <div class="col-6"> <label for="tempoMaximoAtuacaoHoras">Tempo máximo atuação (horas)</label>
+                        <div class="col-6"> <label for="tempoMaximoAtuacaoHoras">Tempo máximo atuação
+                                (horas)</label>
                             <input type="number" class="form-control" formControlName="tempoMaximoAtuacaoHoras"
                                 min="1" />
                         </div>
@@ -157,7 +187,7 @@
                                     <fa-icon [icon]="faTruckPickup" [id]=' getIdCrossHairVehicle(vehicle)'
                                         [style]="getVehicleStyle(vehicle)"></fa-icon>
                                 </td>
-                                <td>Veículo {{vehicle.id}}</td>
+                                <td>{{vehicle.description}}</td>
                                 <td>
                                     <div class="progress" data-toggle="tooltip-load" data-placement="left"
                                         data-html="true" [title]="getVehicleTitle(vehicle)">
@@ -167,7 +197,8 @@
                                     </div>
                                 </td>
                                 <td>{{getDistanciaEmMetros(vehicle.totalDistanceMeters)}}</td>
-                                <td>{{vehicle.totalTimeMilis | humanizeDuration:{ delimiter: ' e ', largest:2 } }}</td>
+                                <td>{{vehicle.totalTimeMilis | humanizeDuration:{ delimiter: ' e ', largest:2 }
+                                    }}</td>
                             </tr>
 
                         </tbody>
@@ -196,7 +227,7 @@
 </div>
 <ng-template #content let-modal>
     <div class="modal-header">
-        <h5 class="modal-title" id="modal-basic-title">Locais de Votação - Veículo {{veiculoItinerario.id}}</h5>
+        <h5 class="modal-title" id="modal-basic-title">Locais de Votação - {{veiculoItinerario.description}}</h5>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">

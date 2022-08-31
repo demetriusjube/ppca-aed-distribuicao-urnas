@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.optaplanner.core.api.score.ScoreManager;
 import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
 import org.optaplanner.core.api.solver.SolverManager;
+import org.optaplanner.core.api.solver.SolverStatus;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.jus.tse.distribuicao_urnas.model.CentroDistribuicaoDTO;
+import br.jus.tse.distribuicao_urnas.model.SimulacaoDTO;
 import br.jus.tse.distribuicao_urnas.service.CentroDistribuicaoService;
+import br.jus.tse.distribuicao_urnas.service.SimulacaoService;
 import br.jus.tse.distribuicao_urnas.solver.builder.DepotCustomerBuilder;
 import br.jus.tse.distribuicao_urnas.solver.builder.DistribuicaoUrnasSolutionBuilder;
 import br.jus.tse.distribuicao_urnas.solver.domain.DepotCustomers;
@@ -41,24 +44,29 @@ public class SolverResource {
 	private final CentroDistribuicaoService centroDistribuicaoService;
 	private final DistribuicaoUrnasSolutionBuilder distribuicaoUrnasSolutionBuilder;
 	private final DepotCustomerBuilder depotCustomerBuilder;
+	private final SimulacaoService simulacaoService;
 
 	public SolverResource(VehicleRoutingSolutionRepository repository,
 			SolverManager<VehicleRoutingSolution, Long> solverManager,
 			ScoreManager<VehicleRoutingSolution, HardSoftLongScore> scoreManager,
 			CentroDistribuicaoService centroDistribuicaoService,
 			DistribuicaoUrnasSolutionBuilder distribuicaoUrnasSolutionBuilder,
-			DepotCustomerBuilder depotCustomerBuilder) {
+			DepotCustomerBuilder depotCustomerBuilder, SimulacaoService simulacaoService) {
 		this.repository = repository;
 		this.solverManager = solverManager;
 		this.scoreManager = scoreManager;
 		this.centroDistribuicaoService = centroDistribuicaoService;
 		this.distribuicaoUrnasSolutionBuilder = distribuicaoUrnasSolutionBuilder;
 		this.depotCustomerBuilder = depotCustomerBuilder;
+		this.simulacaoService = simulacaoService;
 	}
 
 	private Status statusFromSolution(VehicleRoutingSolution solution) {
-		return new Status(solution, scoreManager.explainScore(solution).getSummary(),
-				solverManager.getSolverStatus(PROBLEM_ID));
+		return statusFromSolution(solution, solverManager.getSolverStatus(PROBLEM_ID));
+	}
+
+	private Status statusFromSolution(VehicleRoutingSolution solution, SolverStatus solverStatus) {
+		return new Status(solution, scoreManager.explainScore(solution).getSummary(), solverStatus);
 	}
 
 	@GetMapping(value = "centros-distribuicao", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -95,6 +103,16 @@ public class SolverResource {
 	@PostMapping("stopSolving")
 	public void stopSolving() {
 		solverManager.terminateEarly(PROBLEM_ID);
+	}
+
+	@GetMapping(value = "simulacoes", produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<SimulacaoDTO> getSimulacoes() {
+		return simulacaoService.findAll();
+	}
+
+	@GetMapping(value = "simulacao/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Status getSimulacao(@PathVariable("id") Long idSimulacao) {
+		return statusFromSolution(distribuicaoUrnasSolutionBuilder.build(idSimulacao), SolverStatus.NOT_SOLVING);
 	}
 
 }

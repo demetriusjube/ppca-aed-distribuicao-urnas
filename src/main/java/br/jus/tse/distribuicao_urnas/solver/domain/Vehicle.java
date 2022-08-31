@@ -13,6 +13,7 @@ public class Vehicle {
 	private static final long CONVERSOR_MINUTOS_MILIS = 60l * 1000l;
 	private static final long CONVERSOR_HORA_MILIS = 60l * CONVERSOR_MINUTOS_MILIS;
 	private long id;
+	private String description;
 	private int capacity;
 	private Depot depot;
 	private int tempoDescarregamentoMinutos;
@@ -27,14 +28,18 @@ public class Vehicle {
 	}
 
 	public Vehicle(long id, int capacity, Depot depot, int tempoDescarregamentoMinutos, int tempoMaximoAtuacaoHoras) {
+		this(id, capacity, depot, tempoDescarregamentoMinutos, tempoMaximoAtuacaoHoras, "Veículo " + id);
+	}
+
+	public Vehicle(long id, int capacity, Depot depot, int tempoDescarregamentoMinutos, int tempoMaximoAtuacaoHoras,
+			String description) {
 		this.id = id;
 		this.capacity = capacity;
 		this.depot = depot;
 		this.customerList = new ArrayList<>();
-		this.tempoDescarregamentoMinutos = tempoDescarregamentoMinutos;
-		this.tempoDescarregamentoMilis = tempoDescarregamentoMinutos * CONVERSOR_MINUTOS_MILIS;
-		this.tempoMaximoAtuacaoHoras = tempoMaximoAtuacaoHoras;
-		this.tempoMaximoAtuacaoMilis = tempoMaximoAtuacaoHoras * CONVERSOR_HORA_MILIS;
+		setTempoDescarregamentoMinutos(tempoDescarregamentoMinutos);
+		setTempoMaximoAtuacaoHoras(tempoMaximoAtuacaoHoras);
+		this.description = description;
 	}
 
 	public long getId() {
@@ -43,6 +48,14 @@ public class Vehicle {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public int getCapacity() {
@@ -75,6 +88,7 @@ public class Vehicle {
 
 	public void setTempoDescarregamentoMinutos(int tempoDescarregamentoMinutos) {
 		this.tempoDescarregamentoMinutos = tempoDescarregamentoMinutos;
+		this.tempoDescarregamentoMilis = tempoDescarregamentoMinutos * CONVERSOR_MINUTOS_MILIS;
 	}
 
 	public int getTempoMaximoAtuacaoHoras() {
@@ -83,6 +97,7 @@ public class Vehicle {
 
 	public void setTempoMaximoAtuacaoHoras(int tempoMaximoAtuacaoHoras) {
 		this.tempoMaximoAtuacaoHoras = tempoMaximoAtuacaoHoras;
+		this.tempoMaximoAtuacaoMilis = tempoMaximoAtuacaoHoras * CONVERSOR_HORA_MILIS;
 	}
 
 	// ************************************************************************

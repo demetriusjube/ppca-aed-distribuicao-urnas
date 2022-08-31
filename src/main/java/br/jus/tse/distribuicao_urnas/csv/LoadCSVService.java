@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,16 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
-import br.jus.tse.distribuicao_urnas.distance.DistanceCalculator;
 import br.jus.tse.distribuicao_urnas.domain.CentroDistribuicao;
-import br.jus.tse.distribuicao_urnas.domain.Distancia;
 import br.jus.tse.distribuicao_urnas.domain.LocalVotacao;
 import br.jus.tse.distribuicao_urnas.domain.Localizacao;
 import br.jus.tse.distribuicao_urnas.domain.ParametroCalculo;
 import br.jus.tse.distribuicao_urnas.domain.TRE;
 import br.jus.tse.distribuicao_urnas.domain.ZonaEleitoral;
 import br.jus.tse.distribuicao_urnas.repos.CentroDistribuicaoRepository;
-import br.jus.tse.distribuicao_urnas.repos.DistanciaRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalVotacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.LocalizacaoRepository;
 import br.jus.tse.distribuicao_urnas.repos.ParametroCalculoRepository;

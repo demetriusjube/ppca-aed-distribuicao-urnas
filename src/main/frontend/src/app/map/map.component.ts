@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { faClipboardList, faCrosshairs, faInfoCircle, faListCheck, faPlay, faSignsPost, faStop, faTasks, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardList, faCrosshairs, faDownload, faInfoCircle, faListCheck, faPlay, faSignsPost, faStop, faTasks, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as L from 'leaflet';
 import * as _ from 'lodash';
 import { interval, Subscription } from 'rxjs';
 import { MarkerService } from '../marker.service';
 import { ErrorUtils } from '../shared/error-utils';
-import { CentroDistribuicaoDTO, Depot, SimulacaoRequest, Status, Vehicle } from '../shared/model/distribuicao-urnas-model';
+import { CentroDistribuicaoDTO, Depot, SimulacaoDTO, SimulacaoRequest, Status, Vehicle, VehicleRoutingSolution } from '../shared/model/distribuicao-urnas-model';
 import { SolverService } from '../solver.service';
 
 @Component({
@@ -23,6 +23,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   public faCrosshairs = faCrosshairs;
   public faTruckPickup = faTruckPickup;
   public faListCheck = faListCheck;
+  public faDownload = faDownload;
 
 
   private map: L.Map;
@@ -30,11 +31,15 @@ export class MapComponent implements OnInit, AfterViewInit {
   private updateSubscription: Subscription;
   public solvingIsStarting = false;
   public isSolving = false;
+  public simulationIsLoading = false;
   public statusSolucaoAtual: Status;
   public form: FormGroup;
   public formRotasSelecionadas: FormGroup;
+  public formSimulacoes: FormGroup;
   public centrosDistribuicao: CentroDistribuicaoDTO[] = [];
   public veiculoItinerario: Vehicle;
+  public simulacoes: SimulacaoDTO[];
+
 
   constructor(private markerService: MarkerService,
     private solverService: SolverService,
@@ -54,9 +59,15 @@ export class MapComponent implements OnInit, AfterViewInit {
         tempoDescarregamentoMinutos: this.formBuilder.control(30, Validators.required),
         tempoMaximoAtuacaoHoras: this.formBuilder.control(10, Validators.required),
         tipoOtimizacaoEnum: this.formBuilder.control('MENOR_DISTANCIA', Validators.required)
-      })
+      });
       this.formRotasSelecionadas = this.formBuilder.group({
         rotasSelecionadas: this.formBuilder.array([])
+      });
+      this.solverService.getSimulacoes().subscribe(simulacoes => {
+        this.formSimulacoes = this.formBuilder.group({
+          idSimulacao: this.formBuilder.control(null, Validators.required)
+        });
+        this.simulacoes = simulacoes;
       })
     })
   }
@@ -75,7 +86,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
   private atualizarRotasSelecionadas() {
     const veiculosSelecionados = this.formRotasSelecionadas.value.rotasSelecionadas as number[];
-    this.marcarSolucaoNoMapa(this.map, this.statusSolucaoAtual, veiculosSelecionados);
+    this.marcarSolucaoNoMapa(this.map, this.statusSolucaoAtual.solution, veiculosSelecionados);
 
   }
 
@@ -112,14 +123,18 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private atualizarMapa() {
     this.solverService.status().subscribe(statusSolucao => {
-      this.marcarSolucaoNoMapa(this.map, statusSolucao);
-      this.statusSolucaoAtual = statusSolucao;
-      this.updateSolvingStatus(this.statusSolucaoAtual.isSolving);
+      this.atualizarStatusSolucao(statusSolucao);
     })
   }
 
-  private marcarSolucaoNoMapa(map: L.Map, status: Status, idsVehicles?: number[]): void {
-    this.markerService.marcarSolucaoNoMapa(this.map, status, idsVehicles);
+  private atualizarStatusSolucao(statusSolucao: Status) {
+    this.marcarSolucaoNoMapa(this.map, statusSolucao.solution);
+    this.statusSolucaoAtual = statusSolucao;
+    this.updateSolvingStatus(this.statusSolucaoAtual.isSolving);
+  }
+
+  private marcarSolucaoNoMapa(map: L.Map, solution: VehicleRoutingSolution, idsVehicles?: number[]): void {
+    this.markerService.marcarSolucaoNoMapa(map, solution, idsVehicles);
   }
 
   private marcarCentroDistribuicaoELocaisVotacao(idCentroDistribuicao: number): void {
@@ -236,6 +251,16 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
     }, (reason) => {
     });
+
+  }
+
+  public loadSimulacao(): void {
+    const idSimulacaoSelecionada = this.formSimulacoes.get('idSimulacao').value;
+    this.simulationIsLoading = true;
+    this.solverService.getSolucaoSimulacao(idSimulacaoSelecionada).subscribe(status => {
+      this.simulationIsLoading = false;
+      this.atualizarStatusSolucao(status);
+    })
 
   }
 

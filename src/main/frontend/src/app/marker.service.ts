@@ -27,9 +27,8 @@ export class MarkerService {
     }
   }
 
-  public marcarSolucaoNoMapa(map: L.Map, statusSolucao: Status, idsVehicles?: number[]): void {
-    if (this.existeSolucaoComLocalizacoes(statusSolucao)) {
-      const solution = statusSolucao.solution;
+  public marcarSolucaoNoMapa(map: L.Map, solution: VehicleRoutingSolution, idsVehicles?: number[]): void {
+    if (this.existeSolucaoComLocalizacoes(solution)) {
       // this.adicionaCentrosDeDistribuicao(solution, map);
       // this.adicionaLocaisDeVotacao(solution.customerList, map);
       this.adicionaRotas(solution, map, idsVehicles);
@@ -128,8 +127,8 @@ export class MarkerService {
     return popup;
   }
 
-  private existeSolucaoComLocalizacoes(statusSolucao: Status) {
-    return !_.isNil(statusSolucao) && !_.isNil(statusSolucao.solution) && !_.isNil(statusSolucao.solution.locationList) && statusSolucao.solution.locationList.length > 0;
+  private existeSolucaoComLocalizacoes(solution: VehicleRoutingSolution) {
+    return !_.isNil(solution) && !_.isNil(solution.locationList) && solution.locationList.length > 0;
   }
 
   public getVehicleColorById(id: number) {

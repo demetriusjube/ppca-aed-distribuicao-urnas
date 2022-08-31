@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CentroDistribuicaoDTO, DepotCustomers, SimulacaoRequest, Status } from './shared/model/distribuicao-urnas-model';
+import { CentroDistribuicaoDTO, DepotCustomers, SimulacaoDTO, SimulacaoRequest, Status, VehicleRoutingSolution } from './shared/model/distribuicao-urnas-model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +25,15 @@ export class SolverService {
   public getCentrosDistribuicao(): Observable<CentroDistribuicaoDTO[]> {
     return this.http.get<CentroDistribuicaoDTO[]>("/vrp/centros-distribuicao", {});
   }
+
+  public getSimulacoes(): Observable<SimulacaoDTO[]> {
+    return this.http.get<SimulacaoDTO[]>("/vrp/simulacoes", {});
+  }
+
+  public getSolucaoSimulacao(idSimulacao: number): Observable<Status> {
+    return this.http.get<Status>(`/vrp/simulacao/${idSimulacao}`, {});
+  }
+
 
   public getCentroDistribuicaoELocaisVotacao(idCentroDistribuicao: number): Observable<DepotCustomers> {
     return this.http.get<DepotCustomers>(`/vrp/depot-customers/${idCentroDistribuicao}`, {});

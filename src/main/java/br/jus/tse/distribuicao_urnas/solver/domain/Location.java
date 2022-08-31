@@ -3,6 +3,8 @@ package br.jus.tse.distribuicao_urnas.solver.domain;
 import java.math.BigDecimal;
 import java.util.Map;
 
+import lombok.EqualsAndHashCode;
+
 //@JsonFormat(shape = JsonFormat.Shape.ARRAY)
 //@JsonIgnoreProperties({ "id" })
 public class Location {

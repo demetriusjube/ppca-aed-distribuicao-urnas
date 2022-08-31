@@ -7,12 +7,13 @@ import br.jus.tse.distribuicao_urnas.solver.domain.Location;
 public class LocationBuilder {
 
 	public static Location buildFrom(CentroDistribuicao centroDistribuicao) {
-		return new Location(centroDistribuicao.getId(), centroDistribuicao.getLocalizacao().getLatitude(),
-				centroDistribuicao.getLocalizacao().getLongitude(), centroDistribuicao.getEndereco());
+		return new Location(centroDistribuicao.getLocalizacao().getId(),
+				centroDistribuicao.getLocalizacao().getLatitude(), centroDistribuicao.getLocalizacao().getLongitude(),
+				centroDistribuicao.getEndereco());
 	}
 
 	public static Location buildFrom(LocalVotacao localVotacao) {
-		return new Location(localVotacao.getId(), localVotacao.getLocalizacao().getLatitude(),
+		return new Location(localVotacao.getLocalizacao().getId(), localVotacao.getLocalizacao().getLatitude(),
 				localVotacao.getLocalizacao().getLongitude(), localVotacao.getEndereco());
 	}
 
