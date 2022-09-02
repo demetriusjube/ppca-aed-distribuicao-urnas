@@ -10,13 +10,15 @@ import lombok.EqualsAndHashCode;
 public class Location {
 
 	private final long id;
+	private final String nome;
 	private final String endereco;
 	private final BigDecimal latitude;
 	private final BigDecimal longitude;
 	private Map<Location, RouteData> distanceMap;
 
-	public Location(long id, BigDecimal latitude, BigDecimal longitude, String endereco) {
+	public Location(long id, BigDecimal latitude, BigDecimal longitude, String endereco, String nome) {
 		this.id = id;
+		this.nome = nome;
 		this.endereco = endereco;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -36,6 +38,10 @@ public class Location {
 
 	public String getEndereco() {
 		return endereco;
+	}
+
+	public String getNome() {
+		return nome;
 	}
 
 	/**

@@ -78,8 +78,8 @@ public class DistribuicaoUrnasSolutionBuilder {
 
 	private VehicleRoutingSolution buildSolution(DepotCustomers depotCustomers, List<Vehicle> vehicleList,
 			TipoOtimizacaoEnum tipoOtimizacaoEnum) {
-		Location southWestCorner = new Location(0L, new BigDecimal(-16.04871827), new BigDecimal(-48.04740728), "");
-		Location northEastCorner = new Location(0L, new BigDecimal(-15.7041622), new BigDecimal(-47.3737344), "");
+		Location southWestCorner = new Location(0L, new BigDecimal(-16.04871827), new BigDecimal(-48.04740728), "", "");
+		Location northEastCorner = new Location(0L, new BigDecimal(-15.7041622), new BigDecimal(-47.3737344), "", "");
 		List<Depot> depotList = Arrays.asList(depotCustomers.getDepot());
 		if (CollectionUtils.isEmpty(vehicleList)) {
 			throw new IllegalArgumentException("Não é possível fazer a simulação com uma quantidade nula de veículos!");
@@ -145,8 +145,8 @@ public class DistribuicaoUrnasSolutionBuilder {
 	}
 
 	public VehicleRoutingSolution build(Long idSimulacao) {
-		Location southWestCorner = new Location(0L, new BigDecimal(-16.04871827), new BigDecimal(-48.04740728), "");
-		Location northEastCorner = new Location(0L, new BigDecimal(-15.7041622), new BigDecimal(-47.3737344), "");
+		Location southWestCorner = new Location(0L, new BigDecimal(-16.04871827), new BigDecimal(-48.04740728), "", "");
+		Location northEastCorner = new Location(0L, new BigDecimal(-15.7041622), new BigDecimal(-47.3737344), "", "");
 		Simulacao simulacao = simulacaoRepository.findById(idSimulacao).orElse(null);
 		if (simulacao != null) {
 

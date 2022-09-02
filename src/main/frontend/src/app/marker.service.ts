@@ -19,6 +19,15 @@ export class MarkerService {
 
   constructor(private http: HttpClient) { }
 
+  public mostrarItinerarios(): void {
+    if (this.routeControls && this.routeControls.length > 0) {
+      this.routeControls.forEach(routeControl => {
+        const options = routeControl.options as L.Routing.RoutingControlOptions;
+        options.show = true;
+      });
+    }
+  }
+
   public marcarCentroDistribuicaoELocaisVotacao(layerGroup: L.LayerGroup, depotCustomer: DepotCustomers): void {
     if (depotCustomer) {
       layerGroup.clearLayers();
@@ -27,24 +36,24 @@ export class MarkerService {
     }
   }
 
-  public marcarSolucaoNoMapa(map: L.Map, solution: VehicleRoutingSolution, idsVehicles?: number[]): void {
+  public marcarSolucaoNoMapa(map: L.Map, solution: VehicleRoutingSolution, isSolving: boolean, idsVehicles?: number[]): void {
     if (this.existeSolucaoComLocalizacoes(solution)) {
       // this.adicionaCentrosDeDistribuicao(solution, map);
       // this.adicionaLocaisDeVotacao(solution.customerList, map);
-      this.adicionaRotas(solution, map, idsVehicles);
+      this.adicionaRotas(solution, map, isSolving, idsVehicles);
     }
   }
 
-  public adicionaRotas(solution: VehicleRoutingSolution, map: L.Map, idsVehicles?: number[]) {
+  public adicionaRotas(solution: VehicleRoutingSolution, map: L.Map, isSolving: boolean, idsVehicles?: number[]) {
     this.routeControls.forEach(routeControl => {
       map.removeControl(routeControl);
     });
     solution.vehicleList.forEach(vehicle => {
       if ((_.isNil(idsVehicles) || idsVehicles.length === 0) || (!_.isNil(idsVehicles) && idsVehicles.indexOf(vehicle.id) != -1)) {
         if (!_.isNil(vehicle.customerList) && vehicle.customerList.length > 0) {
-          var visits: L.LatLng[] = [];
+          var visits: L.Routing.Waypoint[] = [];
           vehicle.route.forEach(location => {
-            visits.push(this.buildLatLongFromLocation(location));
+            visits.push(this.buildWaypointLocation(location));
           });
           const vehicleColor = this.getVehicleColorById(vehicle.id);
           const lineOptions: L.Routing.LineOptions = {
@@ -56,7 +65,7 @@ export class MarkerService {
             }]
           }
           const rota = L.Routing.control({
-            show: false,
+            show: !isSolving,
             waypoints: visits,
             pointMarkerStyle: { color: vehicleColor },
             lineOptions: lineOptions,
@@ -71,8 +80,12 @@ export class MarkerService {
     });
   }
 
-  private buildLatLongFromLocation(location: Location) {
-    return L.latLng(location.latitude, location.longitude);
+  private buildWaypointLocation(location: Location) {
+    const waypoint : L.Routing.Waypoint = {
+      latLng : L.latLng(location.latitude, location.longitude),
+      name: location.nome + `(${location.endereco})`
+    }
+    return waypoint;
   }
 
   private adicionaLocaisDeVotacao(customerList: Customer[], layerGroup: L.LayerGroup) {

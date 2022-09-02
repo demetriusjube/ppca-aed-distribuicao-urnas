@@ -86,7 +86,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
   private atualizarRotasSelecionadas() {
     const veiculosSelecionados = this.formRotasSelecionadas.value.rotasSelecionadas as number[];
-    this.marcarSolucaoNoMapa(this.map, this.statusSolucaoAtual.solution, veiculosSelecionados);
+    this.marcarSolucaoNoMapa(this.map, this.statusSolucaoAtual.solution, this.statusSolucaoAtual.isSolving, veiculosSelecionados);
 
   }
 
@@ -128,13 +128,13 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   private atualizarStatusSolucao(statusSolucao: Status) {
-    this.marcarSolucaoNoMapa(this.map, statusSolucao.solution);
+    this.marcarSolucaoNoMapa(this.map, statusSolucao.solution, statusSolucao.isSolving);
     this.statusSolucaoAtual = statusSolucao;
     this.updateSolvingStatus(this.statusSolucaoAtual.isSolving);
   }
 
-  private marcarSolucaoNoMapa(map: L.Map, solution: VehicleRoutingSolution, idsVehicles?: number[]): void {
-    this.markerService.marcarSolucaoNoMapa(map, solution, idsVehicles);
+  private marcarSolucaoNoMapa(map: L.Map, solution: VehicleRoutingSolution, isSolving: boolean, idsVehicles?: number[]): void {
+    this.markerService.marcarSolucaoNoMapa(map, solution, isSolving, idsVehicles);
   }
 
   private marcarCentroDistribuicaoELocaisVotacao(idCentroDistribuicao: number): void {
@@ -185,12 +185,14 @@ export class MapComponent implements OnInit, AfterViewInit {
   public stopSolving(): void {
     this.solverService.stopSolving().subscribe({
       next: () => {
+
         this.updateSolvingStatus(false);
         const rotasSelecionadasArray = this.formRotasSelecionadas.get('rotasSelecionadas') as FormArray;
         rotasSelecionadasArray.clear();
         this.statusSolucaoAtual.solution.vehicleList.forEach(vehicle => {
           rotasSelecionadasArray.push(this.formBuilder.control(vehicle.id))
         })
+        this.markerService.mostrarItinerarios();
       },
       error: (err) => {
         ErrorUtils.displayError(err);
@@ -242,8 +244,15 @@ export class MapComponent implements OnInit, AfterViewInit {
     return `Carga: ${vehicle.totalDemand}<br/>Capacity: ${vehicle.capacity}`;
   }
 
+  public getVehicleProgressBarClass(vehicle: Vehicle): string {
+    let color = 'bg-primary';
+    if (vehicle.totalDemand > vehicle.capacity) {
+      color = 'bg-danger';
+    }
+    return `progress-bar ${color}`
+  }
   public getVehicleProgressBarStyle(vehicle: Vehicle): string {
-    return `width: ${(vehicle.totalDemand / vehicle.capacity) * 100}%`;
+    return `width: ${(vehicle.totalDemand / vehicle.capacity) * 100}%;`;
   }
 
   public abrirItinerario(content, vehicle: Vehicle): void {

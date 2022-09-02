@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-08-31 18:45:30.
+// Generated using typescript-generator version 2.28.785 on 2022-09-02 11:53:49.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -113,6 +113,7 @@ export interface DepotCustomers {
 
 export interface Location {
     id: number;
+    nome: string;
     endereco: string;
     latitude: number;
     longitude: number;
@@ -149,12 +150,12 @@ export interface Vehicle {
     tempoDescarregamentoMinutos: number;
     tempoMaximoAtuacaoHoras: number;
     customerList: Customer[];
+    totalDistanceMeters: number;
+    tempoAtuacaoUltrapassadoMilis: number;
+    tempoMaximoAtuacaoUltrapassado: boolean;
     totalTimeMilis: number;
     route: Location[];
     totalDemand: number;
-    tempoAtuacaoUltrapassadoMilis: number;
-    totalDistanceMeters: number;
-    tempoMaximoAtuacaoUltrapassado: boolean;
 }
 
 export interface VehicleRoutingSolution {

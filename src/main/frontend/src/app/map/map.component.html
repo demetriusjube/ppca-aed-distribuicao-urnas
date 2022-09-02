@@ -191,7 +191,7 @@
                                 <td>
                                     <div class="progress" data-toggle="tooltip-load" data-placement="left"
                                         data-html="true" [title]="getVehicleTitle(vehicle)">
-                                        <div class="progress-bar" role="progressbar"
+                                        <div [class]="getVehicleProgressBarClass(vehicle)" role="progressbar"
                                             [style]="getVehicleProgressBarStyle(vehicle)">
                                             {{vehicle.totalDemand}}/{{vehicle.capacity}}</div>
                                     </div>
