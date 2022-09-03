@@ -187,11 +187,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       next: () => {
 
         this.updateSolvingStatus(false);
-        const rotasSelecionadasArray = this.formRotasSelecionadas.get('rotasSelecionadas') as FormArray;
-        rotasSelecionadasArray.clear();
-        this.statusSolucaoAtual.solution.vehicleList.forEach(vehicle => {
-          rotasSelecionadasArray.push(this.formBuilder.control(vehicle.id))
-        })
+        this.carregarFormRotas(this.statusSolucaoAtual);
         this.markerService.mostrarItinerarios();
       },
       error: (err) => {
@@ -199,6 +195,14 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
     });
 
+  }
+
+  private carregarFormRotas(statusSolucaoAtual: Status) {
+    const rotasSelecionadasArray = this.formRotasSelecionadas.get('rotasSelecionadas') as FormArray;
+    rotasSelecionadasArray.clear();
+    statusSolucaoAtual.solution.vehicleList.forEach(vehicle => {
+      rotasSelecionadasArray.push(this.formBuilder.control(vehicle.id));
+    });
   }
 
   public getDistanciaFormatada(): string {
@@ -269,6 +273,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.solverService.getSolucaoSimulacao(idSimulacaoSelecionada).subscribe(status => {
       this.simulationIsLoading = false;
       this.atualizarStatusSolucao(status);
+      this.carregarFormRotas(status);
       const centroDistribuicaoId = status.solution.depotList[0].id;
       this.marcarCentroDistribuicaoELocaisVotacao(centroDistribuicaoId);
     })
