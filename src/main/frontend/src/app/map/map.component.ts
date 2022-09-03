@@ -145,7 +145,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private updateSolvingStatus(solvingStatus: boolean): void {
     this.isSolving = solvingStatus;
-    if (!solvingStatus) {
+    if (!solvingStatus && this.updateSubscription) {
       this.updateSubscription.unsubscribe();
     }
   }
@@ -269,6 +269,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.solverService.getSolucaoSimulacao(idSimulacaoSelecionada).subscribe(status => {
       this.simulationIsLoading = false;
       this.atualizarStatusSolucao(status);
+      const centroDistribuicaoId = status.solution.depotList[0].id;
+      this.marcarCentroDistribuicaoELocaisVotacao(centroDistribuicaoId);
     })
 
   }
