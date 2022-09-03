@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-09-02 11:53:49.
+// Generated using typescript-generator version 2.28.785 on 2022-09-03 11:38:09.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -93,11 +93,11 @@ export interface ZonaEleitoralDTO {
     centroDistribuicao: number;
 }
 
-export interface Customer {
+export interface Customer extends Standstill {
     id: number;
     name: string;
-    location: Location;
     demand: number;
+    last: boolean;
 }
 
 export interface Depot {
@@ -136,37 +136,43 @@ export interface SimulacaoRequest {
     tempoMaximoAtuacaoHoras: number;
 }
 
+export interface Standstill {
+    location: Location;
+    nextVisit: Customer;
+}
+
 export interface Status {
     solution: VehicleRoutingSolution;
     scoreExplanation: string;
     isSolving: boolean;
 }
 
-export interface Vehicle {
+export interface Vehicle extends Standstill {
     id: number;
     description: string;
     capacity: number;
     depot: Depot;
     tempoDescarregamentoMinutos: number;
     tempoMaximoAtuacaoHoras: number;
-    customerList: Customer[];
-    totalDistanceMeters: number;
-    tempoAtuacaoUltrapassadoMilis: number;
     tempoMaximoAtuacaoUltrapassado: boolean;
-    totalTimeMilis: number;
-    route: Location[];
+    tempoAtuacaoUltrapassadoMinutos: number;
+    totalDistanceMeters: number;
     totalDemand: number;
+    route: Location[];
+    totalTimeMilis: number;
+    futureVisits: Iterable<Customer>;
 }
 
 export interface VehicleRoutingSolution {
     name: string;
-    locationList: Location[];
     depotList: Depot[];
     vehicleList: Vehicle[];
     customerList: Customer[];
     score: HardSoftLongScore;
-    bounds: Location[];
     distanceMeters: number;
+}
+
+export interface Iterable<T> {
 }
 
 export interface HardSoftLongScore extends AbstractScore<HardSoftLongScore> {

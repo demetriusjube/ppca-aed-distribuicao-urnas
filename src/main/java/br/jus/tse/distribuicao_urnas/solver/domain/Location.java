@@ -59,7 +59,7 @@ public class Location {
 	 * @param location other location
 	 * @return distance in meters
 	 */
-	public Double getDistanceTo(Location location) {
+	public Long getDistanceTo(Location location) {
 		return distanceMap.get(location).getDistanceMeters();
 	}
 

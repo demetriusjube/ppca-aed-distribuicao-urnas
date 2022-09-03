@@ -2,16 +2,18 @@ package br.jus.tse.distribuicao_urnas.solver.domain;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import org.optaplanner.core.api.domain.entity.PlanningEntity;
-import org.optaplanner.core.api.domain.variable.PlanningListVariable;
+import org.optaplanner.core.api.domain.lookup.PlanningId;
 
-@PlanningEntity
-public class Vehicle {
+public class Vehicle implements Standstill {
 
 	private static final long CONVERSOR_MINUTOS_MILIS = 60l * 1000l;
 	private static final long CONVERSOR_HORA_MILIS = 60l * CONVERSOR_MINUTOS_MILIS;
+
+	@PlanningId
 	private long id;
 	private String description;
 	private int capacity;
@@ -21,8 +23,7 @@ public class Vehicle {
 	private int tempoMaximoAtuacaoHoras;
 	private long tempoMaximoAtuacaoMilis;
 
-	@PlanningListVariable(valueRangeProviderRefs = "customerRange")
-	private List<Customer> customerList;
+	private Customer nextVisit;
 
 	public Vehicle() {
 	}
@@ -36,7 +37,6 @@ public class Vehicle {
 		this.id = id;
 		this.capacity = capacity;
 		this.depot = depot;
-		this.customerList = new ArrayList<>();
 		setTempoDescarregamentoMinutos(tempoDescarregamentoMinutos);
 		setTempoMaximoAtuacaoHoras(tempoMaximoAtuacaoHoras);
 		this.description = description;
@@ -74,14 +74,6 @@ public class Vehicle {
 		this.depot = depot;
 	}
 
-	public List<Customer> getCustomerList() {
-		return customerList;
-	}
-
-	public void setCustomerList(List<Customer> customerList) {
-		this.customerList = customerList;
-	}
-
 	public int getTempoDescarregamentoMinutos() {
 		return tempoDescarregamentoMinutos;
 	}
@@ -108,14 +100,15 @@ public class Vehicle {
 	 * @return route of the vehicle
 	 */
 	public List<Location> getRoute() {
-		if (customerList.isEmpty()) {
+		Iterable<Customer> customers = getFutureVisits();
+		if (!customers.iterator().hasNext()) {
 			return Collections.emptyList();
 		}
 
 		List<Location> route = new ArrayList<Location>();
 
 		route.add(depot.getLocation());
-		for (Customer customer : customerList) {
+		for (Customer customer : customers) {
 			route.add(customer.getLocation());
 		}
 		route.add(depot.getLocation());
@@ -125,21 +118,24 @@ public class Vehicle {
 
 	public int getTotalDemand() {
 		int totalDemand = 0;
-		for (Customer customer : customerList) {
-			totalDemand += customer.getDemand();
+		Iterable<Customer> customers = getFutureVisits();
+		if (customers.iterator().hasNext()) {
+			for (Customer customer : customers) {
+				totalDemand += customer.getDemand();
+			}
 		}
 		return totalDemand;
 	}
 
 	public long getTotalDistanceMeters() {
-		if (customerList.isEmpty()) {
+		Iterable<Customer> customers = getFutureVisits();
+		if (!customers.iterator().hasNext()) {
 			return 0;
 		}
 
 		long totalDistance = 0;
 		Location previousLocation = depot.getLocation();
-
-		for (Customer customer : customerList) {
+		for (Customer customer : customers) {
 			totalDistance += previousLocation.getDistanceTo(customer.getLocation());
 			previousLocation = customer.getLocation();
 		}
@@ -149,14 +145,15 @@ public class Vehicle {
 	}
 
 	public long getTotalTimeMilis() {
-		if (customerList.isEmpty()) {
+		Iterable<Customer> customers = getFutureVisits();
+		if (!customers.iterator().hasNext()) {
 			return 0;
 		}
 
 		long totalTime = 0;
 		Location previousLocation = depot.getLocation();
 
-		for (Customer customer : customerList) {
+		for (Customer customer : customers) {
 			totalTime += previousLocation.getTimeTo(customer.getLocation());
 			totalTime += tempoDescarregamentoMilis;
 			previousLocation = customer.getLocation();
@@ -178,4 +175,41 @@ public class Vehicle {
 	public String toString() {
 		return "Vehicle{" + "id=" + id + '}';
 	}
+
+	@Override
+	public Location getLocation() {
+		return depot.getLocation();
+	}
+
+	@Override
+	public Customer getNextVisit() {
+		return nextVisit;
+	}
+
+	@Override
+	public void setNextVisit(Customer nextVisit) {
+		this.nextVisit = nextVisit;
+	}
+
+	public Iterable<Customer> getFutureVisits() {
+		return () -> new Iterator<Customer>() {
+			Customer nextVisit = getNextVisit();
+
+			@Override
+			public boolean hasNext() {
+				return nextVisit != null;
+			}
+
+			@Override
+			public Customer next() {
+				if (nextVisit == null) {
+					throw new NoSuchElementException();
+				}
+				Customer out = nextVisit;
+				nextVisit = nextVisit.getNextVisit();
+				return out;
+			}
+		};
+	}
+
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class RouteData {
 
-	private Double distanceMeters;
+	private Long distanceMeters;
 
 	private Long drivingTimeMilis;
 

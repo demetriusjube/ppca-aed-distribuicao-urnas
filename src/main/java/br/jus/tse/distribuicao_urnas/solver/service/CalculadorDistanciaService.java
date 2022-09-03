@@ -37,11 +37,15 @@ public class CalculadorDistanciaService implements DistanceCalculator {
 				throw new DistanceCalculationException(
 						"Não foi possível recuperar o trajeto de " + from.toString() + " para " + to.toString());
 			}
-			return new RouteData(path.getDistance(), path.getTime());
+			return new RouteData(getDistanceLong(path.getDistance()), path.getTime());
 		} catch (DistanceCalculationException e) {
 			log.warn(e.getMessage());
 			return null;
 		}
+	}
+	
+	private long getDistanceLong(double distance) {
+		return (long) Math.ceil(distance);
 	}
 
 }

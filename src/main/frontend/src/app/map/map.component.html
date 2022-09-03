@@ -256,10 +256,10 @@
 
             </thead>
             <tbody>
-                <tr *ngFor="let customer of veiculoItinerario.customerList">
+                <tr *ngFor="let customer of veiculoItinerario.route">
                     <td>{{customer.id}}</td>
-                    <td>{{customer.name}}</td>
-                    <td>{{customer.location.endereco}}</td>
+                    <td>{{customer.nome}}</td>
+                    <td>{{customer.endereco}}</td>
                 </tr>
             </tbody>
         </table>

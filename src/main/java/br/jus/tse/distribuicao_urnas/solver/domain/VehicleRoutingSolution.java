@@ -1,7 +1,6 @@
 package br.jus.tse.distribuicao_urnas.solver.domain;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
@@ -11,44 +10,33 @@ import org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
 
-
 @PlanningSolution
 public class VehicleRoutingSolution {
 
 	private String name;
-
-	@ProblemFactCollectionProperty
-	private List<Location> locationList = new ArrayList<Location>();
-
 	@ProblemFactCollectionProperty
 	private List<Depot> depotList = new ArrayList<Depot>();
 
 	@PlanningEntityCollectionProperty
+	@ValueRangeProvider(id = "vehicleRange")
 	private List<Vehicle> vehicleList = new ArrayList<Vehicle>();
 
-	@ProblemFactCollectionProperty
+	@PlanningEntityCollectionProperty
 	@ValueRangeProvider(id = "customerRange")
 	private List<Customer> customerList = new ArrayList<Customer>();
 
 	@PlanningScore
 	private HardSoftLongScore score;
 
-	private Location southWestCorner;
-	private Location northEastCorner;
-
 	public VehicleRoutingSolution() {
 	}
 
-	public VehicleRoutingSolution(String name, List<Location> locationList, List<Depot> depotList,
-			List<Vehicle> vehicleList, List<Customer> customerList, Location southWestCorner,
-			Location northEastCorner) {
+	public VehicleRoutingSolution(String name, List<Depot> depotList, List<Vehicle> vehicleList,
+			List<Customer> customerList) {
 		this.name = name;
-		this.locationList = locationList;
 		this.depotList = depotList;
 		this.vehicleList = vehicleList;
 		this.customerList = customerList;
-		this.southWestCorner = southWestCorner;
-		this.northEastCorner = northEastCorner;
 	}
 
 	public static VehicleRoutingSolution empty() {
@@ -65,14 +53,6 @@ public class VehicleRoutingSolution {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<Location> getLocationList() {
-		return locationList;
-	}
-
-	public void setLocationList(List<Location> locationList) {
-		this.locationList = locationList;
 	}
 
 	public List<Depot> getDepotList() {
@@ -110,10 +90,6 @@ public class VehicleRoutingSolution {
 	// ************************************************************************
 	// Complex methods
 	// ************************************************************************
-
-	public List<Location> getBounds() {
-		return Arrays.asList(southWestCorner, northEastCorner);
-	}
 
 	public long getDistanceMeters() {
 		return score == null ? 0 : -score.getSoftScore();

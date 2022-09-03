@@ -78,8 +78,6 @@ public class DistribuicaoUrnasSolutionBuilder {
 
 	private VehicleRoutingSolution buildSolution(DepotCustomers depotCustomers, List<Vehicle> vehicleList,
 			TipoOtimizacaoEnum tipoOtimizacaoEnum) {
-		Location southWestCorner = new Location(0L, new BigDecimal(-16.04871827), new BigDecimal(-48.04740728), "", "");
-		Location northEastCorner = new Location(0L, new BigDecimal(-15.7041622), new BigDecimal(-47.3737344), "", "");
 		List<Depot> depotList = Arrays.asList(depotCustomers.getDepot());
 		if (CollectionUtils.isEmpty(vehicleList)) {
 			throw new IllegalArgumentException("Não é possível fazer a simulação com uma quantidade nula de veículos!");
@@ -91,8 +89,7 @@ public class DistribuicaoUrnasSolutionBuilder {
 		log.info("Carregando a matriz de distâncias...");
 		distanceCalculator.initDistanceMaps(locationList, tipoOtimizacaoEnum);
 		log.info("Matriz de distâncias carregada!");
-		return new VehicleRoutingSolution("Teste de otimização", locationList, depotList, vehicleList, customers,
-				southWestCorner, northEastCorner);
+		return new VehicleRoutingSolution("Teste de otimização", depotList, vehicleList, customers);
 	}
 
 	private List<Vehicle> montaVeiculosDaSimulacao(SimulacaoRequest simulacaoRequest, Depot depot) {
@@ -145,8 +142,6 @@ public class DistribuicaoUrnasSolutionBuilder {
 	}
 
 	public VehicleRoutingSolution build(Long idSimulacao) {
-		Location southWestCorner = new Location(0L, new BigDecimal(-16.04871827), new BigDecimal(-48.04740728), "", "");
-		Location northEastCorner = new Location(0L, new BigDecimal(-15.7041622), new BigDecimal(-47.3737344), "", "");
 		Simulacao simulacao = simulacaoRepository.findById(idSimulacao).orElse(null);
 		if (simulacao != null) {
 
@@ -161,8 +156,7 @@ public class DistribuicaoUrnasSolutionBuilder {
 			distanceCalculator.initDistanceMaps(locationList, tipoOtimizacaoEnum);
 			log.info("Matriz de distâncias carregada!");
 			List<Vehicle> vehicleList = montaVeiculosDaSimulacao(simulacao, depotCustomers.getDepot(), customers);
-			return new VehicleRoutingSolution("Teste de otimização", locationList, depotList, vehicleList, customers,
-					southWestCorner, northEastCorner);
+			return new VehicleRoutingSolution("Teste de otimização", depotList, vehicleList, customers);
 
 		}
 		throw new IllegalArgumentException("A simulação informada não foi encontrada!");
@@ -182,14 +176,40 @@ public class DistribuicaoUrnasSolutionBuilder {
 			vehicle.setTempoMaximoAtuacaoHoras(10);
 			List<Visita> visitasOrdenadas = veiculoSimulacao.getPlanoRota().getVisitas().stream()
 					.sorted(Comparator.comparing(Visita::getOrdem)).toList();
-			List<Long> idsLocalizacoes = visitasOrdenadas.stream().map(Visita::getLocalVotacao)
-					.map(LocalVotacao::getLocalizacao).map(Localizacao::getId).toList();
-			List<Customer> customers = customersWithDistanceMatrix.stream()
-					.filter(customer -> idsLocalizacoes.contains(customer.getLocation().getId())).toList();
-			vehicle.setCustomerList(customers);
+			Customer primeiraVisita = mountCustomersVisits(visitasOrdenadas, customersWithDistanceMatrix, vehicle);
+//			List<Long> idsLocalizacoes = visitasOrdenadas.stream().map(Visita::getLocalVotacao)
+//					.map(LocalVotacao::getLocalizacao).map(Localizacao::getId).toList();
+//			List<Customer> customers = customersWithDistanceMatrix.stream()
+//					.filter(customer -> idsLocalizacoes.contains(customer.getLocation().getId())).toList();
+			vehicle.setNextVisit(primeiraVisita);
 			veiculos.add(vehicle);
 		}
 		return veiculos;
+	}
+
+	private Customer mountCustomersVisits(List<Visita> visitasOrdenadas, List<Customer> customersWithDistanceMatrix,
+			Vehicle vehicle) {
+		Customer primeiraVisita = null;
+		Customer visitaAnterior = null;
+		for (Visita visita : visitasOrdenadas) {
+			Customer visitaCorrente = getCustomerFromVisita(customersWithDistanceMatrix, visita);
+			visitaCorrente.setVehicle(vehicle);
+			if (primeiraVisita == null) {
+				visitaCorrente.setPreviousStandstill(vehicle);
+				primeiraVisita = visitaCorrente;
+			} else {
+				visitaCorrente.setPreviousStandstill(visitaAnterior);
+				visitaAnterior.setNextVisit(visitaCorrente);
+			}
+			visitaAnterior = visitaCorrente;
+		}
+		return primeiraVisita;
+	}
+
+	public Customer getCustomerFromVisita(List<Customer> customersWithDistanceMatrix, Visita visita) {
+		return customersWithDistanceMatrix.stream().filter(
+				customer -> visita.getLocalVotacao().getLocalizacao().getId().equals(customer.getLocation().getId()))
+				.findFirst().get();
 	}
 
 }

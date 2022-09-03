@@ -50,7 +50,7 @@ export class MarkerService {
     });
     solution.vehicleList.forEach(vehicle => {
       if ((_.isNil(idsVehicles) || idsVehicles.length === 0) || (!_.isNil(idsVehicles) && idsVehicles.indexOf(vehicle.id) != -1)) {
-        if (!_.isNil(vehicle.customerList) && vehicle.customerList.length > 0) {
+        if (!_.isNil(vehicle.route) && vehicle.route.length > 0) {
           var visits: L.Routing.Waypoint[] = [];
           vehicle.route.forEach(location => {
             visits.push(this.buildWaypointLocation(location));
@@ -149,7 +149,7 @@ export class MarkerService {
   }
 
   private existeSolucaoComLocalizacoes(solution: VehicleRoutingSolution) {
-    return !_.isNil(solution) && !_.isNil(solution.locationList) && solution.locationList.length > 0;
+    return !_.isNil(solution) && !_.isNil(solution.customerList) && solution.customerList.length > 0;
   }
 
   public getVehicleColorById(id: number) {
