@@ -64,12 +64,20 @@ export class MarkerService {
               weight: 5
             }]
           }
+          const format: L.Routing.FormatterOptions = {
+            distanceTemplate: "",
+            language: 'pt-BR'
+          }
+
+          const formatterFunction: L.Routing.Formatter = new L.Routing.Formatter(format);
+
           const rota = L.Routing.control({
-            show: !isSolving,
+            show: true,
             waypoints: visits,
             pointMarkerStyle: { color: vehicleColor },
             lineOptions: lineOptions,
-            routeWhileDragging: false,
+            routeWhileDragging: false
+
           });
 
 
@@ -81,8 +89,8 @@ export class MarkerService {
   }
 
   private buildWaypointLocation(location: Location) {
-    const waypoint : L.Routing.Waypoint = {
-      latLng : L.latLng(location.latitude, location.longitude),
+    const waypoint: L.Routing.Waypoint = {
+      latLng: L.latLng(location.latitude, location.longitude),
       name: location.nome + `(${location.endereco})`
     }
     return waypoint;

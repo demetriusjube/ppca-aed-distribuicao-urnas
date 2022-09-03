@@ -17,7 +17,7 @@ public class VehicleRoutingConstraintProvider implements ConstraintProvider {
 	private Constraint totalTime(ConstraintFactory factory) {
 		return factory.forEach(Vehicle.class).filter(vehicle -> vehicle.isTempoMaximoAtuacaoUltrapassado())
 				.penalizeLong("deliveryTime", HardSoftLongScore.ONE_HARD,
-						vehicle -> vehicle.getTempoAtuacaoUltrapassadoMilis());
+						vehicle -> vehicle.getTempoAtuacaoUltrapassadoMinutos());
 	}
 
 	// ************************************************************************
@@ -27,7 +27,7 @@ public class VehicleRoutingConstraintProvider implements ConstraintProvider {
 	protected Constraint vehicleCapacity(ConstraintFactory factory) {
 		return factory.forEach(Vehicle.class).filter(vehicle -> vehicle.getTotalDemand() > vehicle.getCapacity())
 				.penalizeLong("vehicleCapacity", HardSoftLongScore.ONE_HARD,
-						vehicle -> vehicle.getTotalDemand() - vehicle.getCapacity());
+						vehicle -> 100 * (vehicle.getTotalDemand() - vehicle.getCapacity()));
 	}
 
 	// ************************************************************************

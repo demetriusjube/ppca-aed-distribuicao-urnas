@@ -170,8 +170,8 @@ public class Vehicle {
 		return getTotalTimeMilis() > tempoMaximoAtuacaoMilis;
 	}
 
-	public long getTempoAtuacaoUltrapassadoMilis() {
-		return getTotalTimeMilis() - tempoMaximoAtuacaoMilis;
+	public long getTempoAtuacaoUltrapassadoMinutos() {
+		return (getTotalTimeMilis() - tempoMaximoAtuacaoMilis) / (60 * 1000);
 	}
 
 	@Override
