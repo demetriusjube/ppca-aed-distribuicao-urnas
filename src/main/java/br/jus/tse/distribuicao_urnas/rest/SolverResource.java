@@ -35,6 +35,7 @@ import br.jus.tse.distribuicao_urnas.solver.persistence.VehicleRoutingSolutionRe
 public class SolverResource {
 
 	private static final long PROBLEM_ID = 0L;
+	private static final int TEMPO_DESCARREGAMENTO_DEFAULT = 30;
 
 	private final AtomicReference<Throwable> solverError = new AtomicReference<>();
 
@@ -76,7 +77,7 @@ public class SolverResource {
 
 	@GetMapping(value = "depot-customers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public DepotCustomers getDepotAndCustomers(@PathVariable("id") Long idCentroDistribuicao) {
-		return depotCustomerBuilder.build(idCentroDistribuicao);
+		return depotCustomerBuilder.build(idCentroDistribuicao, TEMPO_DESCARREGAMENTO_DEFAULT);
 	}
 
 	@GetMapping(value = "status", produces = MediaType.APPLICATION_JSON_VALUE)

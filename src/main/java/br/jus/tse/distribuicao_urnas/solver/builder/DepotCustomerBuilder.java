@@ -25,18 +25,18 @@ public class DepotCustomerBuilder {
 	@Autowired
 	private LocalVotacaoRepository localVotacaoRepository;
 
-	public DepotCustomers build(Long idCentroDistribuicao) {
+	public DepotCustomers build(Long idCentroDistribuicao, Integer tempoDescarregamentoMinutos) {
 
 		Optional<CentroDistribuicao> consultaCentroDistribuicao = centroDistribuicaoRepository
 				.findById(idCentroDistribuicao);
 		if (consultaCentroDistribuicao.isPresent()) {
 			CentroDistribuicao centroDistribuicao = consultaCentroDistribuicao.get();
-			return build(centroDistribuicao);
+			return build(centroDistribuicao, tempoDescarregamentoMinutos);
 		}
 		throw new IllegalArgumentException("Não foi possível encontrar o centro de distribuição informado!");
 	}
 
-	public DepotCustomers build(CentroDistribuicao centroDistribuicao) {
+	public DepotCustomers build(CentroDistribuicao centroDistribuicao, Integer tempoDescarregamentoMinutos) {
 		DepotCustomers depotCustomers = new DepotCustomers();
 		Depot depot = new Depot(centroDistribuicao.getId(), LocationBuilder.buildFrom(centroDistribuicao),
 				centroDistribuicao.getNome());
@@ -49,7 +49,7 @@ public class DepotCustomerBuilder {
 					"O centro de distribuição selecionado não tem locais de votação cadastrados!");
 		}
 
-		List<Customer> customers = getCustomersFromLocaisDeVotacao(locaisVotacaoDoCentro);
+		List<Customer> customers = getCustomersFromLocaisDeVotacao(locaisVotacaoDoCentro, tempoDescarregamentoMinutos);
 
 		if (CollectionUtils.isEmpty(customers)) {
 			throw new IllegalArgumentException("Não é possível fazer a simulação sem locais de votação!");
@@ -59,11 +59,12 @@ public class DepotCustomerBuilder {
 		return depotCustomers;
 	}
 
-	public List<Customer> getCustomersFromLocaisDeVotacao(List<LocalVotacao> locaisVotacao) {
+	public List<Customer> getCustomersFromLocaisDeVotacao(List<LocalVotacao> locaisVotacao,
+			Integer tempoDescarregamentoMinutos) {
 		List<Customer> customers = new ArrayList<Customer>();
 		for (LocalVotacao localVotacao : locaisVotacao) {
 			Customer customer = new Customer(localVotacao.getId(), localVotacao.getNome(),
-					LocationBuilder.buildFrom(localVotacao), localVotacao.getQuantidadeSecoes());
+					LocationBuilder.buildFrom(localVotacao), localVotacao.getQuantidadeSecoes(), tempoDescarregamentoMinutos);
 			customers.add(customer);
 		}
 		return customers;

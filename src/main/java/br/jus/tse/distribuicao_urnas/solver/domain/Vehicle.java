@@ -18,8 +18,6 @@ public class Vehicle implements Standstill {
 	private String description;
 	private int capacity;
 	private Depot depot;
-	private int tempoDescarregamentoMinutos;
-	private long tempoDescarregamentoMilis;
 	private int tempoMaximoAtuacaoHoras;
 	private long tempoMaximoAtuacaoMilis;
 
@@ -28,16 +26,14 @@ public class Vehicle implements Standstill {
 	public Vehicle() {
 	}
 
-	public Vehicle(long id, int capacity, Depot depot, int tempoDescarregamentoMinutos, int tempoMaximoAtuacaoHoras) {
-		this(id, capacity, depot, tempoDescarregamentoMinutos, tempoMaximoAtuacaoHoras, "Veículo " + id);
+	public Vehicle(long id, int capacity, Depot depot, int tempoMaximoAtuacaoHoras) {
+		this(id, capacity, depot, tempoMaximoAtuacaoHoras, "Veículo " + id);
 	}
 
-	public Vehicle(long id, int capacity, Depot depot, int tempoDescarregamentoMinutos, int tempoMaximoAtuacaoHoras,
-			String description) {
+	public Vehicle(long id, int capacity, Depot depot, int tempoMaximoAtuacaoHoras, String description) {
 		this.id = id;
 		this.capacity = capacity;
 		this.depot = depot;
-		setTempoDescarregamentoMinutos(tempoDescarregamentoMinutos);
 		setTempoMaximoAtuacaoHoras(tempoMaximoAtuacaoHoras);
 		this.description = description;
 	}
@@ -74,15 +70,6 @@ public class Vehicle implements Standstill {
 		this.depot = depot;
 	}
 
-	public int getTempoDescarregamentoMinutos() {
-		return tempoDescarregamentoMinutos;
-	}
-
-	public void setTempoDescarregamentoMinutos(int tempoDescarregamentoMinutos) {
-		this.tempoDescarregamentoMinutos = tempoDescarregamentoMinutos;
-		this.tempoDescarregamentoMilis = tempoDescarregamentoMinutos * CONVERSOR_MINUTOS_MILIS;
-	}
-
 	public int getTempoMaximoAtuacaoHoras() {
 		return tempoMaximoAtuacaoHoras;
 	}
@@ -90,6 +77,10 @@ public class Vehicle implements Standstill {
 	public void setTempoMaximoAtuacaoHoras(int tempoMaximoAtuacaoHoras) {
 		this.tempoMaximoAtuacaoHoras = tempoMaximoAtuacaoHoras;
 		this.tempoMaximoAtuacaoMilis = tempoMaximoAtuacaoHoras * CONVERSOR_HORA_MILIS;
+	}
+
+	public long getTempoMaximoAtuacaoMilis() {
+		return tempoMaximoAtuacaoMilis;
 	}
 
 	// ************************************************************************
@@ -114,61 +105,6 @@ public class Vehicle implements Standstill {
 		route.add(depot.getLocation());
 
 		return route;
-	}
-
-	public int getTotalDemand() {
-		int totalDemand = 0;
-		Iterable<Customer> customers = getFutureVisits();
-		if (customers.iterator().hasNext()) {
-			for (Customer customer : customers) {
-				totalDemand += customer.getDemand();
-			}
-		}
-		return totalDemand;
-	}
-
-	public long getTotalDistanceMeters() {
-		Iterable<Customer> customers = getFutureVisits();
-		if (!customers.iterator().hasNext()) {
-			return 0;
-		}
-
-		long totalDistance = 0;
-		Location previousLocation = depot.getLocation();
-		for (Customer customer : customers) {
-			totalDistance += previousLocation.getDistanceTo(customer.getLocation());
-			previousLocation = customer.getLocation();
-		}
-		totalDistance += previousLocation.getDistanceTo(depot.getLocation());
-
-		return totalDistance;
-	}
-
-	public long getTotalTimeMilis() {
-		Iterable<Customer> customers = getFutureVisits();
-		if (!customers.iterator().hasNext()) {
-			return 0;
-		}
-
-		long totalTime = 0;
-		Location previousLocation = depot.getLocation();
-
-		for (Customer customer : customers) {
-			totalTime += previousLocation.getTimeTo(customer.getLocation());
-			totalTime += tempoDescarregamentoMilis;
-			previousLocation = customer.getLocation();
-		}
-		totalTime += previousLocation.getTimeTo(depot.getLocation());
-
-		return totalTime;
-	}
-
-	public boolean isTempoMaximoAtuacaoUltrapassado() {
-		return getTotalTimeMilis() > tempoMaximoAtuacaoMilis;
-	}
-
-	public long getTempoAtuacaoUltrapassadoMinutos() {
-		return (getTotalTimeMilis() - tempoMaximoAtuacaoMilis) / (60 * 1000);
 	}
 
 	@Override
@@ -210,6 +146,52 @@ public class Vehicle implements Standstill {
 				return out;
 			}
 		};
+	}
+
+	public long getTotalDistanceMeters() {
+		Iterable<Customer> customers = getFutureVisits();
+		if (!customers.iterator().hasNext()) {
+			return 0;
+		}
+
+		long totalDistance = 0;
+		Location previousLocation = depot.getLocation();
+		for (Customer customer : customers) {
+			totalDistance += previousLocation.getDistanceTo(customer.getLocation());
+			previousLocation = customer.getLocation();
+		}
+		totalDistance += previousLocation.getDistanceTo(depot.getLocation());
+
+		return totalDistance;
+	}
+
+	public long getTotalTimeMilis() {
+		Iterable<Customer> customers = getFutureVisits();
+		if (!customers.iterator().hasNext()) {
+			return 0;
+		}
+
+		long totalTime = 0;
+		Location previousLocation = depot.getLocation();
+
+		for (Customer customer : customers) {
+			totalTime += previousLocation.getTimeTo(customer.getLocation());
+			previousLocation = customer.getLocation();
+		}
+		totalTime += previousLocation.getTimeTo(depot.getLocation());
+
+		return totalTime;
+	}
+
+	public int getTotalDemand() {
+		int totalDemand = 0;
+		Iterable<Customer> customers = getFutureVisits();
+		if (customers.iterator().hasNext()) {
+			for (Customer customer : customers) {
+				totalDemand += customer.getDemand();
+			}
+		}
+		return totalDemand;
 	}
 
 }

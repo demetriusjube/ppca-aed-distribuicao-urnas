@@ -8,14 +8,20 @@ import org.optaplanner.core.api.domain.variable.PlanningVariableGraphType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@PlanningEntity
+import br.jus.tse.distribuicao_urnas.solver.DepotAngleCustomerDifficultyWeightFactory;
+
+@PlanningEntity(difficultyWeightFactoryClass = DepotAngleCustomerDifficultyWeightFactory.class)
 public class Customer implements Standstill {
+
+	private static final long CONVERSOR_MINUTOS_MILIS = 60l * 1000l;
 
 	@PlanningId
 	private long id;
 	private String name;
 	private Location location;
 	private int demand;
+	private int tempoDescarregamentoMinutos;
+	private long tempoDescarregamentoMilis;
 
 	@JsonIgnore
 	// Planning variable: changes during planning, between score calculations.
@@ -32,11 +38,12 @@ public class Customer implements Standstill {
 	public Customer() {
 	}
 
-	public Customer(long id, String name, Location location, int demand) {
+	public Customer(long id, String name, Location location, int demand, int tempoDescarregamentoMinutos) {
 		this.id = id;
 		this.name = name;
 		this.location = location;
 		this.demand = demand;
+		setTempoDescarregamentoMinutos(tempoDescarregamentoMinutos);
 	}
 
 	public long getId() {
@@ -87,6 +94,14 @@ public class Customer implements Standstill {
 		this.vehicle = vehicle;
 	}
 
+	public long getTempoDescarregamentoMilis() {
+		return tempoDescarregamentoMilis;
+	}
+
+	public int getTempoDescarregamentoMinutos() {
+		return tempoDescarregamentoMinutos;
+	}
+
 	// ************************************************************************
 	// Complex methods
 	// ************************************************************************
@@ -104,6 +119,11 @@ public class Customer implements Standstill {
 	@Override
 	public void setNextVisit(Customer nextVisit) {
 		this.nextVisit = nextVisit;
+	}
+
+	public void setTempoDescarregamentoMinutos(int tempoDescarregamentoMinutos) {
+		this.tempoDescarregamentoMinutos = tempoDescarregamentoMinutos;
+		this.tempoDescarregamentoMilis = tempoDescarregamentoMinutos * CONVERSOR_MINUTOS_MILIS;
 	}
 
 	// ************************************************************************
@@ -125,6 +145,14 @@ public class Customer implements Standstill {
 					"This method must not be called when the previousStandstill (null) is not initialized yet.");
 		}
 		return previousStandstill.getLocation().getDistanceTo(location);
+	}
+
+	public Long timeMilisFromPreviousStandstill() {
+		if (previousStandstill == null) {
+			throw new IllegalStateException(
+					"This method must not be called when the previousStandstill (null) is not initialized yet.");
+		}
+		return tempoDescarregamentoMilis + previousStandstill.getLocation().getTimeTo(location);
 	}
 
 	/**

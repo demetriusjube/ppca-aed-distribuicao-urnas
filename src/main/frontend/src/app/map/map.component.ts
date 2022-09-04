@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { faClipboardList, faCrosshairs, faDownload, faInfoCircle, faListCheck, faPlay, faSignsPost, faStop, faTasks, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardList, faCrosshairs, faDownload, faInfoCircle, faListCheck, faPlay, faRefresh, faSignsPost, faStop, faTasks, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as L from 'leaflet';
 import * as _ from 'lodash';
@@ -24,6 +24,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   public faTruckPickup = faTruckPickup;
   public faListCheck = faListCheck;
   public faDownload = faDownload;
+  public faRefresh = faRefresh;
 
 
   private map: L.Map;
@@ -121,7 +122,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private atualizarMapa() {
+  public atualizarMapa() {
     this.solverService.status().subscribe(statusSolucao => {
       this.atualizarStatusSolucao(statusSolucao);
     })
@@ -168,7 +169,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       next: () => {
         this.solvingIsStarting = false;
         this.atualizarMapa();
-        this.updateSubscription = interval(10000).subscribe((val) => {
+        this.updateSubscription = interval(30000).subscribe((val) => {
           this.atualizarMapa();
         });
       },

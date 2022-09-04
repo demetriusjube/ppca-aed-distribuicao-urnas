@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-09-03 11:38:09.
+// Generated using typescript-generator version 2.28.785 on 2022-09-04 11:13:38.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -97,6 +97,8 @@ export interface Customer extends Standstill {
     id: number;
     name: string;
     demand: number;
+    tempoDescarregamentoMinutos: number;
+    tempoDescarregamentoMilis: number;
     last: boolean;
 }
 
@@ -152,15 +154,13 @@ export interface Vehicle extends Standstill {
     description: string;
     capacity: number;
     depot: Depot;
-    tempoDescarregamentoMinutos: number;
     tempoMaximoAtuacaoHoras: number;
-    tempoMaximoAtuacaoUltrapassado: boolean;
-    tempoAtuacaoUltrapassadoMinutos: number;
-    totalDistanceMeters: number;
-    totalDemand: number;
-    route: Location[];
-    totalTimeMilis: number;
+    tempoMaximoAtuacaoMilis: number;
     futureVisits: Iterable<Customer>;
+    totalTimeMilis: number;
+    route: Location[];
+    totalDemand: number;
+    totalDistanceMeters: number;
 }
 
 export interface VehicleRoutingSolution {

@@ -21,9 +21,16 @@ spring:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
+#logging:
+#  level:
+#    org.optaplanner: DEBUG
+#optaplanner:
+#  solver: 
+#    environment-mode: FULL_ASSERT
+        
 springdoc:
   pathsToMatch: /api/**
-
+  
 app:
   routing:
     osm-dir: ${user.home}/distribuicao-urnas-files/openstreetmap

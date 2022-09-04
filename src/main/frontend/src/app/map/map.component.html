@@ -122,6 +122,11 @@
                                     (click)="stopSolving()" *ngIf="isSolving && !solvingIsStarting">
                                     <fa-icon [icon]="faStop"></fa-icon> Parar resolução
                                 </button>
+                                <button id="refreshButton" type="button" class="btn btn-primary" (click)="atualizarMapa()"
+                                    *ngIf="isSolving && !solvingIsStarting">
+                                    <fa-icon [icon]="faRefresh"></fa-icon> Atualizar o mapa
+                                </button>
+
                                 <div *ngIf="solvingIsStarting">
                                     <div class="spinner-border text-primary" role="status">
                                     </div>

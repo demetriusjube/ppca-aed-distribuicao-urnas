@@ -70,7 +70,8 @@ public class DistribuicaoUrnasSolutionBuilder {
 	public VehicleRoutingSolution build(SimulacaoRequest simulacaoRequest) {
 		Long idCentroDistribuicao = simulacaoRequest.getIdCentroDistribuicao();
 		TipoOtimizacaoEnum tipoOtimizacaoEnum = simulacaoRequest.getTipoOtimizacaoEnum();
-		DepotCustomers depotCustomers = depotCustomerBuilder.build(idCentroDistribuicao);
+		DepotCustomers depotCustomers = depotCustomerBuilder.build(idCentroDistribuicao,
+				simulacaoRequest.getTempoDescarregamentoMinutos());
 		List<Vehicle> vehicleList = montaVeiculosDaSimulacao(simulacaoRequest, depotCustomers.getDepot());
 		return buildSolution(depotCustomers, vehicleList, tipoOtimizacaoEnum);
 
@@ -118,7 +119,7 @@ public class DistribuicaoUrnasSolutionBuilder {
 		if (quantidadeVeiculos != null) {
 			Double capacidade = Math.floor(volumeVeiculo / volumeUrna);
 			Supplier<Vehicle> vehicleSupplier = () -> new Vehicle(sequence.incrementAndGet(), capacidade.intValue(),
-					depot, tempoDescarregamentoMinutos, tempoMaximoAtuacao);
+					depot, tempoMaximoAtuacao);
 			vehicleList.addAll(Stream.generate(vehicleSupplier).limit(quantidadeVeiculos).collect(Collectors.toList()));
 		}
 	}
@@ -146,7 +147,7 @@ public class DistribuicaoUrnasSolutionBuilder {
 		if (simulacao != null) {
 
 			TipoOtimizacaoEnum tipoOtimizacaoEnum = TipoOtimizacaoEnum.MENOR_DISTANCIA;
-			DepotCustomers depotCustomers = depotCustomerBuilder.build(simulacao.getCentroDistribuicao());
+			DepotCustomers depotCustomers = depotCustomerBuilder.build(simulacao.getCentroDistribuicao(), 30);
 			List<Depot> depotList = Arrays.asList(depotCustomers.getDepot());
 			List<Customer> customers = depotCustomers.getCustomerList();
 			List<Location> locationList = Stream
@@ -172,7 +173,6 @@ public class DistribuicaoUrnasSolutionBuilder {
 			vehicle.setCapacity(veiculo.getCapacidade());
 			vehicle.setDepot(depot);
 			vehicle.setId(veiculo.getId());
-			vehicle.setTempoDescarregamentoMinutos(30);
 			vehicle.setTempoMaximoAtuacaoHoras(10);
 			List<Visita> visitasOrdenadas = veiculoSimulacao.getPlanoRota().getVisitas().stream()
 					.sorted(Comparator.comparing(Visita::getOrdem)).toList();
