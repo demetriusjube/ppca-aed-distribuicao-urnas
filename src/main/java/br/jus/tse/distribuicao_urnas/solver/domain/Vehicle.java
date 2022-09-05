@@ -176,6 +176,7 @@ public class Vehicle implements Standstill {
 
 		for (Customer customer : customers) {
 			totalTime += previousLocation.getTimeTo(customer.getLocation());
+			totalTime += customer.getTempoDescarregamentoMilis();
 			previousLocation = customer.getLocation();
 		}
 		totalTime += previousLocation.getTimeTo(depot.getLocation());
