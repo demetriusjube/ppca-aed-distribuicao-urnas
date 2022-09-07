@@ -177,6 +177,8 @@ public class LoadCSVService {
 		try {
 			importarLocaisVotacao();
 			importarCentrosDistribuicao();
+			importarLocaisVotacaoTeste();
+			importarCentrosDistribuicaoTeste();
 			importarParametros();
 		} catch (IllegalStateException | IOException e) {
 			throw new RuntimeException("Erro ao importar os locais de votacao!");
@@ -218,26 +220,54 @@ public class LoadCSVService {
 		return getArquivoDoClasspath("csv/parametros.csv");
 	}
 
+	private void importarCentrosDistribuicaoTeste() throws IllegalStateException, FileNotFoundException, IOException {
+		List<CentroDistribuicaoCSVDto> centrosDistribuicaoCSV = new CsvToBeanBuilder(
+				new FileReader(getArquivoCentrosDistribuicaoTesteCSV())).withType(CentroDistribuicaoCSVDto.class)
+				.withQuoteChar('\"').build().parse();
+		log.info("Foram recuperados {} centros de distribuição do CSV", centrosDistribuicaoCSV.size());
+		importarCentrosDistribuicao(centrosDistribuicaoCSV);
+	}
+
 	private void importarCentrosDistribuicao() throws IllegalStateException, FileNotFoundException, IOException {
 		List<CentroDistribuicaoCSVDto> centrosDistribuicaoCSV = new CsvToBeanBuilder(
 				new FileReader(getArquivoCentrosDistribuicaoCSV())).withType(CentroDistribuicaoCSVDto.class)
 				.withQuoteChar('\"').build().parse();
 		log.info("Foram recuperados {} centros de distribuição do CSV", centrosDistribuicaoCSV.size());
+		importarCentrosDistribuicao(centrosDistribuicaoCSV);
+	}
+
+	private void importarCentrosDistribuicao(List<CentroDistribuicaoCSVDto> centrosDistribuicaoCSV) {
 		for (CentroDistribuicaoCSVDto centroDistribuicaoCSVDto : centrosDistribuicaoCSV) {
 			CentroDistribuicao centroDistribuicao = saveCentroDistribuicaoFromCSV(centroDistribuicaoCSVDto);
 			log.info("Salvando o Centro de Distribuição {}", centroDistribuicao.getNome());
 		}
 	}
 
+	private void importarLocaisVotacaoTeste() throws IllegalStateException, FileNotFoundException, IOException {
+		List<LocalVotacaoCSVDto> locaisVotacaoCSV = new CsvToBeanBuilder(
+				new FileReader(getArquivoLocaisVotacaoTesteCSV())).withType(LocalVotacaoCSVDto.class)
+				.withQuoteChar('\"').build().parse();
+		log.info("Foram recuperados {} registros do CSV", locaisVotacaoCSV.size());
+		importarLocaisVotacao(locaisVotacaoCSV);
+	}
+
 	private void importarLocaisVotacao() throws IllegalStateException, FileNotFoundException, IOException {
 		List<LocalVotacaoCSVDto> locaisVotacaoCSV = new CsvToBeanBuilder(new FileReader(getArquivoLocaisVotacaoCSV()))
 				.withType(LocalVotacaoCSVDto.class).withQuoteChar('\"').build().parse();
 		log.info("Foram recuperados {} registros do CSV", locaisVotacaoCSV.size());
+		importarLocaisVotacao(locaisVotacaoCSV);
+	}
+
+	private void importarLocaisVotacao(List<LocalVotacaoCSVDto> locaisVotacaoCSV) {
 		for (LocalVotacaoCSVDto localVotacaoCSVDto : locaisVotacaoCSV) {
 			LocalVotacao localVotacao = saveLocalVotacaoFromCSV(localVotacaoCSVDto);
 			log.info("Salvando a entidade {}, da {} Zona Eleitoral", localVotacao.getNome(),
 					localVotacao.getZonaEleitoral().getNumero());
 		}
+	}
+
+	private File getArquivoCentrosDistribuicaoTesteCSV() throws IOException {
+		return getArquivoDoClasspath("csv/centro-distribuicao-teste.csv");
 	}
 
 	private File getArquivoCentrosDistribuicaoCSV() throws IOException {
@@ -246,6 +276,10 @@ public class LoadCSVService {
 
 	private File getArquivoLocaisVotacaoCSV() throws IOException {
 		return getArquivoDoClasspath("csv/locais-votacao-transporte.csv");
+	}
+
+	private File getArquivoLocaisVotacaoTesteCSV() throws IOException {
+		return getArquivoDoClasspath("csv/locais-votacao-teste.csv");
 	}
 
 	private File getArquivoDoClasspath(String caminhoArquivo) throws IOException {
