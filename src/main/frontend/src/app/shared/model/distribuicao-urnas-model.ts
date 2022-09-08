@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-09-02 11:53:49.
+// Generated using typescript-generator version 2.28.785 on 2022-09-08 11:13:32.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -127,10 +127,7 @@ export interface RouteData {
 
 export interface SimulacaoRequest {
     idCentroDistribuicao: number;
-    quantidadeCaminhoes38m3: number;
-    quantidadeCaminhoes22m3: number;
-    quantidadeCaminhoes13m3: number;
-    quantidadeCaminhoes7_5m3: number;
+    veiculos: VehicleRequest[];
     tipoOtimizacaoEnum: TipoOtimizacaoEnum;
     tempoDescarregamentoMinutos: number;
     tempoMaximoAtuacaoHoras: number;
@@ -150,12 +147,17 @@ export interface Vehicle {
     tempoDescarregamentoMinutos: number;
     tempoMaximoAtuacaoHoras: number;
     customerList: Customer[];
-    totalDistanceMeters: number;
-    tempoAtuacaoUltrapassadoMilis: number;
-    tempoMaximoAtuacaoUltrapassado: boolean;
+    totalDemand: number;
     totalTimeMilis: number;
     route: Location[];
-    totalDemand: number;
+    totalDistanceMeters: number;
+    tempoMaximoAtuacaoUltrapassado: boolean;
+    tempoAtuacaoUltrapassadoMinutos: number;
+}
+
+export interface VehicleRequest {
+    quantidadeVeiculos: number;
+    capacidade: number;
 }
 
 export interface VehicleRoutingSolution {

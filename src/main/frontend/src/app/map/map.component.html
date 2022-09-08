@@ -62,27 +62,42 @@
                                     </div>
                                 </div>
                                 <div class="row pt-2 row-cols-1">
-                                    <div class="col-6">
-                                        <label for="quantidadeCaminhoes38m3">Veículos 38m3 (730)</label>
-                                        <input type="number" class="form-control"
-                                            formControlName="quantidadeCaminhoes38m3" min="0" />
-                                    </div>
-                                    <div class="col-6">
-                                        <label for="quantidadeCaminhoes22m3">Veículos 22m3 (422)</label>
-                                        <input type="number" class="form-control"
-                                            formControlName="quantidadeCaminhoes22m3" min="0" />
+                                    <div class="col-12">
+                                        <button id="addVeiculoButton" type="button" class="btn btn-primary"
+                                            (click)="addVeiculo()" *ngIf="!isSolving">
+                                            <fa-icon [icon]="faTruckPickup"></fa-icon> Adicionar veículo
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="row pt-2 row-cols-1">
-                                    <div class="col-6"> <label for="quantidadeCaminhoes13m3">Veículos 13m3 (249)</label>
-                                        <input type="number" class="form-control"
-                                            formControlName="quantidadeCaminhoes13m3" min="0" />
-                                    </div>
-                                    <div class="col-6"> <label for="quantidadeCaminhoes7_5m3">Veículos 7,5m3
-                                            (144)</label>
-                                        <input type="number" class="form-control"
-                                            formControlName="quantidadeCaminhoes7_5m3" min="0" />
-                                    </div>
+                                    <table class="table-sm w-100" *ngIf="veiculos.length > 0">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-4">Quantidade</th>
+                                                <th class="col-4">Capacidade</th>
+                                                <th class="col-4"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="veiculosTable" formArrayName="veiculos">
+                                            <tr *ngFor="let veiculo of veiculos.controls; let i=index">
+                                                <ng-container [formGroupName]="i">
+                                                    <td>
+                                                        <input type="number" class="form-control"
+                                                            formControlName="quantidadeVeiculos" min="1" />
+                                                    </td>
+                                                    <td> <input type="number" class="form-control"
+                                                            formControlName="capacidade" min="1" /></td>
+                                                    <td>
+                                                        <button id="removeVeiculoButton" type="button"
+                                                            class="btn btn-danger" (click)="removeVeiculo(i)"
+                                                            *ngIf="!isSolving">
+                                                            <fa-icon [icon]="faTrash"></fa-icon>
+                                                        </button>
+                                                    </td>
+                                                </ng-container>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                                 <div class="row pt-2 row-cols-1">
                                     <div class="col-6"> <label for="tempoDescarregamentoMinutos">Tempo descarregamento

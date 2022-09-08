@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { faClipboardList, faCrosshairs, faDownload, faInfoCircle, faListCheck, faPlay, faSignsPost, faStop, faTasks, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardList, faCrosshairs, faDownload, faInfoCircle, faListCheck, faPlay, faSignsPost, faStop, faTasks, faTrash, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as L from 'leaflet';
 import * as _ from 'lodash';
@@ -24,6 +24,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   public faTruckPickup = faTruckPickup;
   public faListCheck = faListCheck;
   public faDownload = faDownload;
+  public faTrash = faTrash;
 
 
   private map: L.Map;
@@ -52,14 +53,12 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.centrosDistribuicao = centrosDistribuicao;
       this.form = this.formBuilder.group({
         idCentroDistribuicao: this.getCentroDistribuicaoControl(),
-        quantidadeCaminhoes38m3: this.formBuilder.control(0),
-        quantidadeCaminhoes22m3: this.formBuilder.control(0),
-        quantidadeCaminhoes13m3: this.formBuilder.control(0),
-        quantidadeCaminhoes7_5m3: this.formBuilder.control(0),
+        veiculos: this.formBuilder.array([]),
         tempoDescarregamentoMinutos: this.formBuilder.control(30, Validators.required),
         tempoMaximoAtuacaoHoras: this.formBuilder.control(10, Validators.required),
         tipoOtimizacaoEnum: this.formBuilder.control('MENOR_DISTANCIA', Validators.required)
       });
+      this.addVeiculo();
       this.formRotasSelecionadas = this.formBuilder.group({
         rotasSelecionadas: this.formBuilder.array([])
       });
@@ -70,6 +69,25 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.simulacoes = simulacoes;
       })
     })
+  }
+
+  get veiculos(): FormArray {
+    return this.form.get("veiculos") as FormArray
+  }
+
+  public newVeiculo(): FormGroup {
+    return this.formBuilder.group({
+      quantidadeVeiculos: this.formBuilder.control(1),
+      capacidade: this.formBuilder.control(1)
+    });
+  }
+
+  public addVeiculo(): void {
+    this.veiculos.push(this.newVeiculo());
+  }
+
+  public removeVeiculo(i: number): void {
+    this.veiculos.removeAt(i);
   }
 
   public onRotasSelecionadasChange(event: any) {
