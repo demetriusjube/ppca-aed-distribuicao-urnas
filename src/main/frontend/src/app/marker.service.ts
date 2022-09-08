@@ -72,7 +72,7 @@ export class MarkerService {
           const formatterFunction: L.Routing.Formatter = new L.Routing.Formatter(format);
 
           const rota = L.Routing.control({
-            show: true,
+            show: false,
             waypoints: visits,
             pointMarkerStyle: { color: vehicleColor },
             lineOptions: lineOptions,
