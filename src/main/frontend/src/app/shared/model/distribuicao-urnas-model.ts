@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-09-04 11:13:38.
+// Generated using typescript-generator version 2.28.785 on 2022-09-08 11:13:32.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -93,13 +93,11 @@ export interface ZonaEleitoralDTO {
     centroDistribuicao: number;
 }
 
-export interface Customer extends Standstill {
+export interface Customer {
     id: number;
     name: string;
+    location: Location;
     demand: number;
-    tempoDescarregamentoMinutos: number;
-    tempoDescarregamentoMilis: number;
-    last: boolean;
 }
 
 export interface Depot {
@@ -129,18 +127,10 @@ export interface RouteData {
 
 export interface SimulacaoRequest {
     idCentroDistribuicao: number;
-    quantidadeCaminhoes38m3: number;
-    quantidadeCaminhoes22m3: number;
-    quantidadeCaminhoes13m3: number;
-    quantidadeCaminhoes7_5m3: number;
+    veiculos: VehicleRequest[];
     tipoOtimizacaoEnum: TipoOtimizacaoEnum;
     tempoDescarregamentoMinutos: number;
     tempoMaximoAtuacaoHoras: number;
-}
-
-export interface Standstill {
-    location: Location;
-    nextVisit: Customer;
 }
 
 export interface Status {
@@ -149,30 +139,36 @@ export interface Status {
     isSolving: boolean;
 }
 
-export interface Vehicle extends Standstill {
+export interface Vehicle {
     id: number;
     description: string;
     capacity: number;
     depot: Depot;
+    tempoDescarregamentoMinutos: number;
     tempoMaximoAtuacaoHoras: number;
-    tempoMaximoAtuacaoMilis: number;
-    futureVisits: Iterable<Customer>;
+    customerList: Customer[];
+    totalDemand: number;
     totalTimeMilis: number;
     route: Location[];
-    totalDemand: number;
     totalDistanceMeters: number;
+    tempoMaximoAtuacaoUltrapassado: boolean;
+    tempoAtuacaoUltrapassadoMinutos: number;
+}
+
+export interface VehicleRequest {
+    quantidadeVeiculos: number;
+    capacidade: number;
 }
 
 export interface VehicleRoutingSolution {
     name: string;
+    locationList: Location[];
     depotList: Depot[];
     vehicleList: Vehicle[];
     customerList: Customer[];
     score: HardSoftLongScore;
+    bounds: Location[];
     distanceMeters: number;
-}
-
-export interface Iterable<T> {
 }
 
 export interface HardSoftLongScore extends AbstractScore<HardSoftLongScore> {

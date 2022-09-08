@@ -36,6 +36,7 @@ import br.jus.tse.distribuicao_urnas.solver.domain.DepotCustomers;
 import br.jus.tse.distribuicao_urnas.solver.domain.Location;
 import br.jus.tse.distribuicao_urnas.solver.domain.SimulacaoRequest;
 import br.jus.tse.distribuicao_urnas.solver.domain.Vehicle;
+import br.jus.tse.distribuicao_urnas.solver.domain.VehicleRequest;
 import br.jus.tse.distribuicao_urnas.solver.domain.VehicleRoutingSolution;
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,17 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DistribuicaoUrnasSolutionBuilder {
 
-	private static final float VOLUME_38M3 = 38f;
-	private static final float VOLUME_22M3 = 22f;
-	private static final float VOLUME_13M3 = 13f;
-	private static final float VOLUME_7_5M3 = 7.5f;
-
-	private static final double VALOR_MAIOR_VOLUME_URNA = 0.52031d;
-
 	private static final AtomicLong sequence = new AtomicLong();
-
-	@Autowired
-	private ParametroCalculoRepository parametroCalculoRepository;
 
 	@Autowired
 	private DistanceCalculator distanceCalculator;
@@ -94,52 +85,25 @@ public class DistribuicaoUrnasSolutionBuilder {
 	}
 
 	private List<Vehicle> montaVeiculosDaSimulacao(SimulacaoRequest simulacaoRequest, Depot depot) {
-		Optional<ParametroCalculo> parametroVolumeUrna = parametroCalculoRepository
-				.findByTipoParametroEquals(TipoParametroEnum.VOLUME_URNA_APOS_2020);
-		Double volumeUrna = VALOR_MAIOR_VOLUME_URNA;
-		if (parametroVolumeUrna.isPresent()) {
-			volumeUrna = parametroVolumeUrna.get().getValor();
-		}
 		List<Vehicle> vehicleList = new ArrayList<Vehicle>();
-		adicionaVeiculos38m3(simulacaoRequest, volumeUrna, depot, vehicleList);
-		adicionaVeiculos22m3(simulacaoRequest, volumeUrna, depot, vehicleList);
-		adicionaVeiculos13m3(simulacaoRequest, volumeUrna, depot, vehicleList);
-		adicionaVeiculos7_5m3(simulacaoRequest, volumeUrna, depot, vehicleList);
+		if (CollectionUtils.isNotEmpty(simulacaoRequest.getVeiculos())) {
+			for (VehicleRequest vehicleRequest : simulacaoRequest.getVeiculos()) {
+				adicionaVeiculo(vehicleRequest, depot, vehicleList, simulacaoRequest.getTempoDescarregamentoMinutos(),
+						simulacaoRequest.getTempoMaximoAtuacaoHoras());
+			}
+		}
 		return vehicleList;
 	}
 
-	private void adicionaVeiculos38m3(SimulacaoRequest simulacaoRequest, Double volumeUrna, Depot depot,
-			List<Vehicle> vehicleList) {
-		adicionaVeiculo(simulacaoRequest.getQuantidadeCaminhoes38m3(), volumeUrna, depot, vehicleList, VOLUME_38M3,
-				simulacaoRequest.getTempoDescarregamentoMinutos(), simulacaoRequest.getTempoMaximoAtuacaoHoras());
-	}
-
-	private void adicionaVeiculo(Integer quantidadeVeiculos, Double volumeUrna, Depot depot, List<Vehicle> vehicleList,
-			float volumeVeiculo, Integer tempoDescarregamentoMinutos, Integer tempoMaximoAtuacao) {
-		if (quantidadeVeiculos != null) {
-			Double capacidade = Math.floor(volumeVeiculo / volumeUrna);
+	private void adicionaVeiculo(VehicleRequest vehicleRequest, Depot depot, List<Vehicle> vehicleList,
+			Integer tempoDescarregamentoMinutos, Integer tempoMaximoAtuacao) {
+		if (vehicleRequest != null) {
+			Integer capacidade = vehicleRequest.getCapacidade();
 			Supplier<Vehicle> vehicleSupplier = () -> new Vehicle(sequence.incrementAndGet(), capacidade.intValue(),
 					depot, tempoMaximoAtuacao);
-			vehicleList.addAll(Stream.generate(vehicleSupplier).limit(quantidadeVeiculos).collect(Collectors.toList()));
+			vehicleList.addAll(Stream.generate(vehicleSupplier).limit(vehicleRequest.getQuantidadeVeiculos())
+					.collect(Collectors.toList()));
 		}
-	}
-
-	private void adicionaVeiculos22m3(SimulacaoRequest simulacaoRequest, Double volumeUrna, Depot depot,
-			List<Vehicle> vehicleList) {
-		adicionaVeiculo(simulacaoRequest.getQuantidadeCaminhoes22m3(), volumeUrna, depot, vehicleList, VOLUME_22M3,
-				simulacaoRequest.getTempoDescarregamentoMinutos(), simulacaoRequest.getTempoMaximoAtuacaoHoras());
-	}
-
-	private void adicionaVeiculos13m3(SimulacaoRequest simulacaoRequest, Double volumeUrna, Depot depot,
-			List<Vehicle> vehicleList) {
-		adicionaVeiculo(simulacaoRequest.getQuantidadeCaminhoes13m3(), volumeUrna, depot, vehicleList, VOLUME_13M3,
-				simulacaoRequest.getTempoDescarregamentoMinutos(), simulacaoRequest.getTempoMaximoAtuacaoHoras());
-	}
-
-	private void adicionaVeiculos7_5m3(SimulacaoRequest simulacaoRequest, Double volumeUrna, Depot depot,
-			List<Vehicle> vehicleList) {
-		adicionaVeiculo(simulacaoRequest.getQuantidadeCaminhoes7_5m3(), volumeUrna, depot, vehicleList, VOLUME_7_5M3,
-				simulacaoRequest.getTempoDescarregamentoMinutos(), simulacaoRequest.getTempoMaximoAtuacaoHoras());
 	}
 
 	public VehicleRoutingSolution build(Long idSimulacao) {
