@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { faClipboardList, faCrosshairs, faDownload, faInfoCircle, faListCheck, faPlay, faRefresh, faSignsPost, faStop, faTasks, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardList, faCrosshairs, faDownload, faInfoCircle, faListCheck, faPlay, faRefresh, faSignsPost, faStop, faTasks, faTrash, faTruckPickup } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as L from 'leaflet';
 import * as _ from 'lodash';

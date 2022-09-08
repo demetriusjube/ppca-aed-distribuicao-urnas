@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-09-08 11:13:32.
+// Generated using typescript-generator version 2.28.785 on 2022-09-08 12:04:05.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -93,11 +93,13 @@ export interface ZonaEleitoralDTO {
     centroDistribuicao: number;
 }
 
-export interface Customer {
+export interface Customer extends Standstill {
     id: number;
     name: string;
-    location: Location;
     demand: number;
+    tempoDescarregamentoMinutos: number;
+    tempoDescarregamentoMilis: number;
+    last: boolean;
 }
 
 export interface Depot {
@@ -133,26 +135,29 @@ export interface SimulacaoRequest {
     tempoMaximoAtuacaoHoras: number;
 }
 
+export interface Standstill {
+    location: Location;
+    nextVisit: Customer;
+}
+
 export interface Status {
     solution: VehicleRoutingSolution;
     scoreExplanation: string;
     isSolving: boolean;
 }
 
-export interface Vehicle {
+export interface Vehicle extends Standstill {
     id: number;
     description: string;
     capacity: number;
     depot: Depot;
-    tempoDescarregamentoMinutos: number;
     tempoMaximoAtuacaoHoras: number;
-    customerList: Customer[];
-    totalDemand: number;
+    tempoMaximoAtuacaoMilis: number;
     totalTimeMilis: number;
-    route: Location[];
+    totalDemand: number;
     totalDistanceMeters: number;
-    tempoMaximoAtuacaoUltrapassado: boolean;
-    tempoAtuacaoUltrapassadoMinutos: number;
+    route: Location[];
+    futureVisits: Iterable<Customer>;
 }
 
 export interface VehicleRequest {
@@ -162,13 +167,14 @@ export interface VehicleRequest {
 
 export interface VehicleRoutingSolution {
     name: string;
-    locationList: Location[];
     depotList: Depot[];
     vehicleList: Vehicle[];
     customerList: Customer[];
     score: HardSoftLongScore;
-    bounds: Location[];
     distanceMeters: number;
+}
+
+export interface Iterable<T> {
 }
 
 export interface HardSoftLongScore extends AbstractScore<HardSoftLongScore> {
