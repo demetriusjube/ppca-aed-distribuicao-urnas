@@ -62,7 +62,7 @@ public class DistribuicaoUrnasSolutionBuilder {
 		Long idCentroDistribuicao = simulacaoRequest.getIdCentroDistribuicao();
 		TipoOtimizacaoEnum tipoOtimizacaoEnum = simulacaoRequest.getTipoOtimizacaoEnum();
 		DepotCustomers depotCustomers = depotCustomerBuilder.build(idCentroDistribuicao,
-				simulacaoRequest.getTempoDescarregamentoMinutos());
+				simulacaoRequest.getTempoDescarregamentoMinutos(), simulacaoRequest.getTempoMaximoAtuacaoHoras());
 		List<Vehicle> vehicleList = montaVeiculosDaSimulacao(simulacaoRequest, depotCustomers.getDepot());
 		return buildSolution(depotCustomers, vehicleList, tipoOtimizacaoEnum);
 
@@ -100,7 +100,7 @@ public class DistribuicaoUrnasSolutionBuilder {
 		if (vehicleRequest != null) {
 			Integer capacidade = vehicleRequest.getCapacidade();
 			Supplier<Vehicle> vehicleSupplier = () -> new Vehicle(sequence.incrementAndGet(), capacidade.intValue(),
-					depot, tempoMaximoAtuacao);
+					depot);
 			vehicleList.addAll(Stream.generate(vehicleSupplier).limit(vehicleRequest.getQuantidadeVeiculos())
 					.collect(Collectors.toList()));
 		}
@@ -111,7 +111,7 @@ public class DistribuicaoUrnasSolutionBuilder {
 		if (simulacao != null) {
 
 			TipoOtimizacaoEnum tipoOtimizacaoEnum = TipoOtimizacaoEnum.MENOR_DISTANCIA;
-			DepotCustomers depotCustomers = depotCustomerBuilder.build(simulacao.getCentroDistribuicao(), 30);
+			DepotCustomers depotCustomers = depotCustomerBuilder.build(simulacao.getCentroDistribuicao(), 30, 10);
 			List<Depot> depotList = Arrays.asList(depotCustomers.getDepot());
 			List<Customer> customers = depotCustomers.getCustomerList();
 			List<Location> locationList = Stream
@@ -137,7 +137,6 @@ public class DistribuicaoUrnasSolutionBuilder {
 			vehicle.setCapacity(veiculo.getCapacidade());
 			vehicle.setDepot(depot);
 			vehicle.setId(veiculo.getId());
-			vehicle.setTempoMaximoAtuacaoHoras(10);
 			List<Visita> visitasOrdenadas = veiculoSimulacao.getPlanoRota().getVisitas().stream()
 					.sorted(Comparator.comparing(Visita::getOrdem)).toList();
 			Customer primeiraVisita = mountCustomersVisits(visitasOrdenadas, customersWithDistanceMatrix, vehicle);

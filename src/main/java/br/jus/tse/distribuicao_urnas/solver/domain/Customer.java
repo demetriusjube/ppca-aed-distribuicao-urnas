@@ -3,11 +3,14 @@ package br.jus.tse.distribuicao_urnas.solver.domain;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.variable.AnchorShadowVariable;
+import org.optaplanner.core.api.domain.variable.CustomShadowVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 import org.optaplanner.core.api.domain.variable.PlanningVariableGraphType;
+import org.optaplanner.core.api.domain.variable.PlanningVariableReference;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.jus.tse.distribuicao_urnas.solver.ArrivalTimeUpdatingVariableListener;
 import br.jus.tse.distribuicao_urnas.solver.DepotAngleCustomerDifficultyWeightFactory;
 
 @PlanningEntity(difficultyWeightFactoryClass = DepotAngleCustomerDifficultyWeightFactory.class)
@@ -22,6 +25,13 @@ public class Customer implements Standstill {
 	private int demand;
 	private int tempoDescarregamentoMinutos;
 	private long tempoDescarregamentoMilis;
+
+	private long readyTime;
+	private long dueTime;
+	private long serviceDuration;
+
+	// Shadow variable
+	private Long arrivalTime;
 
 	@JsonIgnore
 	// Planning variable: changes during planning, between score calculations.
@@ -43,6 +53,7 @@ public class Customer implements Standstill {
 		this.name = name;
 		this.location = location;
 		this.demand = demand;
+		this.readyTime = 0;
 		setTempoDescarregamentoMinutos(tempoDescarregamentoMinutos);
 	}
 
@@ -102,6 +113,60 @@ public class Customer implements Standstill {
 		return tempoDescarregamentoMinutos;
 	}
 
+	/**
+	 * @return a positive number, the time multiplied by 1000 to avoid floating
+	 *         point arithmetic rounding errors
+	 */
+	public long getReadyTime() {
+		return readyTime;
+	}
+
+	public void setReadyTime(long readyTime) {
+		this.readyTime = readyTime;
+	}
+
+	/**
+	 * @return a positive number, the time multiplied by 1000 to avoid floating
+	 *         point arithmetic rounding errors
+	 */
+	public long getDueTime() {
+		return dueTime;
+	}
+
+	public void setDueTime(long dueTime) {
+		this.dueTime = dueTime;
+	}
+
+	/**
+	 * @return a positive number, the time multiplied by 1000 to avoid floating
+	 *         point arithmetic rounding errors
+	 */
+	public long getServiceDuration() {
+		return serviceDuration;
+	}
+
+	public void setServiceDuration(long serviceDuration) {
+		this.serviceDuration = serviceDuration;
+	}
+
+	/**
+	 * @return a positive number, the time multiplied by 1000 to avoid floating
+	 *         point arithmetic rounding errors
+	 */
+	@CustomShadowVariable(variableListenerClass = ArrivalTimeUpdatingVariableListener.class,
+			// Arguable, to adhere to API specs (although this works), nextCustomer should
+			// also be a source,
+			// because this shadow must be triggered after nextCustomer (but there is no
+			// need to be triggered by nextCustomer)
+			sources = { @PlanningVariableReference(variableName = "previousStandstill") })
+	public Long getArrivalTime() {
+		return arrivalTime;
+	}
+
+	public void setArrivalTime(Long arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+
 	// ************************************************************************
 	// Complex methods
 	// ************************************************************************
@@ -124,6 +189,7 @@ public class Customer implements Standstill {
 	public void setTempoDescarregamentoMinutos(int tempoDescarregamentoMinutos) {
 		this.tempoDescarregamentoMinutos = tempoDescarregamentoMinutos;
 		this.tempoDescarregamentoMilis = tempoDescarregamentoMinutos * CONVERSOR_MINUTOS_MILIS;
+		this.serviceDuration = tempoDescarregamentoMilis;
 	}
 
 	// ************************************************************************
@@ -164,6 +230,20 @@ public class Customer implements Standstill {
 		return location.getDistanceTo(vehicle.getLocation());
 	}
 
+	@JsonIgnore
+	public long getDistanceFromPreviousStandstill() {
+		if (previousStandstill == null) {
+			throw new IllegalStateException("This method must not be called when the previousStandstill ("
+					+ previousStandstill + ") is not initialized yet.");
+		}
+		return getDistanceFrom(previousStandstill);
+	}
+
+	@JsonIgnore
+	public long getDistanceFrom(Standstill standstill) {
+		return standstill.getLocation().getDistanceTo(location);
+	}
+
 	/**
 	 * Whether this visit is the last in a chain.
 	 *
@@ -172,4 +252,37 @@ public class Customer implements Standstill {
 	public boolean isLast() {
 		return nextVisit == null;
 	}
+
+	public Long getDepartureTime() {
+		if (arrivalTime == null) {
+			return null;
+		}
+		return Math.max(arrivalTime, readyTime) + serviceDuration;
+	}
+
+	public boolean isArrivalBeforeReadyTime() {
+		return arrivalTime != null && arrivalTime < readyTime;
+	}
+
+	public boolean isArrivalAfterDueTime() {
+		return arrivalTime != null && dueTime < arrivalTime;
+	}
+
+	/**
+	 * @return a positive number, the time multiplied by 1000 to avoid floating
+	 *         point arithmetic rounding errors
+	 */
+	public long getTimeWindowGapTo(Customer other) {
+		// dueTime doesn't account for serviceDuration
+		long latestDepartureTime = dueTime + serviceDuration;
+		long otherLatestDepartureTime = other.getDueTime() + other.getServiceDuration();
+		if (latestDepartureTime < other.getReadyTime()) {
+			return other.getReadyTime() - latestDepartureTime;
+		}
+		if (otherLatestDepartureTime < readyTime) {
+			return readyTime - otherLatestDepartureTime;
+		}
+		return 0L;
+	}
+
 }

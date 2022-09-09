@@ -77,7 +77,7 @@ public class SolverResource {
 
 	@GetMapping(value = "depot-customers/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public DepotCustomers getDepotAndCustomers(@PathVariable("id") Long idCentroDistribuicao) {
-		return depotCustomerBuilder.build(idCentroDistribuicao, TEMPO_DESCARREGAMENTO_DEFAULT);
+		return depotCustomerBuilder.build(idCentroDistribuicao, TEMPO_DESCARREGAMENTO_DEFAULT, 10);
 	}
 
 	@GetMapping(value = "status", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,6 +1,5 @@
 package br.jus.tse.distribuicao_urnas.solver;
 
-import static org.optaplanner.core.api.score.stream.ConstraintCollectors.sumLong;
 import static org.optaplanner.core.api.score.stream.ConstraintCollectors.sum;
 
 import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
@@ -9,44 +8,24 @@ import org.optaplanner.core.api.score.stream.ConstraintFactory;
 import org.optaplanner.core.api.score.stream.ConstraintProvider;
 
 import br.jus.tse.distribuicao_urnas.solver.domain.Customer;
+import br.jus.tse.distribuicao_urnas.solver.domain.Depot;
 
 public class VehicleRoutingConstraintProvider implements ConstraintProvider {
 
 	@Override
 	public Constraint[] defineConstraints(ConstraintFactory factory) {
-		return new Constraint[] { vehicleCapacity(factory),// vehicleDrivingTime(factory), // totalTime(factory),
-				distanceFromPreviousStandstill(factory), distanceFromLastVisitToDepot(factory) };
+		return new Constraint[] { vehicleCapacity(factory), distanceFromPreviousStandstill(factory),
+				distanceFromLastVisitToDepot(factory), arrivalAfterDueTime(factory) };
 	}
-
-//	private Constraint totalTime(ConstraintFactory factory) {
-//		return factory.forEach(Vehicle.class).filter(vehicle -> vehicle.isTempoMaximoAtuacaoUltrapassado())
-//				.penalizeLong("deliveryTime", HardSoftLongScore.ONE_HARD,
-//						vehicle -> vehicle.getTempoAtuacaoUltrapassadoMinutos());
-//	}
 
 	// ************************************************************************
 	// Hard constraints
 	// ************************************************************************
 
-//	protected Constraint vehicleCapacity(ConstraintFactory factory) {
-//		return factory.forEach(Vehicle.class).filter(vehicle -> vehicle.getTotalDemand() > vehicle.getCapacity())
-//				.penalizeLong("vehicleCapacity", HardSoftLongScore.ONE_HARD,
-//						vehicle -> 100 * (vehicle.getTotalDemand() - vehicle.getCapacity()));
-//	}
-
 	Constraint vehicleCapacity(ConstraintFactory constraintFactory) {
 		return constraintFactory.forEach(Customer.class).groupBy(Customer::getVehicle, sum(Customer::getDemand))
 				.filter((vehicle, demand) -> demand > vehicle.getCapacity()).penalizeLong("vehicle capacity",
 						HardSoftLongScore.ONE_HARD, (vehicle, demand) -> 100 * (demand - vehicle.getCapacity()));
-	}
-
-	Constraint vehicleDrivingTime(ConstraintFactory constraintFactory) {
-		return constraintFactory.forEach(Customer.class)
-				.groupBy(Customer::getVehicle, sumLong(Customer::timeMilisFromPreviousStandstill))
-				.filter((vehicle, totalTime) -> totalTime > vehicle.getTempoMaximoAtuacaoMilis())
-				.penalizeLong("vehicle driving time", HardSoftLongScore.ONE_HARD,
-						(vehicle, totalTime) -> getTempoAtuacaoUltrapassadoMinutos(totalTime,
-								vehicle.getTempoMaximoAtuacaoMilis()));
 	}
 
 	// ************************************************************************
@@ -68,8 +47,28 @@ public class VehicleRoutingConstraintProvider implements ConstraintProvider {
 				"distance from last visit to depot", HardSoftLongScore.ONE_SOFT, Customer::distanceToDepot);
 	}
 
-	public long getTempoAtuacaoUltrapassadoMinutos(long totalTimeMilis, long tempoMaximoAtuacaoMilis) {
-		return (totalTimeMilis - tempoMaximoAtuacaoMilis) / (60 * 1000);
+	protected Constraint arrivalAfterDueTime(ConstraintFactory factory) {
+//		return factory.forEach(Customer.class).filter(customer -> customer.getArrivalTime() > customer.getDueTime())
+//				.penalizeLong("arrivalAfterDueTime", HardSoftLongScore.ONE_HARD,
+//						customer -> customer.getArrivalTime() - customer.getDueTime());
+		return factory.forEach(Customer.class).filter(Customer::isLast)
+				.filter(customer -> vaiUltrapassarTempoMaximo(customer)).penalizeLong("depot max arrival time",
+						HardSoftLongScore.ONE_HARD, customer -> diferencaTempoChegadaMinutos(customer));
+
+	}
+
+	private boolean vaiUltrapassarTempoMaximo(Customer customer) {
+		long diferencaTempoChegada = diferencaTempoChegadaMinutos(customer);
+		return diferencaTempoChegada >= 1;
+	}
+
+	private long diferencaTempoChegadaMinutos(Customer customer) {
+		Depot depot = customer.getVehicle().getDepot();
+		long tempoMaximo = depot.getDueTime();
+		long horaSaida = customer.getDepartureTime();
+		long tempoViagem = customer.getLocation().getTimeTo(depot.getLocation());
+		long horaChegadaDeposito = horaSaida + tempoViagem;
+		return (horaChegadaDeposito - tempoMaximo) / (60 * 1000);
 	}
 
 }

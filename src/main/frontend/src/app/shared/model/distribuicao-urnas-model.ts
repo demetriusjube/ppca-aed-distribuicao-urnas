@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.28.785 on 2022-09-08 12:04:05.
+// Generated using typescript-generator version 2.28.785 on 2022-09-09 05:43:09.
 
 export interface CentroDistribuicaoDTO {
     id: number;
@@ -99,6 +99,14 @@ export interface Customer extends Standstill {
     demand: number;
     tempoDescarregamentoMinutos: number;
     tempoDescarregamentoMilis: number;
+    readyTime: number;
+    dueTime: number;
+    serviceDuration: number;
+    arrivalTime: number;
+    distanceFromPreviousStandstill: number;
+    arrivalBeforeReadyTime: boolean;
+    arrivalAfterDueTime: boolean;
+    departureTime: number;
     last: boolean;
 }
 
@@ -106,6 +114,8 @@ export interface Depot {
     id: number;
     name: string;
     location: Location;
+    readyTime: number;
+    dueTime: number;
 }
 
 export interface DepotCustomers {
@@ -136,8 +146,8 @@ export interface SimulacaoRequest {
 }
 
 export interface Standstill {
-    location: Location;
     nextVisit: Customer;
+    location: Location;
 }
 
 export interface Status {
@@ -151,13 +161,11 @@ export interface Vehicle extends Standstill {
     description: string;
     capacity: number;
     depot: Depot;
-    tempoMaximoAtuacaoHoras: number;
-    tempoMaximoAtuacaoMilis: number;
-    totalTimeMilis: number;
-    totalDemand: number;
     totalDistanceMeters: number;
+    totalTimeMilis: number;
     route: Location[];
     futureVisits: Iterable<Customer>;
+    totalDemand: number;
 }
 
 export interface VehicleRequest {
@@ -191,8 +199,8 @@ export interface Serializable {
 export interface Score<Score_> extends Comparable<Score_> {
     zero: boolean;
     solutionInitialized: boolean;
-    feasible: boolean;
     initScore: number;
+    feasible: boolean;
 }
 
 export interface Comparable<T> {

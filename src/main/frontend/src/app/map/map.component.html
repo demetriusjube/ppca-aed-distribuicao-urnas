@@ -62,6 +62,14 @@
                                     </div>
                                 </div>
                                 <div class="row pt-2 row-cols-1">
+                                    <div class="row pt-2 row-cols-1">
+                                        Quantidade de urnas por caminhão:
+                                        <ul>
+                                            <li>38m3 - 488</li>
+                                            <li>22m3 - 280</li>
+                                            <li>15m3 - 162</li>
+                                        </ul>
+                                    </div>
                                     <div class="col-12">
                                         <button id="addVeiculoButton" type="button" class="btn btn-primary"
                                             (click)="addVeiculo()" *ngIf="!isSolving">
@@ -138,8 +146,8 @@
                                     (click)="stopSolving()" *ngIf="isSolving && !solvingIsStarting">
                                     <fa-icon [icon]="faStop"></fa-icon> Parar resolução
                                 </button>
-                                <button id="refreshButton" type="button" class="btn btn-primary" (click)="atualizarMapa()"
-                                    *ngIf="isSolving && !solvingIsStarting">
+                                <button id="refreshButton" type="button" class="btn btn-primary"
+                                    (click)="atualizarMapa()" *ngIf="isSolving && !solvingIsStarting">
                                     <fa-icon [icon]="faRefresh"></fa-icon> Atualizar o mapa
                                 </button>
 

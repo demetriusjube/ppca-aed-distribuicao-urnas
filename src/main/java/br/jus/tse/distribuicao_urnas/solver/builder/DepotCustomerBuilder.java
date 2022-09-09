@@ -19,27 +19,33 @@ import br.jus.tse.distribuicao_urnas.solver.domain.DepotCustomers;
 @Component
 public class DepotCustomerBuilder {
 
+	private static final long CONVERSOR_MINUTOS_MILIS = 60l * 1000l;
+	private static final long CONVERSOR_HORA_MILIS = 60l * CONVERSOR_MINUTOS_MILIS;
+
 	@Autowired
 	private CentroDistribuicaoRepository centroDistribuicaoRepository;
 
 	@Autowired
 	private LocalVotacaoRepository localVotacaoRepository;
 
-	public DepotCustomers build(Long idCentroDistribuicao, Integer tempoDescarregamentoMinutos) {
+	public DepotCustomers build(Long idCentroDistribuicao, Integer tempoDescarregamentoMinutos,
+			Integer tempoMaximoAtuacaoHoras) {
 
 		Optional<CentroDistribuicao> consultaCentroDistribuicao = centroDistribuicaoRepository
 				.findById(idCentroDistribuicao);
 		if (consultaCentroDistribuicao.isPresent()) {
 			CentroDistribuicao centroDistribuicao = consultaCentroDistribuicao.get();
-			return build(centroDistribuicao, tempoDescarregamentoMinutos);
+			return build(centroDistribuicao, tempoDescarregamentoMinutos, tempoMaximoAtuacaoHoras);
 		}
 		throw new IllegalArgumentException("Não foi possível encontrar o centro de distribuição informado!");
 	}
 
-	public DepotCustomers build(CentroDistribuicao centroDistribuicao, Integer tempoDescarregamentoMinutos) {
+	public DepotCustomers build(CentroDistribuicao centroDistribuicao, Integer tempoDescarregamentoMinutos,
+			Integer tempoMaximoAtuacaoHoras) {
+		long tempoMaximoAtuacaoMilis = tempoMaximoAtuacaoHoras * CONVERSOR_HORA_MILIS;
 		DepotCustomers depotCustomers = new DepotCustomers();
 		Depot depot = new Depot(centroDistribuicao.getId(), LocationBuilder.buildFrom(centroDistribuicao),
-				centroDistribuicao.getNome());
+				centroDistribuicao.getNome(), 0l, tempoMaximoAtuacaoMilis);
 
 		List<LocalVotacao> locaisVotacaoDoCentro = localVotacaoRepository
 				.findByZonaEleitoralCentroDistribuicaoEquals(centroDistribuicao);
@@ -64,7 +70,8 @@ public class DepotCustomerBuilder {
 		List<Customer> customers = new ArrayList<Customer>();
 		for (LocalVotacao localVotacao : locaisVotacao) {
 			Customer customer = new Customer(localVotacao.getId(), localVotacao.getNome(),
-					LocationBuilder.buildFrom(localVotacao), localVotacao.getQuantidadeSecoes(), tempoDescarregamentoMinutos);
+					LocationBuilder.buildFrom(localVotacao), localVotacao.getQuantidadeSecoes(),
+					tempoDescarregamentoMinutos);
 			customers.add(customer);
 		}
 		return customers;
