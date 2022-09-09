@@ -153,12 +153,29 @@ public class Vehicle implements Standstill {
 		Iterable<Customer> customers = getFutureVisits();
 		Customer lastCustomer = lastOrNull(customers.iterator());
 		if (lastCustomer != null) {
-			long departureTime = lastCustomer.getDepartureTime();
+			Long departureTime = lastCustomer.getDepartureTime();
+			if (departureTime == null) {
+				departureTime = calculateTotalDrivingTimeToLastVisit();
+			}
 			Location depotLocation = lastCustomer.getVehicle().getDepot().getLocation();
 			long drivingTimeToDepot = lastCustomer.getLocation().getTimeTo(depotLocation);
 			return departureTime + drivingTimeToDepot;
 		}
 		return 0;
+
+	}
+
+	private Long calculateTotalDrivingTimeToLastVisit() {
+		Iterable<Customer> customers = getFutureVisits();
+		long totalTime = 0;
+		Location previousLocation = depot.getLocation();
+
+		for (Customer customer : customers) {
+			totalTime += previousLocation.getTimeTo(customer.getLocation());
+			totalTime += customer.getServiceDuration();
+			previousLocation = customer.getLocation();
+		}
+		return totalTime;
 
 	}
 

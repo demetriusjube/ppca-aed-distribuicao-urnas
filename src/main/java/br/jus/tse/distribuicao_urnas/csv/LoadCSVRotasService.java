@@ -47,6 +47,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LoadCSVRotasService {
 
+	private static final int CAPACIDADE_7_5M3 = 81;
+
+	private static final int CAPACIDADE_15M3 = 162;
+
+	private static final int CAPACIDADE_38M3 = 488;
+
+	private static final int CAPACIDADE_22M3 = 280;
+
 	@Autowired
 	private LocalVotacaoRepository localVotacaoRepository;
 
@@ -89,7 +97,7 @@ public class LoadCSVRotasService {
 		List<CentroDistribuicao> centrosDistribuicao = centroDistribuicaoRepository.findAll();
 		for (CentroDistribuicao centroDistribuicao : centrosDistribuicao) {
 			Simulacao simulacao = montaSimulacao(centroDistribuicao);
-			
+
 			simulacaoRepository.save(simulacao);
 			List<Integer> zonasEleitoraisDoCentro = centroDistribuicao.getCentroDistribuicaoZonaEleitorals().stream()
 					.map(ZonaEleitoral::getNumero).toList();
@@ -188,14 +196,14 @@ public class LoadCSVRotasService {
 	}
 
 	private Integer getCapacidadePeloNumeroDeUrnasTransportadas(int quantidadeDeUrnas) {
-		if (quantidadeDeUrnas > 422) {
-			return 730;
-		} else if (quantidadeDeUrnas > 249) {
-			return 422;
-		} else if (quantidadeDeUrnas > 144) {
-			return 249;
+		if (quantidadeDeUrnas > CAPACIDADE_22M3) {
+			return CAPACIDADE_38M3;
+		} else if (quantidadeDeUrnas > CAPACIDADE_15M3) {
+			return CAPACIDADE_22M3;
+		} else if (quantidadeDeUrnas > CAPACIDADE_7_5M3) {
+			return CAPACIDADE_15M3;
 		}
-		return 144;
+		return CAPACIDADE_7_5M3;
 	}
 
 	private File getArquivoRotaExistenteCSV() throws IOException {

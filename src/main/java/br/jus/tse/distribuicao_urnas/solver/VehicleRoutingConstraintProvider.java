@@ -65,10 +65,13 @@ public class VehicleRoutingConstraintProvider implements ConstraintProvider {
 	private long diferencaTempoChegadaMinutos(Customer customer) {
 		Depot depot = customer.getVehicle().getDepot();
 		long tempoMaximo = depot.getDueTime();
-		long horaSaida = customer.getDepartureTime();
-		long tempoViagem = customer.getLocation().getTimeTo(depot.getLocation());
-		long horaChegadaDeposito = horaSaida + tempoViagem;
-		return (horaChegadaDeposito - tempoMaximo) / (60 * 1000);
+		Long horaSaida = customer.getDepartureTime();
+		if (horaSaida != null) {
+			long tempoViagem = customer.getLocation().getTimeTo(depot.getLocation());
+			long horaChegadaDeposito = horaSaida + tempoViagem;
+			return (horaChegadaDeposito - tempoMaximo) / (60 * 1000);
+		}
+		return 0;
 	}
 
 }
